@@ -10,7 +10,6 @@ Opening/Developing individual apps:
 - Mess around with any html file in there, animation free
 - If you're replacing old files, make sure they have the same name as the original
 
-NOTE: In this current version, Aqua has not configured this to work with anything other than maps yet.
 
 
 
