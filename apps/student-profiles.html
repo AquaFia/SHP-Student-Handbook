@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Student Profiles</title>
+<style>
+:root{--gold:#d7b56d;--gold2:#f4d78f;--green:#2f8f63;--green2:#78d8a2;--ink:#05090a}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#05090a;color:#eef2eb;font-family:Arial,Helvetica,sans-serif}
+.app-page{height:100%;display:flex;flex-direction:column;background:radial-gradient(circle at 85% 5%,rgba(47,143,99,.16),transparent 30%),linear-gradient(135deg,#101719,#05090a 65%)}
+.app-header{height:86px;flex:0 0 auto;padding:20px 28px;border-bottom:1px solid rgba(215,181,109,.24);display:flex;align-items:center;gap:16px}
+.app-header .icon{width:48px;height:48px;border:1px solid rgba(215,181,109,.55);border-radius:13px;display:grid;place-items:center;color:var(--gold2);font-size:22px;background:rgba(35,92,58,.28)}
+.app-header h1{margin:0;color:#f5efdc;font-size:28px}
+.app-header p{margin:4px 0 0;color:rgba(230,236,227,.55);font-size:12px}
+.app-content{flex:1;min-height:0;overflow:auto;padding:24px 28px 34px;scrollbar-color:rgba(215,181,109,.45) transparent}
+.placeholder{max-width:760px;padding:22px;border:1px solid rgba(215,181,109,.22);border-radius:15px;background:rgba(255,255,255,.025)}
+.placeholder h2{color:var(--gold2);margin-top:0}
+.placeholder p{color:rgba(230,236,227,.68);line-height:1.6}
+
+
+:root {
+  --gold:#d7b56d;
+  --gold2:#f4d78f;
+  --green:#2f8f63;
+  --green2:#78d8a2;
+  --ink:#05090a;
+  --panel:#0a1112;
+}
+*{box-sizing:border-box}
+html,body{
+  width:100%;height:100%;margin:0;overflow:hidden;
+  background:rgba(0,0,0,0)!important;
+  font-family:Arial,Helvetica,sans-serif;
+}
+body{perspective:1600px}
+.stage{position:fixed;inset:0;background:transparent;overflow:hidden}
+
+/* Opening handbook animation */
+.device{
+  position:absolute;left:50%;top:50%;
+  width:min(430px,31vw);aspect-ratio:445/770;
+  transform-origin:center;
+  animation:deviceMove 3.85s cubic-bezier(.2,.75,.18,1) both;
+}
+.device img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  filter:drop-shadow(0 20px 26px rgba(0,0,0,.48));
+}
+@keyframes deviceMove{
+  0%{transform:translate(calc(-50% + 48vw),calc(-50% + 72vh)) rotate(0) scale(.58)}
+  34%{transform:translate(-50%,-50%) rotate(0) scale(1)}
+  64%{transform:translate(-50%,-50%) rotate(90deg) scale(1.03)}
+  100%{transform:translate(-50%,-50%) rotate(90deg) scale(2.55)}
+}
+
+/* Power-down flash */
+.powerdown{
+  position:absolute;left:50%;top:50%;
+  width:min(88vw,1180px);height:min(72vh,690px);
+  transform:translate(-50%,-50%) scale(.86);
+  border-radius:28px;background:#000;opacity:0;
+  animation:power 4.55s linear both;
+  box-shadow:0 28px 70px rgba(0,0,0,.5);
+}
+@keyframes power{
+  0%,84%{opacity:0}
+  85%,90%{opacity:1}
+  91%,100%{opacity:0}
+}
+
+/* Landscape tablet viewport */
+.tablet{
+  position:absolute;left:50%;top:50%;
+  width:min(88vw,1180px);height:min(72vh,690px);
+  transform:translate(-50%,-50%) scale(.72);
+  opacity:0;overflow:hidden;border-radius:28px;
+  border:2px solid rgba(215,181,109,.72);
+  background:
+    radial-gradient(circle at 82% 12%,rgba(52,151,97,.18),transparent 28%),
+    linear-gradient(135deg,#101719,#05090a 62%,#07110e);
+  box-shadow:
+    inset 0 0 0 2px rgba(15,20,20,.95),
+    inset 0 0 34px rgba(60,170,105,.1),
+    0 25px 70px rgba(0,0,0,.52),
+    0 0 25px rgba(69,190,117,.12);
+  animation:tabletReveal .72s 4.45s cubic-bezier(.16,.84,.24,1) forwards;
+}
+@keyframes tabletReveal{
+  from{opacity:0;transform:translate(-50%,-50%) scale(.72)}
+  to{opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+.tablet:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+
+/* Boot sequence */
+.boot{
+  position:absolute;inset:0;z-index:8;display:grid;place-items:center;
+  background:#020404;color:var(--gold2);
+  animation:bootHide .4s 6.05s forwards;
+}
+.boot-inner{text-align:center;animation:bootIn .55s 4.7s both}
+.emblem{
+  width:118px;aspect-ratio:1;border-radius:50%;
+  display:grid;place-items:center;margin:auto;
+  border:3px solid var(--gold);
+  color:var(--gold2);font-size:66px;
+  background:
+    radial-gradient(circle,#183b29 0 45%,#08110c 46% 62%,#244b34 63% 68%,#050907 69%);
+  box-shadow:0 0 28px rgba(81,210,137,.28),inset 0 0 18px rgba(255,220,145,.15);
+}
+.boot p{margin:18px 0 0;letter-spacing:.28em;font-size:12px;color:var(--green2)}
+.boot-line{width:210px;height:3px;background:#13211a;margin:18px auto 0;overflow:hidden}
+.boot-line:after{
+  content:"";display:block;height:100%;width:100%;
+  background:linear-gradient(90deg,var(--green),var(--gold2));
+  transform:translateX(-100%);animation:load 1.05s 4.85s ease forwards;
+}
+@keyframes bootIn{from{opacity:0;transform:scale(.84)}to{opacity:1;transform:scale(1)}}
+@keyframes load{to{transform:translateX(0)}}
+@keyframes bootHide{to{opacity:0;visibility:hidden;pointer-events:none}}
+
+/* Landscape UI */
+.ui{
+  position:absolute;inset:0;display:grid;
+  grid-template-columns:210px 1fr;
+  opacity:0;animation:uiIn .6s 6.1s ease forwards;
+}
+@keyframes uiIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.sidebar{
+  padding:26px 20px;border-right:1px solid rgba(215,181,109,.23);
+  background:linear-gradient(180deg,rgba(12,23,20,.95),rgba(5,9,10,.97));
+  display:flex;flex-direction:column;gap:20px;
+}
+.school-mark{display:flex;align-items:center;gap:12px;color:var(--gold2);font-weight:800;font-size:13px;letter-spacing:.08em}
+.school-mark .seal{
+  width:42px;aspect-ratio:1;border:1px solid var(--gold);border-radius:50%;
+  display:grid;place-items:center;color:var(--gold2);background:#11261b;font-size:24px
+}
+.nav button{
+  width:100%;padding:12px 13px;margin:4px 0;border:1px solid transparent;
+  border-radius:10px;background:transparent;color:#d9dfd9;text-align:left;cursor:pointer;
+}
+.nav button.active,.nav button:hover{border-color:rgba(215,181,109,.35);background:rgba(52,126,84,.13);color:#fff}
+.sidebar-foot{margin-top:auto;color:var(--green2);font-size:10px;letter-spacing:.14em}
+
+.main{padding:26px 30px 24px;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}
+.topbar h1{margin:0;color:#f5f0dd;font-size:clamp(24px,3vw,38px)}
+.topbar p{margin:7px 0 0;color:rgba(230,235,226,.56);font-size:13px}
+.status{color:var(--green2);font-size:11px;letter-spacing:.14em;padding-top:5px}
+
+.app-grid{
+  flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-rows:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+.app{
+  opacity:0;transform:translateY(28px) scale(.96);
+  animation:appGlide .55s forwards;
+  appearance:none;border:1px solid rgba(215,181,109,.25);border-radius:16px;
+  background:linear-gradient(145deg,rgba(27,39,38,.98),rgba(6,10,11,.98));
+  color:#eff2eb;padding:18px;text-align:left;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:space-between;min-width:0;
+  box-shadow:inset 0 0 0 1px rgba(80,180,119,.05),0 10px 24px rgba(0,0,0,.25);
+  transition:.18s ease;
+}
+.app:nth-child(1){animation-delay:6.15s} .app:nth-child(2){animation-delay:6.21s}
+.app:nth-child(3){animation-delay:6.27s} .app:nth-child(4){animation-delay:6.33s}
+.app:nth-child(5){animation-delay:6.39s} .app:nth-child(6){animation-delay:6.45s}
+.app:nth-child(7){animation-delay:6.51s} .app:nth-child(8){animation-delay:6.57s}
+@keyframes appGlide{to{opacity:1;transform:none}}
+.app:hover,.app:focus-visible{
+  transform:translateY(-4px);outline:none;border-color:rgba(244,215,143,.7);
+  box-shadow:inset 0 0 22px rgba(65,160,101,.12),0 14px 28px rgba(0,0,0,.38);
+}
+.app-icon{
+  width:54px;aspect-ratio:1;border-radius:15px;border:1px solid rgba(215,181,109,.55);
+  display:grid;place-items:center;font-size:25px;color:var(--gold2);
+  background:radial-gradient(circle at 50% 25%,rgba(65,160,101,.42),rgba(8,17,12,.95));
+}
+.app-copy strong{display:block;font-size:14px;line-height:1.15;margin-bottom:8px}
+.app-copy small{display:block;color:rgba(226,232,223,.5);font-size:10px;line-height:1.4}
+
+/* App detail panel */
+.detail{
+  position:absolute;inset:0;z-index:6;display:grid;grid-template-columns:210px 1fr;
+  background:linear-gradient(135deg,#0b1213,#050809);
+  opacity:0;transform:translateX(5%);pointer-events:none;transition:.28s ease;
+}
+.detail.open{opacity:1;transform:none;pointer-events:auto}
+.detail-side{padding:26px 20px;border-right:1px solid rgba(215,181,109,.22);background:#07100d}
+.back{
+  width:100%;padding:12px;border:1px solid rgba(215,181,109,.35);
+  background:rgba(255,255,255,.025);color:var(--gold2);border-radius:10px;cursor:pointer;text-align:left
+}
+.detail-main{padding:34px}
+.detail-head{display:flex;align-items:center;gap:18px;border-bottom:1px solid rgba(215,181,109,.24);padding-bottom:22px}
+.detail-icon{width:66px;aspect-ratio:1;border:1px solid var(--gold);border-radius:17px;display:grid;place-items:center;font-size:30px;color:var(--gold2);background:#13291d}
+.detail h2{margin:0;color:#f5f0df;font-size:32px}
+.detail p{color:rgba(229,235,225,.68);line-height:1.65;max-width:720px}
+.placeholder{margin-top:28px;padding:24px;border:1px solid rgba(215,181,109,.22);border-radius:16px;background:rgba(255,255,255,.025)}
+
+
+.detail-main{
+  overflow:auto;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(215,181,109,.45) transparent;
+}
+.detail-content{padding-bottom:30px}
+.regulations-shell{margin-top:24px}
+.reg-tabs{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;
+  position:sticky;top:-1px;z-index:2;padding:4px 0 10px;
+  background:linear-gradient(180deg,#0b1213 74%,rgba(11,18,19,0));
+}
+.reg-tab{
+  appearance:none;border:1px solid rgba(215,181,109,.28);
+  background:rgba(255,255,255,.025);color:#dce4dc;
+  padding:10px 14px;border-radius:10px;cursor:pointer;
+  font-size:12px;font-weight:700;letter-spacing:.03em;
+}
+.reg-tab.active,.reg-tab:hover{
+  color:#fff;border-color:rgba(244,215,143,.72);
+  background:rgba(50,132,84,.16);
+}
+.reg-panel{display:none;animation:panelIn .24s ease}
+.reg-panel.active{display:block}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.reg-section-title{
+  margin:0 0 14px;color:#f4eedc;font-size:22px;
+}
+.rule-list,.procedure-list{
+  display:grid;gap:12px;margin:0;padding:0;list-style:none;
+}
+.rule-card,.phase-card,.protocol-card,.procedure-card{
+  border:1px solid rgba(215,181,109,.2);
+  border-radius:14px;background:rgba(255,255,255,.025);
+  padding:16px 18px;box-shadow:inset 0 0 18px rgba(59,143,93,.035);
+}
+.rule-card{display:grid;grid-template-columns:34px 1fr;gap:13px;align-items:start}
+.rule-number{
+  width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  color:var(--gold2);border:1px solid rgba(215,181,109,.55);
+  background:rgba(30,78,50,.3);font-weight:800;
+}
+.rule-card p,.phase-card p,.procedure-card p,.protocol-card p{
+  margin:0;color:rgba(230,236,227,.74);line-height:1.55;font-size:13px;
+}
+.phase-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.phase-card h3,.procedure-card h3,.protocol-card h3{
+  margin:0 0 9px;color:#f4eedc;font-size:15px;
+}
+.phase-tag{
+  display:inline-block;margin-bottom:10px;padding:5px 8px;border-radius:999px;
+  color:var(--green2);border:1px solid rgba(82,190,126,.3);
+  background:rgba(44,122,76,.12);font-size:10px;letter-spacing:.08em;
+}
+.lens-grid{
+  margin-top:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px
+}
+.lens-card{
+  border:1px solid rgba(215,181,109,.17);border-radius:12px;padding:12px;
+  background:rgba(0,0,0,.16);color:rgba(231,236,228,.7);font-size:11px;line-height:1.45
+}
+.lens-card strong{display:block;color:var(--gold2);margin-bottom:5px}
+.procedure-list{counter-reset:steps}
+.procedure-card{position:relative;padding-left:64px}
+.procedure-card:before{
+  counter-increment:steps;content:counter(steps);
+  position:absolute;left:18px;top:18px;width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;border:1px solid rgba(215,181,109,.5);
+  color:var(--gold2);font-weight:800;background:rgba(29,75,49,.25)
+}
+.procedure-card ul,.protocol-card ul{
+  margin:10px 0 0 18px;padding:0;color:rgba(230,236,227,.68);font-size:12px;line-height:1.65
+}
+.protocol-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.reg-note{
+  margin-top:18px;padding:12px 14px;border-left:3px solid var(--green);
+  background:rgba(49,126,80,.08);color:rgba(230,236,227,.66);font-size:12px
+}
+@media(max-width:950px){
+  .phase-grid,.protocol-grid{grid-template-columns:1fr}
+  .lens-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+
+/* Academic Progress Report */
+.report-shell{margin-top:24px;padding-bottom:34px}
+.report-hero{
+  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;
+  padding:20px;border:1px solid rgba(215,181,109,.28);border-radius:16px;
+  background:
+    radial-gradient(circle at 88% 10%,rgba(59,151,99,.2),transparent 30%),
+    linear-gradient(145deg,rgba(24,37,35,.98),rgba(7,11,12,.98));
+}
+.report-kicker{color:var(--green2);font-size:10px;letter-spacing:.18em;font-weight:800}
+.report-hero h3{margin:7px 0 4px;color:#f5efdc;font-size:27px}
+.report-hero p{margin:3px 0;color:rgba(230,236,227,.68);font-size:12px}
+.report-badge{
+  min-width:112px;padding:14px;border:1px solid rgba(215,181,109,.48);
+  border-radius:14px;text-align:center;background:rgba(0,0,0,.2)
+}
+.report-badge strong{display:block;color:var(--gold2);font-size:27px}
+.report-badge span{color:rgba(229,235,226,.58);font-size:9px;letter-spacing:.12em}
+.report-meta{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px
+}
+.meta-card{
+  padding:11px 12px;border:1px solid rgba(215,181,109,.16);border-radius:11px;
+  background:rgba(255,255,255,.02)
+}
+.meta-card small{display:block;color:rgba(225,232,224,.45);font-size:9px;text-transform:uppercase;letter-spacing:.1em}
+.meta-card strong{display:block;margin-top:5px;color:#eef1e9;font-size:11px;line-height:1.35}
+.report-tabs{
+  display:flex;gap:8px;overflow:auto;margin:20px 0 16px;padding:3px 0 8px;
+  position:sticky;top:-1px;z-index:3;
+  background:linear-gradient(180deg,#0b1213 76%,rgba(11,18,19,0));
+}
+.report-tab{
+  flex:0 0 auto;appearance:none;border:1px solid rgba(215,181,109,.25);
+  background:rgba(255,255,255,.025);color:#dce3dc;padding:9px 12px;border-radius:9px;
+  cursor:pointer;font-size:11px;font-weight:700
+}
+.report-tab.active,.report-tab:hover{
+  color:#fff;border-color:rgba(244,215,143,.68);background:rgba(47,128,81,.16)
+}
+.report-panel{display:none;animation:panelIn .23s ease}
+.report-panel.active{display:block}
+.report-section-title{margin:0 0 13px;color:#f4eedc;font-size:21px}
+.grade-table{
+  width:100%;border-collapse:separate;border-spacing:0 8px;font-size:11px
+}
+.grade-table th{
+  padding:0 12px 5px;text-align:left;color:rgba(227,233,225,.48);
+  font-size:9px;text-transform:uppercase;letter-spacing:.1em
+}
+.grade-table td{
+  padding:13px 12px;background:rgba(255,255,255,.025);
+  border-top:1px solid rgba(215,181,109,.16);
+  border-bottom:1px solid rgba(215,181,109,.16);
+  color:rgba(230,236,227,.72);vertical-align:top;line-height:1.5
+}
+.grade-table td:first-child{
+  border-left:1px solid rgba(215,181,109,.16);border-radius:11px 0 0 11px;
+  color:#f0f2eb;font-weight:700;width:25%
+}
+.grade-table td:nth-child(2){
+  color:var(--gold2);font-weight:900;font-size:14px;white-space:nowrap;width:9%
+}
+.grade-table td:last-child{
+  border-right:1px solid rgba(215,181,109,.16);border-radius:0 11px 11px 0
+}
+.summary-strip{
+  display:flex;justify-content:space-between;gap:14px;align-items:center;
+  margin-top:14px;padding:14px 16px;border:1px solid rgba(82,190,126,.23);
+  border-radius:12px;background:rgba(43,121,76,.08)
+}
+.summary-strip span{color:rgba(230,236,227,.62);font-size:11px}
+.summary-strip strong{color:var(--gold2);font-size:17px}
+.mentor-box,.faculty-box{
+  padding:18px;border:1px solid rgba(215,181,109,.2);border-radius:14px;
+  background:rgba(255,255,255,.025);margin-bottom:12px
+}
+.mentor-box h4,.faculty-box h4{margin:0 0 10px;color:var(--gold2);font-size:14px}
+.mentor-box p,.faculty-box p{margin:0;color:rgba(230,236,227,.7);font-size:12px;line-height:1.65}
+.compact-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px
+}
+.compact-card{
+  border:1px solid rgba(215,181,109,.17);border-radius:14px;
+  background:rgba(255,255,255,.022);padding:15px
+}
+.compact-card h4{margin:0 0 11px;color:#f4eedc;font-size:15px}
+.metric-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.metric-list li{
+  display:flex;justify-content:space-between;gap:15px;padding-bottom:7px;
+  border-bottom:1px solid rgba(255,255,255,.05);color:rgba(230,236,227,.64);font-size:11px
+}
+.metric-list strong{color:var(--gold2);text-align:right}
+.attendance-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px
+}
+.att-card{
+  padding:15px;border:1px solid rgba(215,181,109,.18);border-radius:13px;
+  text-align:center;background:rgba(255,255,255,.023)
+}
+.att-card strong{display:block;color:var(--gold2);font-size:21px}
+.att-card span{color:rgba(230,236,227,.5);font-size:9px;letter-spacing:.08em}
+.trait-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
+}
+.trait-row{
+  display:flex;justify-content:space-between;padding:11px 13px;
+  border:1px solid rgba(215,181,109,.15);border-radius:10px;
+  background:rgba(255,255,255,.02);font-size:11px;color:#e9ede6
+}
+.stars{color:var(--gold2);letter-spacing:.05em}
+.honor-list{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0;list-style:none
+}
+.honor-list li{
+  padding:13px;border:1px solid rgba(215,181,109,.2);border-radius:11px;
+  color:#edf0e8;background:rgba(44,121,76,.07);font-size:11px
+}
+.final-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
+}
+.final-item{
+  display:flex;justify-content:space-between;gap:14px;padding:13px;
+  border:1px solid rgba(215,181,109,.16);border-radius:11px;
+  background:rgba(255,255,255,.022);font-size:11px
+}
+.final-item span{color:rgba(230,236,227,.58)}
+.final-item strong{color:var(--gold2);text-align:right}
+@media(max-width:950px){
+  .report-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .attendance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .compact-grid,.trait-grid,.honor-list,.final-grid{grid-template-columns:1fr}
+  .grade-table td:first-child{width:31%}
+}
+
+
+/* Student Profiles */
+.profile-shell{display:grid;grid-template-columns:270px 1fr;gap:18px;height:100%;margin-top:22px;min-height:460px}
+.profile-directory{
+  border:1px solid rgba(215,181,109,.2);border-radius:15px;background:rgba(255,255,255,.02);
+  padding:14px;overflow:hidden;display:flex;flex-direction:column
+}
+.profile-search{
+  width:100%;border:1px solid rgba(215,181,109,.24);border-radius:10px;
+  background:#08100f;color:#edf1ea;padding:11px 12px;outline:none
+}
+.profile-search:focus{border-color:rgba(244,215,143,.65)}
+.profile-filters{display:flex;gap:6px;overflow:auto;padding:10px 0}
+.profile-filter{
+  flex:0 0 auto;border:1px solid rgba(215,181,109,.2);border-radius:999px;
+  background:transparent;color:rgba(231,237,228,.62);padding:6px 9px;font-size:9px;cursor:pointer
+}
+.profile-filter.active{color:#fff;background:rgba(48,135,85,.16);border-color:rgba(215,181,109,.55)}
+.profile-list{overflow:auto;display:grid;gap:7px;padding-right:3px}
+.profile-row{
+  appearance:none;width:100%;border:1px solid transparent;border-radius:11px;
+  background:rgba(255,255,255,.018);color:#eef2eb;text-align:left;padding:9px;cursor:pointer;
+  display:grid;grid-template-columns:38px 1fr;gap:9px;align-items:center
+}
+.profile-row:hover,.profile-row.active{border-color:rgba(215,181,109,.34);background:rgba(47,127,80,.12)}
+.profile-avatar{
+  width:38px;aspect-ratio:1;border-radius:10px;border:1px solid rgba(215,181,109,.42);
+  display:grid;place-items:center;color:var(--gold2);font-weight:900;
+  background:radial-gradient(circle at 45% 25%,rgba(55,154,96,.38),#07100c 70%)
+}
+.profile-row strong{font-size:10px;display:block}
+.profile-row small{font-size:8px;color:rgba(231,237,228,.45)}
+.profile-view{
+  overflow:auto;border:1px solid rgba(215,181,109,.18);border-radius:15px;
+  background:rgba(255,255,255,.018);padding:18px
+}
+.profile-hero{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:start}
+.profile-photo{
+  height:190px;border:1px solid rgba(215,181,109,.42);border-radius:15px;
+  display:grid;place-items:center;text-align:center;color:rgba(238,242,234,.48);
+  background:
+    radial-gradient(circle at 50% 28%,rgba(70,171,111,.25),transparent 30%),
+    linear-gradient(155deg,#17241f,#080c0d 70%);
+  overflow:hidden
+}
+.profile-photo .initials{font-size:48px;color:var(--gold2);font-weight:900}
+.profile-photo small{display:block;font-size:8px;letter-spacing:.12em;margin-top:7px}
+.profile-name{margin:0;color:#f5efdd;font-size:28px}
+.profile-talent{margin:7px 0 12px;color:var(--green2);font-size:12px;font-weight:800;letter-spacing:.05em}
+.profile-bio{color:rgba(231,237,228,.68);font-size:11px;line-height:1.6}
+.profile-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:16px}
+.profile-stat{padding:10px;border:1px solid rgba(215,181,109,.14);border-radius:10px;background:rgba(0,0,0,.14)}
+.profile-stat small{display:block;color:rgba(230,236,228,.42);font-size:8px;text-transform:uppercase;letter-spacing:.08em}
+.profile-stat strong{display:block;color:#edf1e9;font-size:10px;margin-top:4px;overflow-wrap:anywhere}
+.profile-section{margin-top:16px;padding:15px;border:1px solid rgba(215,181,109,.15);border-radius:13px;background:rgba(0,0,0,.1)}
+.profile-section h4{margin:0 0 9px;color:var(--gold2);font-size:13px}
+.profile-section p{margin:0;color:rgba(230,236,227,.66);font-size:11px;line-height:1.6}
+.profile-two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.profile-notes{
+  width:100%;min-height:100px;resize:vertical;border:1px solid rgba(215,181,109,.2);
+  border-radius:10px;background:#07100e;color:#eef2ea;padding:11px;font:inherit;font-size:11px;outline:none
+}
+.profile-notes:focus{border-color:rgba(244,215,143,.55)}
+.impressions-empty{
+  min-height:100px;border:1px dashed rgba(215,181,109,.22);border-radius:10px;
+  display:grid;place-items:center;color:rgba(230,236,227,.3);font-size:10px;text-align:center;padding:14px
+}
+@media(max-width:980px){
+  .profile-shell{grid-template-columns:220px 1fr}
+  .profile-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .profile-hero{grid-template-columns:120px 1fr}
+}
+
+@media(max-width:850px){
+  .tablet{width:94vw;height:68vh}
+  .ui,.detail{grid-template-columns:150px 1fr}
+  .sidebar,.detail-side{padding:18px 12px}
+  .main{padding:20px}
+  .app-grid{gap:10px}
+  .app{padding:12px}
+  .app-copy small{display:none}
+}
+
+.app-header{
+  position:relative;
+}
+.handbook-back{
+  margin-left:auto;
+  flex:0 0 auto;
+  appearance:none;
+  border:1px solid rgba(215,181,109,.42);
+  border-radius:10px;
+  background:rgba(6,12,12,.72);
+  color:var(--gold2);
+  padding:10px 14px;
+  font:inherit;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.03em;
+  cursor:pointer;
+  transition:background .16s ease,border-color .16s ease,transform .16s ease;
+}
+.handbook-back:hover,
+.handbook-back:focus-visible{
+  background:rgba(47,128,81,.18);
+  border-color:rgba(244,215,143,.72);
+  transform:translateY(-1px);
+  outline:none;
+}
+.handbook-back:active{
+  transform:translateY(0) scale(.98);
+}
+@media(max-width:720px){
+  .app-header{height:auto;min-height:86px;flex-wrap:wrap}
+  .handbook-back{margin-left:0}
+}
+
+
+/* Accessibility/UI scale adjustment */
+body{font-size:17px;}
+.app strong{font-size:17px!important;}
+.app small{font-size:13px!important;line-height:1.5!important;}
+.home>p{font-size:17px!important;}
+.brand{font-size:15px!important;}
+.nav button{font-size:16px!important;}
+.app-header h1{font-size:34px!important;}
+.app-header p{font-size:15px!important;}
+.handbook-back{
+  font-size:14px!important;
+  padding:12px 18px!important;
+}
+.profile-name{font-size:34px!important;}
+.profile-bio,
+.profile-section p,
+.rule-card p,
+.phase-card p,
+.procedure-card p,
+.protocol-card p,
+.grade-table td,
+.faculty-box p,
+.mentor-box p,
+.placeholder p{
+  font-size:14px!important;
+  line-height:1.7!important;
+}
+.profile-stat strong{font-size:12px!important;}
+.profile-stat small{font-size:10px!important;}
+.report-tab,.reg-tab{font-size:13px!important;padding:11px 15px!important;}
+.report-section-title,.reg-section-title{font-size:25px!important;}
+.grade-table th{font-size:11px!important;}
+
+</style>
+<style>
+.device,.powerdown,.tablet,.boot,.ui,.detail,.stage{animation:none!important}
+.report-shell,.regulations-shell{margin-top:0}
+</style>
+</head>
+<body>
+<main class="app-page">
+<header class="app-header"><div class="icon">👤</div><div><h1>Student Profiles</h1><p>Academy student identity records</p></div><button class="handbook-back" type="button" aria-label="Return to Student Handbook">← Student Handbook</button></header>
+<section class="app-content"><div class="profile-shell">
+<aside class="profile-directory">
+<input class="profile-search" id="profileSearch" placeholder="Search student records…" aria-label="Search student profiles">
+<div class="profile-filters">
+<button class="profile-filter active" data-group="All">All</button>
+<button class="profile-filter" data-group="Core Profiles">Core Profiles</button>
+<button class="profile-filter" data-group="Eridium’s OCs">Eridium’s OCs</button>
+<button class="profile-filter" data-group="Aqua’s OCs">Aqua’s OCs</button>
+</div>
+<div class="profile-list" id="profileList"></div>
+</aside>
+<section class="profile-view" id="profileView"></section>
+</div></section>
+</main>
+
+<script>
+const profiles=[{"name": "Aria Akira Matsuda", "age": "18", "height": "5’6", "weight": "Not listed", "gender": "Female", "pronouns": "She/Her", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Robotics, systems architecture, logs, diagnostics, safeguards", "dislikes": "Unverified claims, uncontrolled risk, procedural disorder", "talent": "Ultimate Roboticist", "talent_meaning": "Designs, builds, audits, and repairs advanced robotic and autonomous systems under extreme constraints.", "bio": "A precise, disciplined systems thinker who converts uncertainty into logs, safeguards, redundancies, and actionable protocols. Brilliant in crisis response, but prone to overwork and excessive control.", "group": "Core Profiles"}, {"name": "Ludo Ebizuka", "age": "18", "height": "5’5", "weight": "Not listed", "gender": "Male", "pronouns": "He/Him", "hair": "Brown, wavy, neatly styled", "eyes": "Brown; wears glasses", "blood": "Not listed", "birthdate": "TBD", "likes": "Debate notebooks, highlighters, timers, good manners, quality notebooks, washi tape", "dislikes": "Cooking, early mornings, cold temperatures", "talent": "Ultimate Deductive Reasoner", "talent_meaning": "Derives necessary conclusions from established facts, exposes contradictions, and eliminates impossible explanations.", "bio": "Soft-spoken, exacting, and unfailingly polite, Ludo connects details others miss and refuses to settle on a conclusion until the proof is clean.", "group": "Core Profiles"}, {"name": "Kasei Hoshiakari", "age": "18", "height": "5’6", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Ultimate Cryptologist", "talent_meaning": "Analyzes, creates, and breaks codes, ciphers, encrypted systems, and hidden information structures.", "bio": "A cryptology-focused student associated with complex codes, hidden systems, and layered identity mysteries.", "group": "Core Profiles"}, {"name": "Hikari Nori", "age": "19", "height": "5’1", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Ultimate Idealist", "talent_meaning": "Forms and communicates principled visions of how people, systems, and communities could become better.", "bio": "An ideal-driven student whose strongest trait is a commitment to hopeful principles and better outcomes.", "group": "Core Profiles"}, {"name": "Kouji Renran Yoshinari", "age": "18", "height": "5’4", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Ultimate Escape Artist", "talent_meaning": "Escapes restraints, sealed spaces, traps, and controlled environments through preparation, flexibility, and technical skill.", "bio": "A highly adaptable escape specialist known for overcoming physical constraints and finding routes others overlook.", "group": "Core Profiles"}, {"name": "Juno Enyo", "age": "19", "height": "5’5 (5’7 with heels)", "weight": "Not listed", "gender": "Female", "pronouns": "She/Her", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Attention, performance, social influence", "dislikes": "Being ignored, losing control of a narrative", "talent": "Ultimate Social Sensation", "talent_meaning": "Builds attention, influence, and public momentum through performance, image, timing, and audience psychology.", "bio": "A charismatic influence architect who treats attention as a system that can be measured, directed, and turned into social power.", "group": "Core Profiles"}, {"name": "Damian Crosse", "age": "17", "height": "5’9", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Research and verified information", "dislikes": "Not listed", "talent": "Ultimate Researcher", "talent_meaning": "Locates, evaluates, cross-checks, and synthesizes information across multiple sources and disciplines.", "bio": "A research-focused student whose strength lies in gathering reliable information and turning scattered sources into useful conclusions.", "group": "Core Profiles"}, {"name": "Tokiko “Tokie” Crowley", "age": "19", "height": "5’6", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Secure systems, backups, technical validation", "dislikes": "Unsafe configurations and preventable vulnerabilities", "talent": "Ultimate Cybersecurity Specialist", "talent_meaning": "Protects digital systems by identifying vulnerabilities, hardening access, tracing incidents, and safely restoring compromised infrastructure.", "bio": "A technically rigorous security specialist who prioritizes reproduction, rollback points, backups, validation, and documented recovery.", "group": "Core Profiles"}, {"name": "Daika Nori", "age": "19", "height": "5’2", "weight": "Not listed", "gender": "Female", "pronouns": "She/Her", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Listening, emotional support, tea, gentle care routines", "dislikes": "Cruelty and emotional dismissal", "talent": "Ultimate Empath", "talent_meaning": "Recognizes, interprets, and responds to the emotions and needs of others with exceptional sensitivity.", "bio": "A gentle emotional-support presence who listens closely, helps others name what they feel, and creates spaces where vulnerability is safe.", "group": "Core Profiles"}, {"name": "Fate NightLock", "age": "19", "height": "5’6", "weight": "Not listed", "gender": "Female", "pronouns": "She/Her", "hair": "Dark sea-green aqua hair in pigtails", "eyes": "Blue", "blood": "Not listed", "birthdate": "Not listed", "likes": "Protecting others, bomb mechanisms, defusal work", "dislikes": "Uncertain danger and losing people she cares about", "talent": "Ultimate Bomb Expert", "talent_meaning": "Understands explosive devices, safe defusal, triggering systems, structural risks, and controlled blast prevention.", "bio": "Resolute and protective, Fate offers calm reassurance despite her own fear of the future. Her technical interest began through lessons from her military father.", "group": "Eridium’s OCs"}, {"name": "Meggie Harmon", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "Basic profile information has not yet been filled in.", "group": "Eridium’s OCs"}, {"name": "Milo Celestian", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Male", "pronouns": "He/Him", "hair": "Blue or dark blue", "eyes": "Purple", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "A tough but caring and optimistic student associated with a staff and subtle lightning-based imagery.", "group": "Eridium’s OCs"}, {"name": "Ruby Meadows", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "Basic profile information has not yet been filled in.", "group": "Eridium’s OCs"}, {"name": "Luxi Deathhorn", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "Basic profile information has not yet been filled in.", "group": "Eridium’s OCs"}, {"name": "Adair Nexus", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "Student profile imported from Aqua’s character database.", "group": "Aqua’s OCs"}, {"name": "Alice Nexus", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "Student profile imported from Aqua’s character database.", "group": "Aqua’s OCs"}, {"name": "Tyler Ezra", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "Student profile imported from Aqua’s character database.", "group": "Aqua’s OCs"}, {"name": "Jacey “Jace” Cosmo", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "Student profile imported from Aqua’s character database.", "group": "Aqua’s OCs"}, {"name": "Shinobu Kageyoshi", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "Student profile imported from Aqua’s character database.", "group": "Aqua’s OCs"}, {"name": "Naoya Takahoshi", "age": "Not listed", "height": "Not listed", "weight": "Not listed", "gender": "Not listed", "pronouns": "Not listed", "hair": "Not listed", "eyes": "Not listed", "blood": "Not listed", "birthdate": "Not listed", "likes": "Not listed", "dislikes": "Not listed", "talent": "Not listed", "talent_meaning": "Not listed in the source summary.", "bio": "Student profile imported from Aqua’s character database.", "group": "Aqua’s OCs"}];
+const handbookMemoryNotes=Object.create(null);
+function getNote(k){try{return localStorage.getItem(k)||handbookMemoryNotes[k]||''}catch(e){return handbookMemoryNotes[k]||''}}
+function setNote(k,v){handbookMemoryNotes[k]=v;try{localStorage.setItem(k,v)}catch(e){}}
+function esc(v){return String(v??'Not listed').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function initials(n){return n.replace(/[“”"']/g,'').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase()}
+function card(p){
+ const key='student-handbook-note-'+p.name,saved=getNote(key);
+ const fields=[['Height',p.height],['Weight',p.weight],['Age',p.age],['Gender',p.gender],['Pronouns',p.pronouns],['Hair Color',p.hair],['Eye Color',p.eyes],['Blood Type',p.blood],['Birthdate',p.birthdate]];
+ return `<div class="profile-hero"><div class="profile-photo"><div><div class="initials">${initials(p.name)}</div><small>PROFILE PICTURE</small></div></div>
+ <div><h3 class="profile-name">${esc(p.name)}</h3><div class="profile-talent">${esc(p.talent)}</div><p class="profile-bio">${esc(p.bio)}</p>
+ <div class="profile-stat-grid">${fields.map(([k,v])=>`<div class="profile-stat"><small>${esc(k)}</small><strong>${esc(v)}</strong></div>`).join('')}</div></div></div>
+ <div class="profile-section"><h4>Ultimate Talent — What It Means</h4><p>${esc(p.talent_meaning)}</p></div>
+ <div class="profile-two-col"><div class="profile-section"><h4>Likes</h4><p>${esc(p.likes)}</p></div><div class="profile-section"><h4>Dislikes</h4><p>${esc(p.dislikes)}</p></div></div>
+ <div class="profile-two-col"><div class="profile-section"><h4>Personal Notes</h4><textarea class="profile-notes" data-key="${esc(key)}" placeholder="Write private handbook notes…">${esc(saved)}</textarea></div>
+ <div class="profile-section"><h4>Character Impressions</h4><div class="impressions-empty">No impressions recorded.</div></div></div>`;
+}
+const list=document.getElementById('profileList'),view=document.getElementById('profileView'),search=document.getElementById('profileSearch');
+let selected=0,group='All';
+function visible(){const q=search.value.trim().toLowerCase();return profiles.map((p,i)=>({p,i})).filter(x=>(group==='All'||x.p.group===group)&&(!q||x.p.name.toLowerCase().includes(q)||x.p.talent.toLowerCase().includes(q)))}
+function show(i){selected=i;const p=profiles[i];if(!p)return;view.innerHTML=card(p);list.querySelectorAll('.profile-row').forEach(b=>b.classList.toggle('active',Number(b.dataset.index)===i));const n=view.querySelector('.profile-notes');if(n)n.addEventListener('input',()=>setNote(n.dataset.key,n.value));view.scrollTop=0}
+function render(){const f=visible();list.innerHTML=f.length?f.map(x=>`<button class="profile-row ${x.i===selected?'active':''}" data-index="${x.i}"><span class="profile-avatar">${initials(x.p.name)}</span><span><strong>${esc(x.p.name)}</strong><small>${esc(x.p.talent)}</small></span></button>`).join(''):'<div class="impressions-empty">No matching records.</div>';list.querySelectorAll('.profile-row').forEach(b=>b.addEventListener('click',()=>show(Number(b.dataset.index))));if(f.length&&!f.some(x=>x.i===selected))show(f[0].i)}
+search.addEventListener('input',render);
+document.querySelectorAll('.profile-filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.profile-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');group=b.dataset.group;render()}));
+render();show(0);
+</script>
+
+<script id="handbook-back-navigation">
+document.querySelector('.handbook-back')?.addEventListener('click',()=>{
+  window.parent.postMessage({type:'shp:return-handbook'},'*');
+});
+</script>
+
+</body>
+</html>
