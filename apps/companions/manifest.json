@@ -1,0 +1,12 @@
+{
+  "companions": [
+    {
+      "id": "aria-matsuda",
+      "name": "Aria Matsuda",
+      "subtitle": "Ultimate Roboticist",
+      "file": "./companions/aria-companion.html",
+      "portrait": "",
+      "enabled": false
+    }
+  ]
+}
