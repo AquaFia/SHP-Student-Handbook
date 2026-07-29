@@ -3,10 +3,10 @@
     {
       "id": "aria-matsuda",
       "name": "Aria Matsuda",
-      "subtitle": "Ultimate Roboticist",
-      "file": "./companions/aria-companion.html",
-      "portrait": "",
-      "enabled": false
+      "subtitle": "Ultimate Robotics Engineer",
+      "file": "./companions/aria/aria_companion.html",
+      "portrait": "./companions/aria/portraits/aria_neutral.webp",
+      "enabled": true
     }
   ]
 }
