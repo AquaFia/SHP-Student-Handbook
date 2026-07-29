@@ -1,0 +1,21 @@
+{
+  "id": "topic.loyaltydefine",
+  "activeRevisionId": "draft-001",
+  "latestRevisionId": "draft-001",
+  "updatedAt": "2026-07-28T22:57:09.920Z",
+  "revisions": [
+    {
+      "revisionId": "draft-001",
+      "status": "active",
+      "createdAt": "2026-07-28T22:56:59.211Z",
+      "mergeMode": "extend",
+      "baseRevisionId": null,
+      "approvedAt": "2026-07-28T22:57:09.920Z",
+      "rejectionReason": null,
+      "activatedAt": "2026-07-28T22:57:09.920Z",
+      "previousRevisionId": null
+    }
+  ],
+  "previousActiveRevisionId": null,
+  "cacheToken": "draft-001:1785279429920"
+}
