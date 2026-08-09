@@ -1,0 +1,182 @@
+{
+  "schema": "companion-episode-v1",
+  "id": "jacey_01_lies",
+  "identity": "jace",
+  "title": "Lies Wearing Disguises",
+  "topic": "Lies",
+  "coreQuestion": "Can Jace understand that truth matters without treating every hidden thing as a lie that needs to be solved?",
+  "triggers": [
+    "lies",
+    "truth",
+    "secrets",
+    "honesty"
+  ],
+  "requires": "None",
+  "openingNode": "lies_01_opening",
+  "offerExpression": "thinking",
+  "offerPrompt": "Jace is staring very intensely at a scribbled note. Talk with her about lies?",
+  "acceptLabel": "Let’s Talk",
+  "declineLabel": "Maybe Later",
+  "fallbackBank": "idle_smalltalk",
+  "nodes": {
+    "lies_01_opening": {
+      "type": "Conversation",
+      "expression": "thinking",
+      "dialogue": "Do you think lies know they’re lies? Like, if a person says something wrong on purpose, that’s obviously a lie. Easy. But if they hide the true thing behind a nice word like secret or privacy or don’t worry about it, then it gets all blurry. I don’t like blurry. Blurry means someone changed the data and forgot to leave a decryption key. That’s rude.",
+      "choices": [
+        {
+          "label": "Maybe lies feel like broken codes to you.",
+          "nextNode": "lies_01_broken_code",
+          "requires": "None",
+          "lockedHint": "",
+          "hidden": false
+        },
+        {
+          "label": "What if the truth hurts someone?",
+          "nextNode": "lies_01_truth_hurts",
+          "requires": "None",
+          "lockedHint": "",
+          "hidden": false
+        },
+        {
+          "label": "Are secrets always lies?",
+          "nextNode": "lies_01_secrets_question",
+          "requires": "None",
+          "lockedHint": "",
+          "hidden": false
+        }
+      ]
+    },
+    "lies_01_broken_code": {
+      "type": "Conversation",
+      "expression": "curious",
+      "dialogue": "Broken codes! Yes! Exactly! If the answer is supposed to be there and someone makes it wrong on purpose, my brain starts making angry little modem noises. People say lies are normal, but normal things can still be bad system design. I mean, my whole past is basically a locked file I can’t open. If someone put false labels on it too, I think I’d explode. Politely. Maybe.",
+      "choices": [
+        {
+          "label": "You still deserve the truth about yourself.",
+          "nextNode": "lies_01_ending_seen",
+          "requires": "None",
+          "lockedHint": "",
+          "hidden": false
+        },
+        {
+          "label": "Some truths need timing, not force.",
+          "nextNode": "lies_01_ending_timing",
+          "requires": "None",
+          "lockedHint": "",
+          "hidden": false
+        }
+      ]
+    },
+    "lies_01_truth_hurts": {
+      "type": "Conversation",
+      "expression": "serious",
+      "dialogue": "Then the hurting part is important data too, right? If the truth hurts, that means there’s something sharp inside it. You don’t fix a sharp thing by pretending it’s soft. You label it. You handle it carefully. You maybe don’t throw it at someone’s face during lunch. I have been told that last part is important.",
+      "choices": [
+        {
+          "label": "That’s why people need care with truth.",
+          "nextNode": "lies_01_ending_careful_truth",
+          "requires": "None",
+          "lockedHint": "",
+          "hidden": false
+        },
+        {
+          "label": "Maybe lies hurt worse.",
+          "nextNode": "lies_01_ending_no_disguise",
+          "requires": "None",
+          "lockedHint": "",
+          "hidden": false
+        }
+      ]
+    },
+    "lies_01_secrets_question": {
+      "type": "Conversation",
+      "expression": "confused",
+      "dialogue": "I want to say yes. My mouth is already ready to say yes. But then people get that face. The please-don’t-open-that-door face. And sometimes the door has a monster behind it, but sometimes it has evidence, or someone’s missing name, or a really important answer everyone just decided not to look at. How am I supposed to know which kind of door it is before opening it?",
+      "choices": [
+        {
+          "label": "A secret can be protection.",
+          "nextNode": "lies_01_ending_protection",
+          "requires": "None",
+          "lockedHint": "",
+          "hidden": false
+        },
+        {
+          "label": "A secret can also be a locked clue.",
+          "nextNode": "lies_01_ending_locked_clue",
+          "requires": "None",
+          "lockedHint": "",
+          "hidden": false
+        }
+      ]
+    },
+    "lies_01_ending_seen": {
+      "type": "Ending",
+      "expression": "soft",
+      "dialogue": "Yeah. I think so too. I don’t need every answer immediately. Probably. Maybe. But I want the real ones when they come. Not fake files, not cleaned-up reports, not someone deciding I’m easier to manage if I don’t know things. If I’m the hardest code I’ve ever tried to crack, then I at least deserve an honest puzzle.",
+      "endingId": "lies_01_ending_seen",
+      "unlocks": [
+        "jacey_truth_deserved"
+      ]
+    },
+    "lies_01_ending_timing": {
+      "type": "Ending",
+      "expression": "thinking",
+      "dialogue": "Timing. Hm. Like releasing a cipher key after everyone has the matching message? That makes sense. Annoying sense, but sense. Maybe the truth isn’t the problem. Maybe the problem is me throwing the truth like confetti before checking if anyone is allergic to confetti. I will write that down. Metaphorically. Or literally. Both.",
+      "endingId": "lies_01_ending_timing",
+      "unlocks": [
+        "jacey_truth_timing"
+      ]
+    },
+    "lies_01_ending_careful_truth": {
+      "type": "Ending",
+      "expression": "nervous",
+      "dialogue": "Care with truth. That sounds harder than just saying it. But… okay. I can try. If truth is a tool, then maybe using it wrong can still break things even if the tool itself is good. Like a screwdriver. Or a password. Or a scooter. Especially a scooter. Don’t tell Tyler I said that.",
+      "endingId": "lies_01_ending_careful_truth",
+      "unlocks": [
+        "jacey_careful_truth"
+      ]
+    },
+    "lies_01_ending_no_disguise": {
+      "type": "Ending",
+      "expression": "serious",
+      "dialogue": "That’s what I think. Lies don’t just hide the truth. They make a fake path and let people walk on it until the floor disappears. If someone had lied to me about who I was… no. I don’t like that thought. I’d rather trip over the truth than stand safely on something fake.",
+      "endingId": "lies_01_ending_no_disguise",
+      "unlocks": [
+        "jacey_no_disguise"
+      ]
+    },
+    "lies_01_ending_protection": {
+      "type": "Ending",
+      "expression": "uncertain",
+      "dialogue": "Protection. Like… putting a lock on a dangerous file, not because the file is fake, but because opening it wrong could hurt someone. I don’t love that. But I can understand it a little. Maybe. If someone says a secret is protection, they should still label it properly. ‘Protected truth.’ Not ‘nothing to see here.’ That phrase is suspicious and basically begs me to investigate.",
+      "endingId": "lies_01_ending_protection",
+      "unlocks": [
+        "jacey_protected_truth"
+      ]
+    },
+    "lies_01_ending_locked_clue": {
+      "type": "Ending",
+      "expression": "excited",
+      "dialogue": "Exactly! A locked clue is still a clue! Thank you! Finally, someone understands the door problem. But… okay, maybe I should knock before opening it. Or ask whose clue it is. Or check if the clue is load-bearing. Can truths be load-bearing? That sounds fake but important. I’m adding it to the list.",
+      "endingId": "lies_01_ending_locked_clue",
+      "unlocks": [
+        "jacey_locked_clue"
+      ]
+    }
+  },
+  "achievement": {
+    "id": "jacey_01_lies_all_endings",
+    "identity": "jace",
+    "title": "No Disguise for the Truth",
+    "description": "Complete every ending in Jace’s lies episode.",
+    "requiredEndings": [
+      "lies_01_ending_seen",
+      "lies_01_ending_timing",
+      "lies_01_ending_careful_truth",
+      "lies_01_ending_no_disguise",
+      "lies_01_ending_protection",
+      "lies_01_ending_locked_clue"
+    ]
+  }
+}

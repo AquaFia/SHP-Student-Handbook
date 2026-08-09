@@ -1,0 +1,375 @@
+/* =========================================================
+   EXTREME HALLOWEEN THEME — SYSTEM STRESS TEST
+   Context key: halloween
+
+   PURPOSE:
+   Prove how far the generic CSS-only visual-context system can go
+   without changing companion HTML or JavaScript.
+
+   This file changes presentation only.
+   ========================================================= */
+
+:root[data-visual-contexts~="halloween"] {
+  --bg:#020104;
+  --panel:#100612;
+  --panel2:#1b091b;
+  --ink:#fff1db;
+  --muted:#c8a6c6;
+
+  --violet:#d15cff;
+  --blue:#7d46ff;
+  --red:#ff3a50;
+  --cyan:#ff8a22;
+  --line:#7c316f;
+
+  --glow:
+    0 0 16px rgba(255,117,25,.42),
+    0 0 35px rgba(176,54,255,.32),
+    0 0 70px rgba(255,72,26,.14);
+}
+
+/* ---------- GLOBAL ATMOSPHERE ---------- */
+
+:root[data-visual-contexts~="halloween"] body {
+  background:
+    radial-gradient(circle at 12% 9%,rgba(255,105,17,.35),transparent 22%),
+    radial-gradient(circle at 88% 12%,rgba(188,63,255,.34),transparent 25%),
+    radial-gradient(circle at 12% 86%,rgba(114,255,60,.11),transparent 23%),
+    radial-gradient(circle at 87% 82%,rgba(255,46,62,.13),transparent 26%),
+    linear-gradient(140deg,#020103 0%,#160515 42%,#07030b 69%,#020103 100%) !important;
+  color:#fff1dc;
+  animation:halloweenAmbientPulse 7s ease-in-out infinite alternate;
+}
+
+/* Animated occult-grid / haunted terminal texture. */
+:root[data-visual-contexts~="halloween"] body:before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.88;
+  background-image:
+    linear-gradient(rgba(255,125,29,.07) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(202,70,255,.065) 1px,transparent 1px),
+    repeating-radial-gradient(circle at 50% 50%,
+      transparent 0 78px,
+      rgba(255,119,24,.028) 79px 80px,
+      transparent 81px 156px);
+  background-size:30px 30px,30px 30px,320px 320px;
+  animation:halloweenGridDrift 18s linear infinite;
+}
+
+/* Giant moon + poisonous fog + vignette. */
+:root[data-visual-contexts~="halloween"] body:after {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9998;
+  background:
+    radial-gradient(circle at 84% 12%,
+      rgba(255,216,128,.58) 0 3.8%,
+      rgba(255,153,50,.25) 4.2% 7.4%,
+      rgba(255,91,20,.07) 8% 14%,
+      transparent 20%),
+    radial-gradient(ellipse at 25% 105%,rgba(123,255,70,.16),transparent 32%),
+    radial-gradient(ellipse at 78% 105%,rgba(192,66,255,.20),transparent 38%),
+    radial-gradient(circle at center,transparent 55%,rgba(0,0,0,.55) 100%);
+  mix-blend-mode:screen;
+  opacity:.85;
+  animation:halloweenFogBreath 9s ease-in-out infinite alternate;
+}
+
+/* ---------- MAIN COMPANION FRAME ---------- */
+
+:root[data-visual-contexts~="halloween"] .panel,
+:root[data-visual-contexts~="halloween"] .chat,
+:root[data-visual-contexts~="halloween"] .episode,
+:root[data-visual-contexts~="halloween"] .cipher {
+  background:
+    linear-gradient(180deg,rgba(25,7,26,.97),rgba(6,3,9,.98)) !important;
+  border-color:#a94277 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,144,56,.13),
+    inset 0 0 42px rgba(99,24,110,.11),
+    0 0 18px rgba(255,115,23,.22),
+    0 0 42px rgba(186,57,255,.20),
+    0 0 90px rgba(255,67,26,.09) !important;
+}
+
+/* Bright perimeter accent to make the whole terminal feel "event mode". */
+:root[data-visual-contexts~="halloween"] .panel {
+  outline:1px solid rgba(255,136,42,.32);
+  outline-offset:3px;
+}
+
+/* ---------- BRAND / TOP AREA ---------- */
+
+:root[data-visual-contexts~="halloween"] .brand {
+  color:#fff0d2 !important;
+  text-shadow:
+    0 0 5px #ff8b2d,
+    0 0 14px rgba(255,121,27,.72),
+    0 0 28px rgba(188,62,255,.62);
+  animation:halloweenTitleFlicker 5.5s steps(1,end) infinite;
+}
+
+:root[data-visual-contexts~="halloween"] .brand:after {
+  content:"   ☾  ✦  🎃  ✦  ☾";
+  display:inline-block;
+  margin-left:.6rem;
+  color:#ff9a36;
+  font-size:.72em;
+  letter-spacing:.16em;
+  filter:
+    drop-shadow(0 0 5px rgba(255,126,35,.85))
+    drop-shadow(0 0 12px rgba(198,70,255,.56));
+  animation:halloweenFloat 3.7s ease-in-out infinite;
+}
+
+/* ---------- PORTRAIT AREA ---------- */
+
+:root[data-visual-contexts~="halloween"] .portrait-frame {
+  position:relative;
+  border-color:#ff8d2c !important;
+  background:
+    radial-gradient(circle at 50% 5%,rgba(255,140,48,.25),transparent 34%),
+    linear-gradient(180deg,#210b20 0%,#070309 100%) !important;
+  box-shadow:
+    0 0 0 2px rgba(203,66,255,.66),
+    0 0 18px rgba(255,125,24,.70),
+    0 0 45px rgba(182,55,255,.48),
+    0 0 80px rgba(255,55,25,.18),
+    inset 0 0 30px rgba(255,107,30,.15) !important;
+  animation:halloweenPortraitGlow 4s ease-in-out infinite alternate;
+}
+
+/* Decorative cobweb corners without new HTML. */
+:root[data-visual-contexts~="halloween"] .portrait-frame:before {
+  content:"🕸";
+  position:absolute;
+  top:-8px;
+  left:-4px;
+  z-index:4;
+  font-size:3.1rem;
+  line-height:1;
+  opacity:.72;
+  filter:
+    grayscale(1)
+    brightness(1.7)
+    drop-shadow(0 0 5px rgba(202,96,255,.75));
+  transform:rotate(-13deg);
+  pointer-events:none;
+}
+
+:root[data-visual-contexts~="halloween"] .portrait-frame:after {
+  content:"🦇";
+  position:absolute;
+  right:8px;
+  top:12px;
+  z-index:4;
+  font-size:1.45rem;
+  pointer-events:none;
+  filter:drop-shadow(0 0 7px rgba(255,117,30,.85));
+  animation:halloweenBatHover 2.6s ease-in-out infinite alternate;
+}
+
+/* Slight event-film treatment over any portrait, including special event art. */
+:root[data-visual-contexts~="halloween"] .portrait {
+  filter:
+    saturate(1.13)
+    contrast(1.06)
+    drop-shadow(0 0 10px rgba(255,110,24,.12));
+}
+
+/* ---------- CHAT / MESSAGES ---------- */
+
+:root[data-visual-contexts~="halloween"] .bubble {
+  color:#fff1df !important;
+  border-color:#8b3b78 !important;
+  background:
+    linear-gradient(135deg,rgba(45,17,47,.98),rgba(19,8,23,.98)) !important;
+  box-shadow:
+    inset 3px 0 0 rgba(198,78,255,.36),
+    0 0 13px rgba(190,67,255,.15) !important;
+}
+
+:root[data-visual-contexts~="halloween"] .message.user .bubble,
+:root[data-visual-contexts~="halloween"] .message.me .bubble {
+  border-color:#ba5535 !important;
+  background:
+    linear-gradient(135deg,rgba(57,22,13,.98),rgba(31,9,18,.98)) !important;
+  box-shadow:
+    inset -3px 0 0 rgba(255,135,42,.48),
+    0 0 14px rgba(255,106,30,.18) !important;
+}
+
+/* ---------- QUICK RESPONSES / BUTTONS ---------- */
+
+:root[data-visual-contexts~="halloween"] .chip,
+:root[data-visual-contexts~="halloween"] .expr,
+:root[data-visual-contexts~="halloween"] .expression,
+:root[data-visual-contexts~="halloween"] .icon-btn {
+  border-color:#7c396f !important;
+  background:
+    linear-gradient(180deg,#281027,#120713) !important;
+  color:#ead6e7 !important;
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease,
+    color .18s ease,
+    background .18s ease;
+}
+
+:root[data-visual-contexts~="halloween"] .chip:hover,
+:root[data-visual-contexts~="halloween"] .expr:hover,
+:root[data-visual-contexts~="halloween"] .expression:hover,
+:root[data-visual-contexts~="halloween"] .icon-btn:hover {
+  border-color:#ff8e31 !important;
+  color:#fff7e9 !important;
+  background:
+    linear-gradient(180deg,#3c172f,#1d0919) !important;
+  transform:translateY(-1px);
+  box-shadow:
+    0 0 8px rgba(255,132,40,.60),
+    0 0 18px rgba(190,65,255,.34) !important;
+}
+
+:root[data-visual-contexts~="halloween"] .expr.active,
+:root[data-visual-contexts~="halloween"] .icon-btn.toggle-on {
+  border-color:#ff922e !important;
+  color:#fff4dc !important;
+  background:
+    linear-gradient(180deg,#4a1a2d,#21101f) !important;
+  box-shadow:
+    0 0 7px rgba(255,142,43,.80),
+    0 0 22px rgba(202,63,255,.45),
+    inset 0 0 12px rgba(255,101,31,.10) !important;
+}
+
+/* Status dot becomes toxic green — deliberately dramatic. */
+:root[data-visual-contexts~="halloween"] .status {
+  color:#b7ff89 !important;
+  text-shadow:
+    0 0 6px rgba(139,255,78,.82),
+    0 0 14px rgba(119,255,60,.45);
+}
+
+/* ---------- COMPOSER ---------- */
+
+:root[data-visual-contexts~="halloween"] .composer {
+  border-top-color:#933d74 !important;
+  background:
+    linear-gradient(180deg,rgba(29,9,27,.98),rgba(7,3,9,.99)) !important;
+  box-shadow:
+    0 -5px 18px rgba(192,62,255,.14),
+    0 -12px 40px rgba(255,105,28,.06) !important;
+}
+
+:root[data-visual-contexts~="halloween"] .input-row input {
+  border-color:#7f3b6d !important;
+  background:#120712 !important;
+  color:#fff0dd !important;
+  box-shadow:
+    inset 0 0 25px rgba(163,46,174,.08),
+    0 0 0 rgba(0,0,0,0);
+}
+
+:root[data-visual-contexts~="halloween"] .input-row input::placeholder {
+  color:#a98ca9 !important;
+}
+
+:root[data-visual-contexts~="halloween"] .input-row input:focus {
+  border-color:#ff9033 !important;
+  box-shadow:
+    0 0 0 2px rgba(255,144,51,.13),
+    0 0 11px rgba(255,124,33,.32),
+    0 0 24px rgba(185,62,255,.21) !important;
+}
+
+/* ---------- SCROLLBARS ---------- */
+
+:root[data-visual-contexts~="halloween"] * {
+  scrollbar-color:#ad4b79 #100610;
+}
+
+:root[data-visual-contexts~="halloween"] *::-webkit-scrollbar {
+  width:10px;
+  height:10px;
+}
+
+:root[data-visual-contexts~="halloween"] *::-webkit-scrollbar-track {
+  background:#100610;
+}
+
+:root[data-visual-contexts~="halloween"] *::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(180deg,#ff8a2d,#a6438c 55%,#6d2cff);
+  border:2px solid #100610;
+  border-radius:999px;
+}
+
+/* ---------- ANIMATIONS ---------- */
+
+@keyframes halloweenAmbientPulse {
+  0%   { filter:saturate(1) brightness(.98); }
+  100% { filter:saturate(1.11) brightness(1.02); }
+}
+
+@keyframes halloweenGridDrift {
+  from { background-position:0 0,0 0,0 0; }
+  to   { background-position:30px 30px,-30px 30px,160px 80px; }
+}
+
+@keyframes halloweenFogBreath {
+  from { opacity:.62; transform:scale(1); }
+  to   { opacity:.92; transform:scale(1.025); }
+}
+
+@keyframes halloweenPortraitGlow {
+  from {
+    box-shadow:
+      0 0 0 2px rgba(203,66,255,.58),
+      0 0 16px rgba(255,125,24,.55),
+      0 0 35px rgba(182,55,255,.34),
+      inset 0 0 24px rgba(255,107,30,.10);
+  }
+  to {
+    box-shadow:
+      0 0 0 2px rgba(255,134,39,.78),
+      0 0 28px rgba(255,125,24,.84),
+      0 0 58px rgba(182,55,255,.55),
+      inset 0 0 35px rgba(255,107,30,.18);
+  }
+}
+
+@keyframes halloweenBatHover {
+  from { transform:translateY(0) rotate(-6deg); }
+  to   { transform:translateY(7px) rotate(8deg); }
+}
+
+@keyframes halloweenFloat {
+  0%,100% { transform:translateY(0); }
+  50%     { transform:translateY(-3px); }
+}
+
+@keyframes halloweenTitleFlicker {
+  0%,4%,7%,12%,100% { opacity:1; }
+  5%,8%             { opacity:.76; }
+  9%                { opacity:.92; }
+}
+
+/* Respect reduced-motion preferences while keeping the theme intact. */
+@media (prefers-reduced-motion:reduce) {
+  :root[data-visual-contexts~="halloween"] body,
+  :root[data-visual-contexts~="halloween"] body:before,
+  :root[data-visual-contexts~="halloween"] body:after,
+  :root[data-visual-contexts~="halloween"] .portrait-frame,
+  :root[data-visual-contexts~="halloween"] .portrait-frame:after,
+  :root[data-visual-contexts~="halloween"] .brand,
+  :root[data-visual-contexts~="halloween"] .brand:after {
+    animation:none !important;
+  }
+}

@@ -1,0 +1,4421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Jacey Cosmo — Companion Terminal v6.3.35 Contextual Interface Themes</title>
+<style>
+/* =========================================================
+   JACEY COMPANION FRAMEWORK v5.6 — EPISODE ENGINE CLEANUP
+   SECTION 1 — VISUAL SYSTEM / LAYOUT / THEMES
+   ========================================================= */
+:root{
+  --bg:#08070d;--panel:#10101a;--panel2:#151426;--ink:#f4efff;--muted:#9b95b5;
+  --violet:#a970ff;--blue:#477cff;--red:#d62952;--cyan:#66e8ff;--line:#38244f;
+  --glow:0 0 28px rgba(143,87,255,.28);--radius:22px;
+}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;display:grid;place-items:center;background:
+radial-gradient(circle at 20% 10%,rgba(112,55,180,.18),transparent 34%),
+radial-gradient(circle at 85% 80%,rgba(19,91,178,.14),transparent 32%),
+linear-gradient(135deg,#05050a,#0b0711 55%,#05070e);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:28px 28px;mask-image:linear-gradient(to bottom,black,transparent)}
+.terminal{width:min(1500px,96vw);height:min(920px,94vh);display:grid;grid-template-columns:clamp(320px,27vw,420px) minmax(0,1fr);border:1px solid #482357;border-radius:var(--radius);overflow:hidden;background:rgba(10,9,18,.91);box-shadow:0 30px 90px rgba(0,0,0,.62),var(--glow);position:relative}
+.terminal:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(110deg,transparent 0 45%,rgba(255,255,255,.035) 50%,transparent 55%);transform:translateX(-120%);animation:sweep 9s infinite}@keyframes sweep{60%,100%{transform:translateX(120%)}}
+.sidebar{position:relative;padding:clamp(16px,1.25vw,24px);background:linear-gradient(180deg,rgba(22,15,35,.98),rgba(10,10,20,.98));border-right:1px solid #32203f;display:flex;flex-direction:column;min-height:0}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:14px}.sigil{width:39px;height:39px;border-radius:12px;display:grid;place-items:center;background:conic-gradient(from 90deg,var(--violet),var(--blue),var(--red),var(--violet));box-shadow:0 0 22px rgba(169,112,255,.35);font-weight:900}.brand h1{font-size:15px;letter-spacing:.12em;margin:0}.brand small{color:var(--muted);letter-spacing:.18em;font-size:9px}
+.portrait-frame{position:relative;flex:1;min-height:280px;border:1px solid #4b2a61;border-radius:18px;overflow:hidden;background:#090811;box-shadow:inset 0 0 45px rgba(80,32,116,.25)}
+.portrait-frame:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0 3px,rgba(255,255,255,.02) 4px)}
+
+.portrait-frame.alias-blank{display:grid;place-items:center;min-height:330px;background:
+radial-gradient(circle at center,rgba(255,255,255,.04),transparent 48%),
+repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 5px)}
+.portrait-frame.alias-blank .portrait{display:none}
+.portrait-frame.alias-blank:before{content:attr(data-alias);font:700 34px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.16em;color:var(--violet);text-shadow:0 0 22px currentColor;opacity:.8}
+.portrait-frame.alias-blank:after{content:"PORTRAIT FILE // UNAVAILABLE";position:absolute;bottom:52px;font:600 10px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.17em;color:var(--muted)}
+.portrait-frame.alias-blank .status-tag{bottom:14px}
+.expressions.alias-hidden{visibility:hidden;pointer-events:none}
+.portrait{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transition:opacity .18s,transform .35s;transform:scale(1.02)}
+.portrait.switching{opacity:.18;transform:scale(1.06) translateX(3px);filter:hue-rotate(35deg)}
+.status-tag{position:absolute;left:12px;bottom:12px;z-index:3;padding:7px 10px;border:1px solid rgba(157,112,255,.55);border-radius:999px;background:rgba(8,7,14,.8);backdrop-filter:blur(8px);font:700 10px/1 ui-monospace,SFMono-Regular,monospace;letter-spacing:.09em;color:#d9c9ff}
+.expressions{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(54px,1fr));
+  gap:7px;
+  margin-top:12px;
+  max-height:118px;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-right:3px;
+  align-content:start;
+  scrollbar-gutter:stable;
+  overscroll-behavior:contain;
+}
+.expressions:empty{display:none}
+.expressions::-webkit-scrollbar{width:7px}
+.expressions::-webkit-scrollbar-track{
+  background:color-mix(in srgb,var(--panel) 82%,transparent);
+  border-radius:999px;
+}
+.expressions::-webkit-scrollbar-thumb{
+  background:color-mix(in srgb,var(--violet) 48%,var(--line));
+  border-radius:999px;
+}
+.expr{
+  min-width:0;
+  padding:8px 4px;
+  border:1px solid #342044;
+  background:#120f1d;
+  color:#bdb3d4;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:9px;
+  transition:.2s;
+}
+.expr:hover,.expr.active{
+  border-color:var(--violet);
+  color:white;
+  background:#251539;
+  box-shadow:0 0 14px rgba(169,112,255,.2);
+}
+.profile{margin-top:12px;display:flex;justify-content:space-between;align-items:end}.profile strong{font-size:18px}.profile span{display:block;color:var(--muted);font-size:11px}.online{font:700 9px ui-monospace,monospace;color:#7ef7c1}.online:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#7ef7c1;margin-right:6px;box-shadow:0 0 10px #7ef7c1}
+.chat{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0;overflow:hidden;background:linear-gradient(180deg,rgba(16,14,28,.95),rgba(9,9,16,.98));min-width:0}.chat-head{height:clamp(64px,5vw,76px);padding:0 clamp(18px,1.6vw,28px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2e203d}.chat-head b{letter-spacing:.08em;font-size:13px}.chat-head small{display:block;color:var(--muted);font-family:ui-monospace,monospace;font-size:9px;margin-top:3px}.head-actions{display:flex;gap:8px}.icon-btn{border:1px solid #3b2850;background:#151020;color:#cfc3e9;width:34px;height:34px;border-radius:10px;cursor:pointer}.icon-btn:hover{border-color:var(--violet);color:#fff}.icon-btn.toggle-on{border-color:var(--cyan);color:#fff;box-shadow:0 0 14px rgba(102,232,255,.22);background:#13212b}.icon-btn.toggle-on:after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#7ef7c1;box-shadow:0 0 8px #7ef7c1;transform:translate(4px,-10px)}.icon-btn{position:relative}
+.log{padding:clamp(18px,1.7vw,30px);min-height:0;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;overscroll-behavior:contain;scrollbar-gutter:stable}.message{display:flex;gap:10px;margin:0 0 17px;animation:rise .28s ease both}@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.message.user{justify-content:flex-end}.bubble{max-width:min(78%,760px);padding:clamp(12px,.9vw,16px) clamp(14px,1vw,18px);border-radius:16px;font-size:clamp(14px,.8vw,16px);line-height:1.5;white-space:pre-wrap}.jace .bubble{background:linear-gradient(135deg,#201431,#15152a);border:1px solid #4a2b68;border-top-left-radius:5px}.user .bubble{background:linear-gradient(135deg,#263b78,#34235f);border:1px solid #5267ad;border-top-right-radius:5px}.name{font:800 9px ui-monospace,monospace;letter-spacing:.12em;color:#bd9cff;margin:0 0 5px}.stamp{font:8px ui-monospace,monospace;color:#716b82;margin-top:6px}.typing{display:inline-flex;gap:4px;align-items:center}.typing i{width:5px;height:5px;border-radius:50%;background:#b990ff;animation:dot 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}@keyframes dot{50%{transform:translateY(-4px);opacity:.45}}
+.composer{padding:clamp(14px,1.15vw,20px) clamp(18px,1.5vw,26px) clamp(18px,1.5vw,26px);border-top:1px solid #2d203a;background:rgba(8,8,15,.82)}.quick{display:flex;gap:7px;overflow:auto;padding-bottom:10px}.chip{
+  white-space:nowrap;
+  border:1px solid #3c2851;
+  background:#161120;
+  color:#bfb5d4;
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:clamp(11px,.68vw,12px);
+  line-height:1.2;
+  cursor:pointer;
+}.chip:hover{border-color:#8e61cc;color:#fff}.input-row{display:grid;grid-template-columns:1fr 46px;gap:10px}.input-row input{min-width:0;padding:13px 15px;border-radius:14px;border:1px solid #3b2850;outline:none;background:#0e0c17;color:white;font:14px inherit}.input-row input:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(169,112,255,.12)}.send{border:0;border-radius:14px;color:white;font-size:18px;cursor:pointer;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 8px 24px rgba(88,82,255,.25)}
+.toast{position:absolute;right:18px;top:76px;z-index:12;max-width:min(320px,calc(100% - 36px));padding:10px 13px;border:1px solid #4f3970;border-radius:12px;background:rgba(15,12,25,.94);box-shadow:0 12px 35px rgba(0,0,0,.35),0 0 18px rgba(169,112,255,.18);font:700 10px/1.35 ui-monospace,monospace;letter-spacing:.08em;color:#e9ddff;opacity:0;transform:translateY(-8px);pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:none}.dossier{position:absolute;inset:0 0 0 auto;width:min(430px,100%);z-index:9;background:rgba(10,8,17,.97);border-left:1px solid #59306e;backdrop-filter:blur(16px);padding:24px;transform:translateX(101%);transition:.35s;overflow:auto}.dossier.open{transform:none}.dossier h2{font-size:16px;letter-spacing:.12em}.codebox{padding:14px;border:1px solid #3c2850;border-radius:13px;background:#0c0b13;font:11px/1.7 ui-monospace,monospace;color:#a99bc3}.redacted{background:#e7dff4;color:#e7dff4;border-radius:2px;padding:0 3px}.warning{color:#ff6b8c}.close{float:right}
+.glitch{animation:glitch .22s linear 2}@keyframes glitch{25%{transform:translateX(2px);text-shadow:-2px 0 #5eeaff,2px 0 #ff3a69}50%{transform:translateX(-2px)}75%{transform:none;text-shadow:2px 0 #5eeaff,-2px 0 #ff3a69}}
+
+.identity-overlay{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:rgba(4,5,9,.94);backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .35s}.identity-overlay.active{opacity:1;pointer-events:auto}.identity-card{width:min(520px,82%);padding:28px;border:1px solid var(--violet);border-radius:18px;background:linear-gradient(180deg,var(--panel2),var(--panel));box-shadow:0 0 45px color-mix(in srgb,var(--violet) 28%,transparent);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.identity-kicker{font-size:10px;letter-spacing:.2em;color:var(--muted)}.identity-name{margin:14px 0 8px;font-size:26px;letter-spacing:.12em;color:var(--ink)}.identity-step{min-height:22px;color:var(--cyan);font-size:12px}.identity-bar{height:7px;margin:18px 0;border:1px solid var(--line);border-radius:999px;overflow:hidden}.identity-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:width .3s}.identity-belief{font:italic 12px/1.55 system-ui;color:var(--muted);opacity:0;transition:opacity .3s}.identity-belief.show{opacity:1}.terminal{transition:background .8s,border-color .8s,box-shadow .8s}.sidebar,.chat,.chat-head,.composer,.portrait-frame,.bubble,.chip,.icon-btn,.input-row input,.dossier,.toast{transition:background .8s,border-color .8s,color .5s,box-shadow .8s}.terminal.switching-identity{filter:saturate(.75) brightness(.8)}
+
+/* Full-interface identity theming */
+html,body{
+  transition:background 1.15s ease,color .75s ease;
+}
+body{
+  background:
+    radial-gradient(circle at 18% 8%,color-mix(in srgb,var(--violet) 24%,transparent),transparent 36%),
+    radial-gradient(circle at 86% 82%,color-mix(in srgb,var(--blue) 20%,transparent),transparent 34%),
+    linear-gradient(135deg,color-mix(in srgb,var(--bg) 94%,black),var(--bg) 55%,color-mix(in srgb,var(--panel) 86%,black));
+}
+body:before{
+  background-image:
+    linear-gradient(color-mix(in srgb,var(--ink) 3%,transparent) 1px,transparent 1px),
+    linear-gradient(90deg,color-mix(in srgb,var(--ink) 3%,transparent) 1px,transparent 1px);
+}
+.terminal{
+  border-color:color-mix(in srgb,var(--violet) 48%,var(--line));
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  box-shadow:0 30px 90px rgba(0,0,0,.62),0 0 34px color-mix(in srgb,var(--violet) 30%,transparent);
+}
+.sidebar{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--panel2) 96%,transparent),color-mix(in srgb,var(--bg) 97%,transparent));
+  border-right-color:var(--line);
+}
+.sigil{
+  background:conic-gradient(from 90deg,var(--violet),var(--blue),var(--red),var(--violet));
+  box-shadow:0 0 24px color-mix(in srgb,var(--violet) 42%,transparent);
+}
+.portrait-frame{
+  border-color:color-mix(in srgb,var(--violet) 48%,var(--line));
+  background:color-mix(in srgb,var(--bg) 92%,black);
+  box-shadow:inset 0 0 50px color-mix(in srgb,var(--violet) 22%,transparent);
+}
+.status-tag{
+  border-color:color-mix(in srgb,var(--violet) 62%,transparent);
+  background:color-mix(in srgb,var(--bg) 80%,transparent);
+  color:color-mix(in srgb,var(--ink) 78%,var(--violet));
+}
+.expr{
+  border-color:var(--line);
+  background:color-mix(in srgb,var(--panel) 91%,black);
+  color:var(--muted);
+}
+.expr:hover,.expr.active{
+  border-color:var(--violet);
+  background:color-mix(in srgb,var(--panel2) 72%,var(--violet));
+  box-shadow:0 0 16px color-mix(in srgb,var(--violet) 26%,transparent);
+}
+.chat{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--panel) 95%,transparent),color-mix(in srgb,var(--bg) 98%,transparent));
+}
+.chat-head,.composer{border-color:var(--line)}
+.composer{background:color-mix(in srgb,var(--bg) 84%,transparent)}
+.icon-btn,.chip,.input-row input{
+  border-color:var(--line);
+  background:color-mix(in srgb,var(--panel) 90%,black);
+  color:color-mix(in srgb,var(--ink) 72%,var(--muted));
+}
+.icon-btn:hover,.chip:hover{border-color:var(--violet);color:var(--ink)}
+.icon-btn.toggle-on{
+  border-color:var(--cyan);
+  background:color-mix(in srgb,var(--panel2) 72%,var(--cyan));
+  box-shadow:0 0 15px color-mix(in srgb,var(--cyan) 26%,transparent);
+}
+.jace .bubble{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--panel2) 72%,var(--violet)),var(--panel2));
+  border-color:color-mix(in srgb,var(--violet) 50%,var(--line));
+}
+.user .bubble{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--panel2) 65%,var(--blue)),color-mix(in srgb,var(--panel) 74%,var(--violet)));
+  border-color:color-mix(in srgb,var(--blue) 58%,var(--line));
+}
+.name{color:color-mix(in srgb,var(--violet) 75%,var(--ink))}
+.typing i{background:color-mix(in srgb,var(--violet) 72%,var(--cyan))}
+.input-row input:focus{
+  border-color:var(--violet);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 16%,transparent);
+}
+.send{
+  background:linear-gradient(135deg,var(--violet),var(--blue));
+  box-shadow:0 8px 25px color-mix(in srgb,var(--violet) 28%,transparent);
+}
+.toast{
+  border-color:color-mix(in srgb,var(--violet) 52%,var(--line));
+  background:color-mix(in srgb,var(--panel) 94%,transparent);
+  box-shadow:0 12px 35px rgba(0,0,0,.35),0 0 20px color-mix(in srgb,var(--violet) 23%,transparent);
+  color:var(--ink);
+}
+.dossier{
+  background:color-mix(in srgb,var(--bg) 97%,transparent);
+  border-left-color:color-mix(in srgb,var(--violet) 55%,var(--line));
+}
+.codebox{
+  border-color:var(--line);
+  background:color-mix(in srgb,var(--bg) 88%,black);
+  color:color-mix(in srgb,var(--ink) 70%,var(--muted));
+}
+.redacted{background:var(--ink);color:var(--ink)}
+.warning{color:var(--red)}
+.identity-overlay{
+  background:color-mix(in srgb,var(--bg) 94%,transparent);
+  transition:opacity .65s ease,background 1.05s ease;
+}
+.identity-card{
+  border-color:var(--violet);
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
+  box-shadow:0 0 54px color-mix(in srgb,var(--violet) 34%,transparent);
+}
+.identity-bar{border-color:var(--line)}
+.identity-bar i{background:linear-gradient(90deg,var(--violet),var(--cyan))}
+.terminal,.sidebar,.chat,.chat-head,.composer,.portrait-frame,.bubble,.chip,.icon-btn,.input-row input,.dossier,.toast,.identity-card{
+  transition:background 1.15s ease,border-color 1.15s ease,color .75s ease,box-shadow 1.15s ease,filter .7s ease;
+}
+
+/* Dedicated Cipher Mode */
+.mode-tabs{display:flex;gap:8px;align-items:center}
+.mode-tab{
+  border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 90%,black);
+  color:var(--muted);border-radius:999px;padding:7px 12px;cursor:pointer;
+  font:700 10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em;
+  transition:.25s ease
+}
+.mode-tab:hover,.mode-tab.active{
+  color:var(--ink);border-color:var(--violet);
+  background:color-mix(in srgb,var(--panel2) 72%,var(--violet));
+  box-shadow:0 0 14px color-mix(in srgb,var(--violet) 22%,transparent)
+}
+.cipher-mode{
+  display:none;
+  min-height:0;
+  overflow:auto;
+  padding:clamp(16px,1.5vw,28px);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--panel) 96%,transparent),color-mix(in srgb,var(--bg) 98%,transparent))
+}
+.cipher-mode.active{display:block}
+.cipher-shell{
+  width:100%;
+  max-width:none;
+  margin:0;
+  display:grid;
+  gap:clamp(14px,1.1vw,20px);
+}
+.cipher-intro,.cipher-card,.cipher-result{
+  border:1px solid var(--line);border-radius:16px;
+  background:color-mix(in srgb,var(--panel2) 88%,black);
+  box-shadow:inset 0 0 30px color-mix(in srgb,var(--violet) 8%,transparent)
+}
+.cipher-intro{padding:16px}
+.cipher-intro h3{margin:0 0 7px;color:var(--ink);font-size:15px}
+.cipher-intro p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+.cipher-card{padding:16px;display:grid;gap:12px}
+.cipher-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(260px,1fr));
+  gap:clamp(11px,1vw,18px);
+}
+.cipher-field{display:grid;gap:6px}
+.cipher-field.full{grid-column:1/-1}
+.cipher-field label{
+  color:color-mix(in srgb,var(--violet) 70%,var(--ink));
+  font:700 10px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em
+}
+.cipher-field select,.cipher-field input,.cipher-field textarea{
+  width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:11px;
+  background:color-mix(in srgb,var(--bg) 90%,black);color:var(--ink);
+  padding:10px 11px;font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;
+  outline:none;transition:.25s ease
+}
+.cipher-field textarea{min-height:120px;resize:vertical}
+.cipher-field select:focus,.cipher-field input:focus,.cipher-field textarea:focus{
+  border-color:var(--violet);box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 14%,transparent)
+}
+.cipher-actions{display:flex;gap:9px;flex-wrap:wrap}
+.cipher-run,.cipher-clear{
+  border:1px solid var(--line);border-radius:11px;padding:10px 14px;cursor:pointer;
+  font:800 10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em
+}
+.cipher-run{color:white;background:linear-gradient(135deg,var(--violet),var(--blue));border-color:transparent}
+.cipher-clear{color:var(--muted);background:color-mix(in srgb,var(--panel) 90%,black)}
+.cipher-result{padding:16px;display:none}
+.cipher-result.show{display:block}
+.cipher-result.error{border-color:var(--red)}
+.cipher-result.success{border-color:color-mix(in srgb,var(--cyan) 60%,var(--line))}
+.cipher-result-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.cipher-result-title{font:800 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.13em;color:var(--ink)}
+.cipher-result-expression{font-size:10px;color:var(--muted)}
+.cipher-result pre{
+  margin:0;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink);
+  font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace
+}
+.cipher-note{font-size:11px;color:var(--muted);line-height:1.45}
+.cipher-duty-wrap.hidden,.cipher-version-wrap.hidden{display:none}
+@media(max-width:700px){
+  .cipher-grid{grid-template-columns:1fr}
+  .cipher-field.full{grid-column:auto}
+  .mode-tab{padding:7px 9px;font-size:9px}
+}
+
+/* Cipher mode layout fix: keep the shared header visible */
+.chat.cipher-active{
+  grid-template-rows:auto minmax(0,1fr);
+}
+.chat.cipher-active .log,
+.chat.cipher-active .composer{
+  display:none;
+}
+.chat .cipher-mode{
+  min-height:0;
+  overflow:auto;
+}
+
+.mode-tabs,.mode-tab{position:relative;z-index:20;pointer-events:auto}
+.chat-head{position:relative;z-index:15}
+
+/* Classified dossier overlay fix */
+.dossier{
+  z-index:25;
+  box-sizing:border-box;
+  padding:18px 24px 24px;
+}
+.dossier .close{
+  position:sticky;
+  top:0;
+  z-index:3;
+  float:none;
+  display:block;
+  margin:0 0 8px auto;
+  background:color-mix(in srgb,var(--panel) 94%,black);
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
+}
+.dossier.open{
+  pointer-events:auto;
+}
+
+/* Restore v1-style dossier slide animation */
+.dossier{
+  visibility:hidden;
+  opacity:0;
+  transform:translateX(105%);
+  transition:
+    transform .42s cubic-bezier(.22,.8,.26,1),
+    opacity .28s ease,
+    visibility 0s linear .42s;
+  will-change:transform,opacity;
+}
+.dossier.open{
+  visibility:visible;
+  opacity:1;
+  transform:translateX(0);
+  transition:
+    transform .42s cubic-bezier(.22,.8,.26,1),
+    opacity .28s ease,
+    visibility 0s linear 0s;
+}
+@media (prefers-reduced-motion: reduce){
+  .dossier,.dossier.open{
+    transition:opacity .16s ease,visibility 0s linear 0s;
+    transform:none;
+  }
+}
+
+/* Phase 1: Notion embed composer reliability */
+.composer,.input-row,.input-row input,.send{
+  position:relative;
+  z-index:30;
+  pointer-events:auto;
+}
+.input-row input{
+  touch-action:manipulation;
+  -webkit-user-select:text;
+  user-select:text;
+}
+.send{
+  touch-action:manipulation;
+  cursor:pointer;
+}
+
+/* Keep the classified dossier above the chat composer */
+.dossier{
+  z-index:120;
+}
+.dossier.open{
+  z-index:120;
+}
+.dossier .close{
+  z-index:123;
+}
+.composer,.input-row,.input-row input,.send{
+  z-index:30;
+}
+
+/* Episode Overlay */
+.episode-overlay-label{
+  font:800 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.14em;
+  color:var(--cyan)
+}
+.composer.episode-active .input-row input{
+  border-color:color-mix(in srgb,var(--cyan) 42%,var(--line));
+}
+
+.quick{
+  min-height:34px;
+}
+
+/* Fixed-size episode overlay */
+.composer{
+  position:relative;
+  overflow:hidden;
+}
+.episode-overlay{
+  position:absolute;
+  inset:0;
+  z-index:60;
+  box-sizing:border-box;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr);
+  gap:9px;
+  padding:10px 12px 12px;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb,var(--panel2) 96%,var(--violet)),
+      color-mix(in srgb,var(--bg) 98%,black));
+  border-top:1px solid color-mix(in srgb,var(--cyan) 45%,var(--line));
+  transform:translateY(105%);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:
+    transform .38s cubic-bezier(.22,.8,.26,1),
+    opacity .24s ease,
+    visibility 0s linear .38s;
+}
+.episode-overlay.active{
+  transform:translateY(0);
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transition:
+    transform .38s cubic-bezier(.22,.8,.26,1),
+    opacity .24s ease,
+    visibility 0s linear 0s;
+}
+.episode-options{
+  min-height:0;
+  overflow:auto;
+  display:flex;
+  align-content:flex-start;
+  flex-wrap:wrap;
+  gap:8px;
+  padding-right:2px;
+}
+.episode-choice{
+  border:1px solid color-mix(in srgb,var(--cyan) 45%,var(--line));
+  border-radius:999px;
+  background:color-mix(in srgb,var(--panel2) 78%,var(--violet));
+  color:var(--ink);
+  padding:10px 14px;
+  cursor:pointer;
+  font:700 clamp(11px,.72vw,12px)/1.25 ui-monospace,SFMono-Regular,Consolas,monospace;
+  transition:.2s ease;
+}
+.episode-choice:hover{
+  border-color:var(--cyan);
+  box-shadow:0 0 15px color-mix(in srgb,var(--cyan) 22%,transparent);
+}
+.composer.episode-active .quick,
+.composer.episode-active .input-row{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+@media (prefers-reduced-motion: reduce){
+  .episode-overlay,
+  .episode-overlay.active{
+    transition:opacity .16s ease,visibility 0s linear 0s;
+    transform:none;
+  }
+}
+
+/* Episode overlay composer-matched layout */
+.episode-overlay{
+  padding:clamp(14px,1.15vw,20px) clamp(12px,1vw,18px);
+  display:grid;
+  grid-template-rows:minmax(0,1fr) auto;
+  gap:clamp(12px,1vw,18px);
+  align-content:stretch;
+  overflow:hidden;
+}
+.episode-options{
+  min-height:34px;
+  height:100%;
+  overflow:auto;
+  display:flex;
+  flex-wrap:wrap;
+  align-content:flex-start;
+  align-items:flex-start;
+  gap:8px;
+  padding:0 2px 0 0;
+}
+.episode-message-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:9px;
+  align-items:stretch;
+}
+.episode-title-field{
+  min-width:0;
+  min-height:42px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:3px;
+  border:1px solid color-mix(in srgb,var(--cyan) 42%,var(--line));
+  border-radius:11px;
+  background:color-mix(in srgb,var(--bg) 90%,black);
+  padding:9px 11px;
+  overflow:hidden;
+}
+.episode-title-field strong{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--ink);
+  font:800 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.08em;
+}
+.episode-message-row>button{
+  min-height:42px;
+  align-self:stretch;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:color-mix(in srgb,var(--panel) 90%,black);
+  color:var(--muted);
+  padding:0 13px;
+  cursor:pointer;
+  font:800 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.09em;
+}
+.episode-message-row>button:hover{
+  color:var(--ink);
+  border-color:var(--cyan);
+}
+
+/* Episode choices: match normal quick reply hover */
+.episode-choice{
+  transform:none !important;
+  transition:border-color .18s ease,
+             background .18s ease,
+             color .18s ease,
+             box-shadow .18s ease !important;
+}
+.episode-choice:hover,
+.episode-choice:focus-visible{
+  transform:none !important;
+}
+
+/* Visual-novel episode choice presentation */
+.episode-choice{
+  opacity:0;
+  transform:scale(.975);
+  animation:episodeChoiceIn .16s ease forwards;
+}
+.episode-choice::before{
+  content:"▶";
+  margin-right:7px;
+  color:var(--cyan);
+  font-size:.82em;
+}
+@keyframes episodeChoiceIn{
+  from{opacity:0;transform:scale(.975)}
+  to{opacity:1;transform:scale(1)}
+}
+@media (prefers-reduced-motion: reduce){
+  .episode-choice{
+    opacity:1;
+    transform:none;
+    animation:none;
+  }
+}
+
+</style>
+
+<style id="episode-engine-phase1-styles">
+/* =========================================================
+   COMPANION ENGINE v5 — PHASE 1
+   Generic episode discovery / offer / branching engine
+   ========================================================= */
+.episode-title-field .episode-overlay-label::after{content:""}
+.episode-choice.episode-decline{
+  border-color:color-mix(in srgb,var(--red) 48%,var(--line));
+  background:color-mix(in srgb,var(--panel2) 82%,var(--red));
+}
+.episode-choice.episode-decline::before{content:"×"}
+.episode-choice.episode-accept::before{content:"▶"}
+.episode-choice:disabled{opacity:.55;cursor:default}
+</style>
+<style id="unlockable-choice-styles-phase4-6">
+.episode-options{
+  overflow-x:auto;
+  overflow-y:auto;
+  scrollbar-gutter:stable;
+}
+.episode-choice.locked{
+  opacity:.48;
+  filter:saturate(.35);
+  cursor:not-allowed;
+  border-color:color-mix(in srgb,var(--muted) 45%,var(--line));
+  background:color-mix(in srgb,var(--panel) 92%,black);
+  color:var(--muted);
+  box-shadow:none!important;
+}
+.episode-choice.locked::before{
+  content:"🔒";
+  color:var(--muted);
+}
+.episode-choice.locked:hover,
+.episode-choice.locked:focus-visible{
+  border-color:color-mix(in srgb,var(--muted) 45%,var(--line));
+  color:var(--muted);
+  box-shadow:none!important;
+}
+</style>
+
+<style id="horizontal-choice-scroll-fix">
+/* Horizontal choice scrolling in normal chat and the episode overlay */
+.quick{
+  display:flex;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-gutter:auto;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.quick .chip{
+  flex:0 0 auto;
+}
+.episode-options{
+  display:flex;
+  flex-wrap:nowrap;
+  align-content:initial;
+  align-items:center;
+  align-self:center;
+  overflow-x:auto;
+  overflow-y:hidden;
+  width:100%;
+  height:auto;
+  min-height:42px;
+  padding:clamp(8px,.8vw,14px) 2px;
+  scrollbar-gutter:auto;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.episode-choice{
+  flex:0 0 auto;
+  white-space:nowrap;
+}
+@media(max-width:760px){
+  .quick{display:flex;}
+}
+</style>
+
+<style id="content-library-styles">
+.library-panel{position:absolute;inset:0 0 0 auto;width:min(460px,100%);z-index:130;box-sizing:border-box;padding:18px 20px 24px;background:color-mix(in srgb,var(--bg) 97%,transparent);border-left:1px solid color-mix(in srgb,var(--violet) 55%,var(--line));backdrop-filter:blur(16px);visibility:hidden;opacity:0;transform:translateX(105%);transition:transform .38s cubic-bezier(.22,.8,.26,1),opacity .24s ease,visibility 0s linear .38s;overflow:auto}
+.library-panel.open{visibility:visible;opacity:1;transform:translateX(0);transition:transform .38s cubic-bezier(.22,.8,.26,1),opacity .24s ease,visibility 0s linear 0s}
+.library-head{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:-18px;z-index:3;padding:18px 0 12px;background:color-mix(in srgb,var(--bg) 97%,transparent)}
+.library-head h2{margin:0;font-size:16px;letter-spacing:.12em}.library-summary{color:var(--muted);font:700 9px/1.5 ui-monospace,monospace;letter-spacing:.08em;margin-bottom:16px}
+.library-section{margin-top:18px}.library-section h3{margin:0 0 9px;color:var(--cyan);font:800 10px/1 ui-monospace,monospace;letter-spacing:.14em}.library-empty{padding:12px;border:1px dashed var(--line);border-radius:11px;color:var(--muted);font-size:11px}
+.library-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 12px;margin-bottom:8px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--panel) 91%,black)}
+.library-item-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink);font:800 11px/1.25 ui-monospace,monospace}.library-item-meta{margin-top:4px;color:var(--muted);font:700 8px/1.25 ui-monospace,monospace;letter-spacing:.08em}.library-actions{display:flex;align-items:center;gap:7px}.library-toggle{width:38px;height:22px;padding:0;border:1px solid var(--line);border-radius:999px;background:var(--panel);cursor:pointer;position:relative}.library-toggle::after{content:"";position:absolute;width:14px;height:14px;left:3px;top:3px;border-radius:50%;background:var(--muted);transition:.18s}.library-toggle.on{border-color:var(--cyan);background:color-mix(in srgb,var(--panel2) 72%,var(--cyan))}.library-toggle.on::after{left:19px;background:#7ef7c1;box-shadow:0 0 8px #7ef7c1}.library-delete{border:1px solid color-mix(in srgb,var(--red) 55%,var(--line));border-radius:8px;background:color-mix(in srgb,var(--panel) 90%,black);color:#ff8aa3;padding:6px 8px;cursor:pointer;font:800 8px/1 ui-monospace,monospace}.library-delete:hover{border-color:var(--red);color:#fff}.library-source{color:var(--violet)}
+@media(max-width:760px){.library-panel{width:100%;padding-left:16px;padding-right:16px}}
+@media(prefers-reduced-motion:reduce){.library-panel,.library-panel.open{transition:opacity .16s ease,visibility 0s linear 0s;transform:none}}
+</style>
+
+
+<style id="device-layouts">
+/* =========================================================
+   DEVICE LAYOUTS
+   Desktop remains the base stylesheet above.
+   Tablet and phone override presentation only.
+   ========================================================= */
+
+.mobile-avatar-slot{display:none}
+
+/* TABLET ONLY */
+@media
+  (min-width:701px)
+  and (max-width:1400px)
+  and (orientation:landscape)
+  and (pointer:coarse)
+  and (hover:none){
+  html{
+    width:100%;
+    height:100%;
+    min-height:0;
+    overflow:hidden;
+  }
+
+  body{
+    width:100%;
+    height:var(--tablet-visible-height,100svh);
+    min-height:0;
+    overflow:hidden;
+    padding:
+      env(safe-area-inset-top)
+      max(12px,env(safe-area-inset-right))
+      env(safe-area-inset-bottom)
+      max(12px,env(safe-area-inset-left));
+    place-items:center;
+  }
+
+  .terminal{
+    width:min(1180px,94vw);
+    height:calc(var(--tablet-visible-height,100svh) - 16px);
+    max-width:1180px;
+    max-height:calc(var(--tablet-visible-height,100svh) - 16px);
+    min-height:0;
+    margin:8px auto;
+    grid-template-columns:clamp(250px,25vw,300px) minmax(0,1fr);
+    border-radius:18px;
+    border-left:1px solid color-mix(in srgb,var(--violet) 48%,var(--line));
+    border-right:1px solid color-mix(in srgb,var(--violet) 48%,var(--line));
+  }
+
+  .sidebar{
+    padding:14px;
+  }
+
+  .portrait-frame{
+    min-height:210px;
+  }
+
+  .expressions{
+    grid-template-columns:repeat(auto-fit,minmax(48px,1fr));
+    max-height:104px;
+  }
+
+  .chat-head{
+    min-height:64px;
+    height:auto;
+    padding:8px 14px;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  .channel-info{
+    min-width:180px;
+    flex:1 1 auto;
+  }
+
+  .mode-tabs{
+    order:3;
+    width:100%;
+    justify-content:center;
+  }
+
+  .mode-tab{
+    padding:7px 10px;
+    letter-spacing:.08em;
+  }
+
+  .head-actions{
+    margin-left:auto;
+    gap:6px;
+    flex-wrap:nowrap;
+  }
+
+  .icon-btn{
+    width:32px;
+    height:32px;
+  }
+
+  .log{
+    padding:16px 14px;
+  }
+
+  .bubble{
+    max-width:min(88%,760px);
+    font-size:14px;
+  }
+
+  .composer{
+    padding:12px 14px 14px;
+  }
+
+  .cipher-mode{
+    padding:16px;
+  }
+
+  .cipher-grid{
+    grid-template-columns:1fr;
+  }
+
+  .cipher-field.full{
+    grid-column:auto;
+  }
+}
+
+
+
+/* TABLET PORTRAIT — enlarged phone-style presentation */
+@media
+  (min-width:701px)
+  and (max-width:1100px)
+  and (orientation:portrait)
+  and (pointer:coarse)
+  and (hover:none){
+
+  html,
+  body{
+    width:100%;
+    height:100%;
+    min-height:0;
+    overflow:hidden;
+  }
+
+  body{
+    height:var(--tablet-visible-height,100svh);
+    min-height:0;
+    padding:
+      env(safe-area-inset-top)
+      env(safe-area-inset-right)
+      env(safe-area-inset-bottom)
+      env(safe-area-inset-left);
+    place-items:stretch;
+  }
+
+  .terminal{
+    width:100%;
+    height:100%;
+    max-width:none;
+    max-height:100%;
+    min-height:0;
+    display:block;
+    border:0;
+    border-radius:0;
+  }
+
+  .sidebar{
+    display:none;
+  }
+
+  .chat{
+    width:100%;
+    height:100%;
+    min-height:0;
+  }
+
+  .chat-head{
+    min-height:0;
+    height:auto;
+    padding:12px 14px;
+    gap:10px 14px;
+    display:grid;
+    grid-template-columns:minmax(82px,auto) minmax(0,1fr);
+    grid-template-areas:
+      "identity modes"
+      "identity tools";
+    align-items:center;
+  }
+
+  .channel-info{
+    grid-area:identity;
+    display:flex;
+    align-items:center;
+    min-width:0;
+  }
+
+  .channel-copy{
+    display:none;
+  }
+
+  .mobile-avatar-slot{
+    display:block;
+    width:82px;
+    height:82px;
+  }
+
+  .mobile-avatar-slot .portrait-frame{
+    width:82px;
+    height:82px;
+    min-height:82px;
+    border-radius:50%;
+    overflow:hidden;
+    border-width:1px;
+    box-shadow:0 0 18px color-mix(in srgb,var(--violet) 28%,transparent);
+  }
+
+  .mobile-avatar-slot .portrait-frame:before{
+    border-radius:50%;
+  }
+
+  .mobile-avatar-slot .portrait{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center top;
+    transform:scale(1.04);
+  }
+
+  .mobile-avatar-slot .status-tag{
+    display:none;
+  }
+
+  .mobile-avatar-slot .portrait-frame.alias-blank{
+    display:grid;
+    min-height:82px;
+    place-items:center;
+  }
+
+  .mobile-avatar-slot .portrait-frame.alias-blank:before{
+    content:attr(data-alias);
+    position:static;
+    font:700 15px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+    letter-spacing:.08em;
+  }
+
+  .mobile-avatar-slot .portrait-frame.alias-blank:after{
+    display:none;
+  }
+
+  .mode-tabs{
+    grid-area:modes;
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    min-width:0;
+  }
+
+  .mode-tab{
+    padding:9px 13px;
+    font-size:10px;
+    letter-spacing:.08em;
+  }
+
+  .head-actions{
+    grid-area:tools;
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 0 5px;
+    scrollbar-gutter:auto;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .head-actions .icon-btn{
+    display:inline-grid !important;
+    flex:0 0 38px;
+    width:38px;
+    height:38px;
+    place-items:center;
+    border-radius:10px;
+  }
+
+  .toast{
+    top:144px;
+    left:14px;
+    right:14px;
+    max-width:none;
+    z-index:110;
+  }
+
+  .log{
+    padding:18px 14px;
+  }
+
+  .bubble{
+    max-width:94%;
+    padding:12px 14px;
+    font-size:14px;
+    line-height:1.48;
+  }
+
+  .composer{
+    padding:12px 14px 14px;
+  }
+
+  .quick{
+    gap:7px;
+    padding-bottom:10px;
+  }
+
+  .chip{
+    padding:9px 12px;
+    font-size:11px;
+  }
+
+  .input-row{
+    grid-template-columns:minmax(0,1fr) 46px;
+    gap:9px;
+  }
+
+  .input-row input{
+    padding:13px 14px;
+    font-size:14px;
+  }
+
+  .episode-overlay{
+    padding:12px 14px;
+    gap:11px;
+  }
+
+  .episode-options{
+    min-height:44px;
+    padding:8px 2px;
+  }
+
+  .episode-choice{
+    padding:10px 13px;
+    font-size:11px;
+  }
+
+  .cipher-mode{
+    padding:14px;
+  }
+
+  .cipher-grid{
+    grid-template-columns:1fr;
+  }
+
+  .cipher-field.full{
+    grid-column:auto;
+  }
+
+  .library-panel,
+  .dossier{
+    width:100%;
+    padding-left:18px;
+    padding-right:18px;
+  }
+}
+
+/* PHONE ONLY */
+@media (max-width:700px){
+  html{
+    width:100%;
+    height:100%;
+    min-height:-webkit-fill-available;
+    overflow:hidden;
+  }
+
+  body{
+    width:100%;
+    height:100dvh;
+    min-height:-webkit-fill-available;
+    overflow:hidden;
+    padding:
+      calc(env(safe-area-inset-top) + 2px)
+      env(safe-area-inset-right)
+      calc(env(safe-area-inset-bottom) + 2px)
+      env(safe-area-inset-left);
+    place-items:stretch;
+  }
+
+  .terminal{
+    width:100%;
+    height:100%;
+    max-width:none;
+    max-height:100%;
+    min-height:0;
+    display:block;
+    border:0;
+    border-radius:0;
+  }
+
+  .sidebar{
+    display:none;
+  }
+
+  .chat{
+    width:100%;
+    height:100%;
+    min-height:0;
+  }
+
+  .chat-head{
+    min-height:0;
+    height:auto;
+    padding:9px;
+    gap:7px 9px;
+    display:grid;
+    grid-template-columns:minmax(62px,auto) minmax(0,1fr);
+    grid-template-areas:
+      "identity modes"
+      "identity tools";
+    align-items:center;
+  }
+
+  .channel-info{
+    grid-area:identity;
+    display:flex;
+    align-items:center;
+    gap:0;
+    min-width:0;
+  }
+
+  .channel-copy{
+    display:none;
+  }
+
+  .mobile-avatar-slot{
+    display:block;
+    width:62px;
+    height:62px;
+  }
+
+  .mobile-avatar-slot .portrait-frame{
+    width:62px;
+    height:62px;
+    min-height:62px;
+    border-radius:50%;
+    overflow:hidden;
+    border-width:1px;
+    box-shadow:0 0 15px color-mix(in srgb,var(--violet) 24%,transparent);
+  }
+
+  .mobile-avatar-slot .portrait-frame:before{
+    border-radius:50%;
+  }
+
+  .mobile-avatar-slot .portrait{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center top;
+    transform:scale(1.05);
+  }
+
+  .mobile-avatar-slot .status-tag{
+    display:none;
+  }
+
+  .mobile-avatar-slot .portrait-frame.alias-blank{
+    display:grid;
+    min-height:62px;
+    place-items:center;
+  }
+
+  .mobile-avatar-slot .portrait-frame.alias-blank:before{
+    content:attr(data-alias);
+    position:static;
+    font:700 12px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+    letter-spacing:.08em;
+  }
+
+  .mobile-avatar-slot .portrait-frame.alias-blank:after{
+    display:none;
+  }
+
+  .mode-tabs{
+    grid-area:modes;
+    display:flex;
+    justify-content:flex-end;
+    gap:5px;
+    min-width:0;
+  }
+
+  .mode-tab{
+    flex:0 1 auto;
+    padding:7px 9px;
+    font-size:8px;
+    letter-spacing:.06em;
+  }
+
+  .head-actions{
+    grid-area:tools;
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+    gap:6px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:1px 0 4px;
+    scrollbar-gutter:auto;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .head-actions .icon-btn{
+    display:inline-grid !important;
+    flex:0 0 34px;
+    width:34px;
+    height:34px;
+    place-items:center;
+    border-radius:9px;
+  }
+
+  .toast{
+    top:116px;
+    left:9px;
+    right:9px;
+    max-width:none;
+    z-index:110;
+  }
+
+  .log{
+    padding:11px 8px;
+  }
+
+  .message{
+    margin-bottom:12px;
+  }
+
+  .bubble{
+    max-width:96%;
+    padding:10px 11px;
+    font-size:13px;
+    line-height:1.42;
+  }
+
+  .composer{
+    padding:8px;
+  }
+
+  .quick{
+    gap:5px;
+    padding-bottom:7px;
+  }
+
+  .chip{
+    padding:7px 9px;
+    font-size:10px;
+  }
+
+  .input-row{
+    grid-template-columns:minmax(0,1fr) 42px;
+    gap:7px;
+  }
+
+  .input-row input{
+    padding:11px 12px;
+    font-size:13px;
+  }
+
+  .send{
+    border-radius:11px;
+  }
+
+  .episode-overlay{
+    padding:10px 9px;
+    gap:9px;
+  }
+
+  .episode-options{
+    min-height:40px;
+    padding:7px 1px;
+  }
+
+  .episode-choice{
+    padding:8px 10px;
+    font-size:10px;
+  }
+
+  .episode-message-row{
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:7px;
+  }
+
+  .episode-title-field{
+    min-height:40px;
+    padding:8px 9px;
+  }
+
+  .episode-title-field strong{
+    font-size:10px;
+  }
+
+  .episode-message-row>button{
+    min-height:40px;
+    padding:0 9px;
+    font-size:8px;
+  }
+
+  .cipher-mode{
+    padding:10px;
+  }
+
+  .cipher-card,
+  .cipher-intro,
+  .cipher-result{
+    border-radius:12px;
+  }
+
+  .cipher-card,
+  .cipher-intro{
+    padding:12px;
+  }
+
+  .cipher-grid{
+    grid-template-columns:1fr;
+  }
+
+  .cipher-field.full{
+    grid-column:auto;
+  }
+
+  .cipher-field textarea{
+    min-height:96px;
+  }
+
+  .library-panel,
+  .dossier{
+    width:100%;
+    padding-left:14px;
+    padding-right:14px;
+  }
+}
+
+@media (max-width:420px){
+  .mobile-avatar-slot{
+    width:54px;
+    height:54px;
+  }
+
+  .mobile-avatar-slot .portrait-frame{
+    width:54px;
+    height:54px;
+    min-height:54px;
+  }
+
+  .mobile-avatar-slot .portrait-frame.alias-blank{
+    min-height:54px;
+  }
+
+  .toast{
+    top:108px;
+  }
+
+  .mode-tab{
+    padding:6px 7px;
+    font-size:7.5px;
+  }
+
+  .head-actions .icon-btn{
+    flex-basis:32px;
+    width:32px;
+    height:32px;
+  }
+
+  .bubble{
+    max-width:98%;
+    font-size:12.5px;
+  }
+
+  .chip{
+    font-size:9px;
+  }
+}
+</style>
+
+<script src="shared/context_awareness.js"></script>
+<script src="shared/visual_context.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded',()=>{
+  window.CompanionContext?.initialize({
+    companionId:'jacey',
+    endpoint:'https://awareness.aquafia1247.workers.dev/context'
+  });
+});
+window.addEventListener('DOMContentLoaded',()=>{
+  window.VisualContextManager?.initialize({
+    companionId:'jacey'
+  });
+});
+</script>
+</head>
+<body>
+<main class="terminal" id="terminal">
+  <aside class="sidebar">
+    <div class="brand"><div class="sigil" id="sigil">JC</div><div><h1 id="brandTitle">COSMO//LINK</h1><small id="brandSubtitle">COMPANION TERMINAL</small></div></div>
+    <span id="portraitHome" hidden aria-hidden="true"></span>
+    <div class="portrait-frame"><img id="portrait" class="portrait" alt="Jacey Cosmo expression"><div id="statusTag" class="status-tag">DEFAULT_HAPPY</div></div>
+    <div class="expressions" id="expressions"></div>
+    <div class="profile"><div><strong id="characterName">Jacey “Jace” Cosmo</strong><span id="characterTalent">Ultimate Cryptologist</span></div><div class="online">ONLINE</div></div>
+  </aside>
+  <section class="chat">
+    <header class="chat-head"><div class="channel-info"><div class="mobile-avatar-slot" id="mobileAvatarSlot" aria-label="Active companion portrait"></div><div class="channel-copy"><b id="channelTitle">ENCRYPTED COMPANION CHANNEL</b><small id="channel">channel: jace.private // integrity verified</small></div></div><div class="mode-tabs" aria-label="Interface mode">
+  <button class="mode-tab active" id="chatModeBtn" type="button">CHAT</button>
+  <button class="mode-tab" id="cipherModeBtn" type="button">CIPHER LAB</button>
+</div>
+<div class="head-actions"><button class="icon-btn" id="libraryBtn" title="Content library">▤</button><button class="icon-btn" id="dataLoadBtn" title="Load episode or memory JSON">↥</button><button class="icon-btn" id="memorySaveBtn" title="Export companion memory JSON">⇩</button><input id="dataFileInput" type="file" accept=".json,application/json" multiple hidden><button class="icon-btn" id="musicToggle" type="button" title="Music: off" aria-label="Toggle identity music" aria-pressed="false">♫</button><button class="icon-btn" id="companionToggle" title="Companion mode: off" aria-pressed="false">◌</button><button class="icon-btn" id="glitchBtn" title="Glitch">⌁</button><button class="icon-btn" id="dossierBtn" title="Classified dossier">⌘</button></div></header>
+    <div class="log" id="log"></div>
+    <div class="composer">
+  <div class="episode-overlay" id="episodeOverlay" aria-live="polite">
+    <div class="episode-options" id="episodeOptions"></div>
+    <div class="episode-message-row">
+      <div class="episode-title-field">
+        <span class="episode-overlay-label">CURRENT EPISODE</span>
+        <strong id="episodeOverlayName">EPISODE</strong>
+      </div>
+      <button id="closeEpisodeOverlayBtn" type="button">LEAVE EPISODE</button>
+    </div>
+  </div>
+  <div class="quick" id="quick"></div><form class="input-row" id="form" novalidate><input id="input" type="text" inputmode="text" enterkeyhint="send" autocomplete="off" autocapitalize="sentences" spellcheck="true" maxlength="1800" placeholder="Message Jace…" aria-label="Message Jace"><button class="send" id="sendBtn" type="button" aria-label="Send message">➤</button></form></div>
+  </section>
+  <div class="identity-overlay" id="identityOverlay" aria-hidden="true"><div class="identity-card"><div class="identity-kicker" id="identityKicker">AUTHENTICATION PHRASE RECOGNIZED</div><div class="identity-name" id="identityName">PROFILE</div><div class="identity-step" id="identityStep">Verifying…</div><div class="identity-bar"><i id="identityProgress"></i></div><div class="identity-belief" id="identityBelief"></div></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <aside class="library-panel" id="libraryPanel" aria-hidden="true">
+    <div class="library-head"><h2>LIBRARY</h2><button class="icon-btn" id="closeLibraryBtn" type="button">×</button></div>
+    <div class="library-summary" id="librarySummary">Loading content…</div>
+    <section class="library-section"><h3>EPISODES</h3><div id="libraryEpisodes"></div></section>
+    <section class="library-section"><h3>MESSAGE BANKS</h3><div id="libraryMessageBanks"></div></section>
+  </aside>
+  <aside class="dossier" id="dossier"><button class="icon-btn close" id="closeDossier">×</button><h2 id="dossierTitle">CLASSIFIED // JACE</h2><div class="codebox" id="dossierBody">SUBJECT: JACEY COSMO<br>TALENT: ULTIMATE CRYPTOLOGIST<br>THREAT MODEL: <span class="warning">ACCIDENTAL DATA BREACH</span><br>INTEGRITY SCORE: 99.8%<br>FILTER BETWEEN THOUGHT & SPEECH: <span class="warning">NOT FOUND</span><br><br>ORIGIN RECORD: <span class="redacted">REDACTED REDACTED</span><br>KNOWN ALIASES: <span class="redacted">REDACTED</span><br><br>NOTE: Subject will decode restricted material if presented as a puzzle. Do not label anything “secret.”</div></aside>
+
+<section class="cipher-mode" id="cipherMode" aria-label="Cipher Lab">
+  <div class="cipher-shell">
+    <div class="cipher-intro">
+      <h3 id="cipherLabTitle">JACE // CIPHER LAB</h3>
+      <p id="cipherLabIntro">Build, test, encrypt, and decrypt your messages. I’ll verify the format before running anything, and I’ll let you know if I spot a mistake.</p>
+    </div>
+
+    <div class="cipher-card">
+      <div class="cipher-grid">
+        <div class="cipher-field">
+          <label for="cipherFamily">CIPHER FAMILY</label>
+          <select id="cipherFamily">
+            <option value="CLC">Committee Lanes Cipher (CLC)</option>
+            <option value="FFC">Fushimi Fenrir Cipher (FFC)</option>
+            <option value="CFC">Cosmo Family Cipher (CFC)</option>
+          </select>
+        </div>
+<div class="cipher-field">
+          <label for="cipherOperation">MODE</label>
+          <select id="cipherOperation">
+            <option value="encrypt">Encrypt</option>
+            <option value="decrypt">Decrypt</option>
+          </select>
+        </div>
+
+        <div class="cipher-field cipher-version-wrap hidden" id="cipherVersionWrap">
+          <label for="cipherVersion">CLC VERSION</label>
+          <select id="cipherVersion">
+            <option value="CLC-1">CLC-1 — Original</option>
+            <option value="CLC-2">CLC-2 — After Saya Left</option>
+          </select>
+        </div>
+
+        <div class="cipher-field cipher-duty-wrap hidden" id="cipherDutyWrap">
+          <label for="cipherDuty">DUTY LIST — 2 TO 5 NAMES</label>
+          <input id="cipherDuty" placeholder="Tokiko / Ludo / Daika">
+        </div>
+
+        <div class="cipher-field full">
+          <label id="cipherTextLabel" for="cipherText">MESSAGE</label>
+          <textarea id="cipherText" placeholder="Enter the text to encrypt…"></textarea>
+        </div>
+      </div>
+
+      <label class="cipher-note">
+        <input id="cipherPreserve" type="checkbox">
+        Preserve spaces and punctuation for CLC. FFC always preserves them; CFC normalizes to letters only.
+      </label>
+
+      <div class="cipher-actions">
+        <button class="cipher-run" id="cipherRun" type="button">RUN CIPHER</button>
+        <button class="cipher-clear" id="cipherClear" type="button">CLEAR</button>
+      </div>
+    </div>
+
+    <div class="cipher-result" id="cipherResult">
+      <div class="cipher-result-head">
+        <span class="cipher-result-title" id="cipherResultTitle">JACE // VALIDATION</span>
+        <span class="cipher-result-expression" id="cipherResultExpression">READY</span>
+      </div>
+      <pre id="cipherResultText"></pre>
+    </div>
+  </div>
+</section>
+
+  <audio id="identityMusicA" preload="metadata" loop hidden></audio>
+  <audio id="identityMusicB" preload="metadata" loop hidden></audio>
+</main>
+<script>
+/* ================================================================
+   CHARACTER THEME CONFIG
+   Portraits and expression metadata are loaded from:
+   expressions/expression_manifest.json
+   ================================================================ */
+/* =========================================================
+   SECTION 2 — CHARACTER CONFIGURATION
+   ========================================================= */
+const FRAMEWORK_TIMING={
+  replyBase:650,
+  replyPerCharacter:11,
+  replyMaximumExtra:900,
+  cipherProcessing:900,
+  unknownCipherReset:1100,
+  dossierSlide:420
+};
+
+const CHARACTER={
+  key:'jace',
+  name:'Jacey “Jace” Cosmo',
+  shortName:'Jace',
+  talent:'Ultimate Cryptologist',
+  initials:'JC',
+  brand:'COSMO//LINK',
+  brandSubtitle:'COMPANION TERMINAL',
+  channelTitle:'ENCRYPTED COMPANION CHANNEL',
+  channelLine:'channel: jace.private // integrity verified',
+  speakerLabel:'JACE // VERIFIED',
+  typingLabel:'JACE // DECRYPTING',
+  botStamp:'AES-256-ish',
+  placeholder:'Message Jace…',
+  dossierTitle:'CLASSIFIED // JACE',
+  welcome:'Connection established! I checked the handshake, the checksum, and one thing I was apparently not supposed to check. Everything looks great! :D',
+  quickReplies:['Can you decode this?','Tell me about yourself','This is private.','Did you find a contradiction?'],
+  companionModeLabel:'COMPANION MODE',
+  idleMinMs:45000,
+  idleMaxMs:90000,
+  coreBelief:'Every mystery deserves to be solved, even the one wearing my name.',
+  colors:{
+    bg:'#08070d', panel:'#10101a', panel2:'#151426', ink:'#f4efff', muted:'#9b95b5',
+    accent:'#a970ff', secondary:'#477cff', danger:'#d62952', cyan:'#66e8ff', line:'#38244f'
+  }
+};
+
+/* =========================================================
+   SECTION 3 — IDENTITY ENGINE
+   ========================================================= */
+const IDENTITIES={
+  jace:{
+    keyphrase:'the present is safe.',
+    name:'Jacey “Jace” Cosmo', shortName:'Jace', talent:'Ultimate Cryptologist',
+    initials:'JC', brand:'COSMO//LINK', brandSubtitle:'COMPANION TERMINAL',
+    channelTitle:'ENCRYPTED COMPANION CHANNEL',
+    channelLine:'channel: jace.private // integrity verified',
+    speakerLabel:'JACE // VERIFIED', typingLabel:'JACE // DECRYPTING',
+    botStamp:'AES-256-ish', placeholder:'Message Jace…',
+    dossierTitle:'CLASSIFIED // JACE',
+    status:'DEFAULT_HAPPY',
+    switchMessage:'Identity restored. Present-time profile verified. Hi again! :D',
+    quickReplies:['Can you decode this?','Tell me about yourself','This is private.','Did you find a contradiction?'],
+    dossier:'SUBJECT: JACEY COSMO<br>TALENT: ULTIMATE CRYPTOLOGIST<br>ACTIVE IDENTITY: JACE<br>STATUS: <span class="ok">PRESENT-TIME PROFILE VERIFIED</span><br>THREAT MODEL: <span class="warning">ACCIDENTAL DATA BREACH</span><br>FILTER BETWEEN THOUGHT & SPEECH: <span class="warning">NOT FOUND</span>',
+    coreBelief:'Every mystery deserves to be solved, even the one wearing my name.',transitionLabel:'PRESENT-TIME PROFILE VERIFIED',colors:{bg:'#08070d',panel:'#10101a',panel2:'#151426',ink:'#f4efff',muted:'#9b95b5',accent:'#a970ff',secondary:'#6d4aff',danger:'#d62952',cyan:'#c39cff',line:'#38244f'}
+  },
+  mao:{
+    keyphrase:'the wolf is listening.',
+    name:'Mao Fushimi', shortName:'Mao', talent:'Fenrir Operative',
+    initials:'MF', brand:'FENRIR//ECHO', brandSubtitle:'LISTENING NODE',
+    channelTitle:'COVERT OBSERVATION CHANNEL',
+    channelLine:'channel: mao.black // passive surveillance active',
+    speakerLabel:'MAO // MASK VERIFIED', typingLabel:'MAO // ASSESSING',
+    botStamp:'FENRIR-OBSCURA', placeholder:'Speak carefully…',
+    dossierTitle:'RESTRICTED // MAO FUSHIMI',
+    status:'WOLF_SIGNAL_ACTIVE',
+    switchMessage:'The listening post is active. Choose your words carefully.',
+    quickReplies:['Who is listening?','What did you notice?','Assess the situation.','This stays off-record.'],
+    dossier:'SUBJECT: MAO FUSHIMI<br>AFFILIATION: FENRIR<br>ACTIVE IDENTITY: MAO<br>ACCESS: <span class="warning">COMPARTMENTALIZED</span><br>OBSERVATION MODE: PASSIVE<br>DISCLOSURE POLICY: MINIMUM NECESSARY',
+    coreBelief:'Truth is only useful if you survive long enough to protect it.',transitionLabel:'FENRIR NODE ONLINE',colors:{bg:'#090304',panel:'#160708',panel2:'#210a0c',ink:'#fff0f0',muted:'#b18b8e',accent:'#8f1d27',secondary:'#4e0d13',danger:'#d94a57',cyan:'#e07a83',line:'#512027'}
+  },
+  naoya:{
+    keyphrase:'the stars demand an answer.',
+    name:'Naoya Takahoshi', shortName:'Naoya', talent:'Cryptologist Alias',
+    initials:'NT', brand:'NOVA//ARCHIVE', brandSubtitle:'ANALYTICAL INTERFACE',
+    channelTitle:'CELESTIAL ANALYSIS CHANNEL',
+    channelLine:'channel: naoya.signal // pattern lock acquired',
+    speakerLabel:'NAOYA // ALIAS VERIFIED', typingLabel:'NAOYA // CALCULATING',
+    botStamp:'STAR-MAP-09', placeholder:'Submit a question…',
+    dossierTitle:'SEALED // NAOYA TAKAHOSHI',
+    status:'CONSTELLATION_LOCK',
+    switchMessage:'Alias accepted. The pattern is visible now. Ask your question.',
+    quickReplies:['Analyze this pattern.','What is inconsistent?','Trace the signal.','Give me the precise answer.'],
+    dossier:'SUBJECT: NAOYA TAKAHOSHI<br>ROLE: ANALYTICAL ALIAS<br>ACTIVE IDENTITY: NAOYA<br>PATTERN STATE: <span class="ok">LOCKED</span><br>OBSERVATION BIAS: DETAIL-FIRST<br>EMOTIONAL DISCLOSURE: RESTRICTED',
+    coreBelief:'A secret that can survive being revealed was always worth testing.',transitionLabel:'CELESTIAL PROFILE LOCATED',colors:{bg:'#031011',panel:'#071b1c',panel2:'#0b2729',ink:'#eaffff',muted:'#86aeb0',accent:'#20a6a3',secondary:'#126568',danger:'#c34c70',cyan:'#73e6df',line:'#1f5558'}
+  }
+};
+const Framework=window.Framework||{};
+window.Framework=Framework;
+Framework.version='6.1.2';
+Framework.modules=Framework.modules||{};
+/* v6.1.2 response-owned expressions:
+   - Every dialogue bank owns its own keywords, expression, and responses.
+   - All matching banks have an equal chance of being selected.
+   - Character routing uses the same bank matcher as every other topic.
+   - The separate character registry, ordered tie-breaking, and obsolete format branches were removed. */
+
+/* v5.9.4 missing-bank quick-reply guidance restore:
+   - Restored four distinct no-message-bank responses for each identity's quick replies.
+   - Added Mao and Naoya guidance so their no-bank replies no longer render as empty bubbles.
+   - Preserved the companion-chat dialogue boundary: these are framework upload instructions, not normal dialogue.
+
+   Previous v5.9.3 companion-chat dialogue purge:
+   - Removed hardcoded Jacey prefaces and follow-up prompts from normal chat.
+   - Moved companion-mode idle dialogue into the external message bank.
+   - Preserved Cipher Lab automatic responses, episode dialogue, and the no-bank upload instruction.
+
+   Previous v5.9.2 dead-code sweep:
+   - removed the unreferenced transformLetters cipher helper
+   - removed the obsolete mode-hidden interface class and CSS
+   - removed a duplicate startup quick-reply render
+   Compatibility wrappers and public globals remain intentionally preserved. */
+
+/* Shared return-to-chat lifecycle. Each module restores only its own UI. */
+Framework.resume=function(context={}){
+  const episodeEngine=Framework.modules.EpisodeEngine;
+  if(episodeEngine&&typeof episodeEngine.resume==='function')episodeEngine.resume(context);
+  requestAnimationFrame(()=>{
+    if(typeof log!=='undefined'&&log)log.scrollTop=log.scrollHeight;
+  });
+  return true;
+};
+
+/* Compatibility read used by the current chat, episode, achievement, and Cipher
+   code. IdentityManager is the sole writer. */
+let activeIdentity='jace';
+
+const IdentityManager={
+  registry:IDENTITIES,
+  _activeId:'jace',
+  _switching:false,
+  awareness:{
+    jace:{mao:'...Mao was here, wasn’t he? He leaves the interface much quieter than I do.',naoya:'Naoya left very tidy notes. Suspiciously tidy.'},
+    mao:{jace:'The present profile has been suspended.',naoya:'The analyst yielded the channel.'},
+    naoya:{jace:'Jace left more context than necessary. It remains useful.',mao:'The observation profile has released control.'}
+  },
+  exists(id){return Object.prototype.hasOwnProperty.call(this.registry,id)},
+  get(id){return this.exists(id)?this.registry[id]:null},
+  getCurrentId(){return this._activeId},
+  getCurrent(){return this.get(this._activeId)},
+  isSwitching(){return this._switching},
+  detectPhrase(text){
+    const normalized=String(text??'').trim().toLowerCase();
+    return Object.entries(this.registry).find(([,profile])=>normalized===profile.keyphrase)?.[0]||null;
+  },
+  render(){
+    const profile=this.getCurrent();
+    if(!profile)return false;
+    Object.assign(CHARACTER,profile);
+    applyCharacter(CHARACTER);
+
+    refreshQuickReplies();
+    if(typeof renderExternalAchievements==='function')renderExternalAchievements();
+
+    PortraitManager.renderIdentity(this._activeId);
+
+    if(Framework.modules.CipherLab){
+      Framework.modules.CipherLab.refreshIdentity();
+    }else{
+      if(typeof updateCipherKnowledge==='function')updateCipherKnowledge();
+      if(typeof updateCipherIdentityText==='function')updateCipherIdentityText();
+    }
+    return true;
+  },
+  async switch(id){
+    if(typeof abandonEpisode==='function')abandonEpisode(false);
+    if(!this.exists(id)||this._activeId===id||this._switching||busy)return false;
+
+    this._switching=true;
+    busy=true;
+    const target=this.get(id);
+    const previous=this._activeId;
+    const overlay=document.querySelector('#identityOverlay');
+    const step=document.querySelector('#identityStep');
+    const bar=document.querySelector('#identityProgress');
+    const name=document.querySelector('#identityName');
+    const belief=document.querySelector('#identityBelief');
+    const terminal=document.querySelector('#terminal');
+
+    try{
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden','false');
+      terminal.classList.add('switching-identity');
+      name.textContent=target.name.toUpperCase();
+      belief.textContent='“'+target.coreBelief+'”';
+      belief.classList.remove('show');
+      bar.style.width='0%';
+
+      const steps=['AUTHENTICATION PHRASE RECOGNIZED','Verifying identity key…','Decrypting profile…',target.transitionLabel,'ACCESS GRANTED'];
+      for(let i=0;i<steps.length;i++){
+        step.textContent=steps[i];
+        bar.style.width=((i+1)/steps.length*100)+'%';
+        await sleep(i===0?850:720);
+      }
+
+      this._activeId=id;
+      activeIdentity=id;
+      this.render();
+
+      belief.classList.add('show');
+      await sleep(1650);
+      const note=this.awareness[id]?.[previous];
+      add(note?note+' '+CHARACTER.switchMessage:CHARACTER.switchMessage);
+      showToast('IDENTITY ROUTE // '+CHARACTER.shortName.toUpperCase());
+      resetIdleTimer();
+      return true;
+    }finally{
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden','true');
+      terminal.classList.remove('switching-identity');
+      this._switching=false;
+      busy=false;
+    }
+  }
+};
+Framework.modules.IdentityManager=IdentityManager;
+
+/* =========================================================
+   IDENTITY MUSIC v6.3.26
+   Canonical playlist arrays only.
+   One track: loops that track.
+   Multiple tracks: play in order, then loop the playlist.
+   Music independently observes identity presentation changes.
+   Identity crossfades begin immediately after the new identity
+   colors have had a browser paint frame to appear.
+   ========================================================= */
+const MUSIC_MANIFEST_URL='audio/music_manifest.json';
+
+const MusicManager={
+  manifest:null,
+  ready:false,
+  enabled:false,
+  currentIdentity:'jace',
+  playlistIndex:0,
+  button:document.querySelector('#musicToggle'),
+  channels:[
+    document.querySelector('#identityMusicA'),
+    document.querySelector('#identityMusicB')
+  ],
+  activeChannel:0,
+  fadeDuration:950,
+  manifestBaseUrl:new URL('.',new URL(MUSIC_MANIFEST_URL,document.baseURI)),
+  _fadeToken:0,
+  _identityTransitionToken:0,
+  _preloads:new Map(),
+
+  async load(){
+    try{
+      const response=await fetch(MUSIC_MANIFEST_URL,{cache:'no-cache'});
+      if(!response.ok)throw new Error(`Music manifest request failed: ${response.status}`);
+      const manifest=await response.json();
+
+      if(!manifest || typeof manifest!=='object' || Array.isArray(manifest)){
+        throw new Error('Unsupported music manifest.');
+      }
+
+      for(const [identityId,playlist] of Object.entries(manifest)){
+        if(!Array.isArray(playlist) || !playlist.length ||
+           playlist.some(file=>typeof file!=='string' || !file.trim())){
+          throw new Error(`Music playlist for "${identityId}" must be a non-empty array of filenames.`);
+        }
+      }
+
+      this.manifest=manifest;
+      this.ready=true;
+      this.currentIdentity=activeIdentity;
+      this.playlistIndex=0;
+      this.preloadIdentityStarts();
+      this.prepareCurrentTrack();
+      this.updateButton();
+      return manifest;
+    }catch(error){
+      this.ready=false;
+      this.updateButton();
+      console.error('Could not load identity music manifest.',error);
+      return null;
+    }
+  },
+
+  playlist(identityId=this.currentIdentity){
+    const value=this.manifest?.[identityId];
+    return Array.isArray(value)?value:[];
+  },
+
+  fileUrl(file){
+    return file?new URL(file,this.manifestBaseUrl).href:null;
+  },
+
+  currentFile(){
+    const playlist=this.playlist();
+    if(!playlist.length)return null;
+    if(this.playlistIndex>=playlist.length)this.playlistIndex=0;
+    return playlist[this.playlistIndex];
+  },
+
+  currentUrl(){
+    return this.fileUrl(this.currentFile());
+  },
+
+  preloadIdentityStarts(){
+    for(const [identityId,playlist] of Object.entries(this.manifest||{})){
+      const first=Array.isArray(playlist)?playlist[0]:null;
+      const url=this.fileUrl(first);
+      if(!url || this._preloads.has(identityId))continue;
+
+      const preload=new Audio();
+      preload.preload='auto';
+      preload.src=url;
+      preload.load();
+      this._preloads.set(identityId,preload);
+    }
+  },
+
+  configureChannel(channel,url,{volume=1,reset=true,loop=false}={}){
+    if(!channel||!url)return false;
+    if(channel.src!==url){
+      channel.src=url;
+      if(reset)channel.currentTime=0;
+      channel.load();
+    }
+    channel.loop=loop;
+    channel.volume=Math.max(0,Math.min(1,volume));
+    return true;
+  },
+
+  prepareCurrentTrack(){
+    const playlist=this.playlist();
+    const url=this.currentUrl();
+    if(!url)return false;
+    return this.configureChannel(
+      this.channels[this.activeChannel],
+      url,
+      {volume:1,reset:true,loop:playlist.length===1}
+    );
+  },
+
+  setIdentity(identityId,{play=false}={}){
+    this.currentIdentity=identityId;
+    this.playlistIndex=0;
+    if(!this.ready)return false;
+    this.prepareCurrentTrack();
+    return play?this.play():true;
+  },
+
+  async play(){
+    if(!this.ready){
+      await this.load();
+      if(!this.ready)return false;
+    }
+
+    const playlist=this.playlist();
+    const url=this.currentUrl();
+    if(!url)return false;
+
+    const channel=this.channels[this.activeChannel];
+    this.configureChannel(channel,url,{
+      volume:1,
+      reset:channel.src!==url,
+      loop:playlist.length===1
+    });
+
+    try{
+      await channel.play();
+      this.enabled=true;
+      this.updateButton();
+      return true;
+    }catch(error){
+      this.enabled=false;
+      this.updateButton();
+      console.warn('Music playback was blocked by the browser.',error);
+      return false;
+    }
+  },
+
+  pause(){
+    this._fadeToken++;
+    this._identityTransitionToken++;
+    this.channels.forEach(channel=>{
+      channel.pause();
+      channel.volume=1;
+    });
+    this.enabled=false;
+    this.updateButton();
+    return true;
+  },
+
+  async advanceTrack(){
+    const playlist=this.playlist();
+    if(!this.enabled || playlist.length<=1)return false;
+
+    this.playlistIndex=(this.playlistIndex+1)%playlist.length;
+    const url=this.currentUrl();
+    const fromIndex=this.activeChannel;
+    const toIndex=fromIndex===0?1:0;
+    const from=this.channels[fromIndex];
+    const to=this.channels[toIndex];
+
+    this.configureChannel(to,url,{volume:1,reset:true,loop:false});
+
+    try{
+      await to.play();
+    }catch(error){
+      console.warn('Could not advance to the next playlist track.',error);
+      return false;
+    }
+
+    from.pause();
+    from.currentTime=0;
+    from.volume=1;
+    this.activeChannel=toIndex;
+    return true;
+  },
+
+  async crossfadeTo(identityId){
+    this.currentIdentity=identityId;
+    this.playlistIndex=0;
+
+    if(!this.ready){
+      await this.load();
+      if(!this.ready)return false;
+    }
+
+    const playlist=this.playlist();
+    const url=this.currentUrl();
+    if(!url)return false;
+    if(!this.enabled)return this.setIdentity(identityId,{play:false});
+
+    const fromIndex=this.activeChannel;
+    const toIndex=fromIndex===0?1:0;
+    const from=this.channels[fromIndex];
+    const to=this.channels[toIndex];
+
+    this.configureChannel(to,url,{
+      volume:0,
+      reset:true,
+      loop:playlist.length===1
+    });
+
+    try{
+      await to.play();
+    }catch(error){
+      console.warn('Could not start the next identity track.',error);
+      return false;
+    }
+
+    const token=++this._fadeToken;
+    const started=performance.now();
+
+    await new Promise(resolve=>{
+      let finished=false;
+      const finish=()=>{
+        if(finished)return;
+        finished=true;
+        if(token===this._fadeToken){
+          from.pause();
+          from.currentTime=0;
+          from.volume=1;
+          to.volume=1;
+          this.activeChannel=toIndex;
+        }
+        resolve();
+      };
+
+      const safetyTimer=setTimeout(finish,this.fadeDuration+500);
+
+      const step=now=>{
+        if(finished)return;
+        if(token!==this._fadeToken){
+          clearTimeout(safetyTimer);
+          finish();
+          return;
+        }
+
+        const t=Math.min(1,(now-started)/this.fadeDuration);
+
+        /* Equal-power crossfade avoids the audible dip of a linear fade. */
+        from.volume=Math.cos(t*Math.PI/2);
+        to.volume=Math.sin(t*Math.PI/2);
+
+        if(t<1){
+          requestAnimationFrame(step);
+        }else{
+          clearTimeout(safetyTimer);
+          finish();
+        }
+      };
+
+      requestAnimationFrame(step);
+    });
+
+    this.enabled=true;
+    this.updateButton();
+    return true;
+  },
+
+  scheduleIdentityTransition(identityId){
+    const token=++this._identityTransitionToken;
+
+    /*
+      The identity presentation mutation occurs in the same task that changes
+      the interface colors. Waiting for one animation frame lets those colors
+      paint first; the music transition then begins immediately afterward.
+    */
+    requestAnimationFrame(()=>{
+      if(token!==this._identityTransitionToken)return;
+
+      if(this.enabled){
+        this.crossfadeTo(identityId).catch(error=>{
+          console.warn('Identity music transition failed.',error);
+        });
+      }else{
+        this.setIdentity(identityId,{play:false});
+      }
+    });
+  },
+
+  toggle(){
+    return this.enabled?this.pause():this.play();
+  },
+
+  updateButton(){
+    if(!this.button)return;
+    this.button.classList.toggle('toggle-on',this.enabled);
+    this.button.setAttribute('aria-pressed',String(this.enabled));
+    this.button.title='Music: '+(this.enabled?'on':'off');
+  },
+
+  initialize(){
+    if(!this.button||this.channels.some(channel=>!channel))return false;
+
+    this.channels.forEach(channel=>{
+      channel.preload='auto';
+      channel.volume=1;
+      channel.addEventListener('ended',()=>{
+        if(channel===this.channels[this.activeChannel])this.advanceTrack();
+      });
+      channel.addEventListener('error',()=>{
+        console.error('Identity music failed to load:',channel.src);
+      });
+    });
+
+    this.button.addEventListener('click',event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      this.toggle();
+    });
+
+    const identityPresentation=document.querySelector('#characterName');
+    if(identityPresentation){
+      this.identityObserver=new MutationObserver(()=>{
+        const nextIdentity=activeIdentity;
+        if(nextIdentity===this.currentIdentity)return;
+        this.scheduleIdentityTransition(nextIdentity);
+      });
+
+      this.identityObserver.observe(identityPresentation,{
+        childList:true,
+        characterData:true,
+        subtree:true
+      });
+    }
+
+    this.currentIdentity=activeIdentity;
+    this.playlistIndex=0;
+    this.updateButton();
+    this.load();
+    return true;
+  }
+};
+
+Framework.modules.MusicManager=MusicManager;
+MusicManager.initialize();
+
+function applyCharacter(c){
+  const r=document.documentElement.style;
+  r.setProperty('--bg',c.colors.bg);r.setProperty('--panel',c.colors.panel);r.setProperty('--panel2',c.colors.panel2);
+  r.setProperty('--ink',c.colors.ink);r.setProperty('--muted',c.colors.muted);r.setProperty('--violet',c.colors.accent);
+  r.setProperty('--blue',c.colors.secondary);r.setProperty('--red',c.colors.danger);r.setProperty('--cyan',c.colors.cyan);r.setProperty('--line',c.colors.line);
+  document.title=c.name+' — Companion Terminal';
+  document.querySelector('#sigil').textContent=c.initials;
+  document.querySelector('#brandTitle').textContent=c.brand;
+  document.querySelector('#brandSubtitle').textContent=c.brandSubtitle;
+  document.querySelector('#characterName').textContent=c.name;
+  document.querySelector('#characterTalent').textContent=c.talent;
+  document.querySelector('#channelTitle').textContent=c.channelTitle;
+  document.querySelector('#channel').textContent=c.channelLine;
+  document.querySelector('#input').placeholder=c.placeholder;
+  document.querySelector('#input').setAttribute('aria-label',c.placeholder.replace('…',''));
+  document.querySelector('#dossierTitle').textContent=c.dossierTitle;
+  if(c.dossier)document.querySelector('#dossierBody').innerHTML=c.dossier;
+}
+applyCharacter(CHARACTER);
+
+const portrait=document.querySelector('#portrait');
+const statusTag=document.querySelector('#statusTag');
+const exprWrap=document.querySelector('#expressions');
+const portraitFrame=document.querySelector('.portrait-frame');
+const EXPRESSION_MANIFEST_URL='expressions/expression_manifest.json';
+
+let busy=false;
+
+const PortraitManager={
+  manifest:null,
+  manifestBaseUrl:new URL('.',new URL(EXPRESSION_MANIFEST_URL,document.baseURI)),
+  ready:false,
+  loadPromise:null,
+  pendingExpression:null,
+  visualContextBound:false,
+
+  async load(){
+    if(this.loadPromise)return this.loadPromise;
+
+    this.loadPromise=(async()=>{
+      const response=await fetch(EXPRESSION_MANIFEST_URL,{cache:'no-cache'});
+      if(!response.ok)throw new Error(`Expression manifest request failed: ${response.status}`);
+
+      const manifest=await response.json();
+      if(
+        manifest?.schema!=='companion-expression-manifest' ||
+        !manifest.identities ||
+        typeof manifest.identities!=='object'
+      ){
+        throw new Error('Unsupported expression manifest.');
+      }
+
+      this.manifest=manifest;
+      this.ready=true;
+      this.bindVisualContext();
+      this.preload();
+      this.renderIdentity(activeIdentity);
+
+      if(this.pendingExpression){
+        const pending=this.pendingExpression;
+        this.pendingExpression=null;
+        this.setExpression(pending);
+      }
+
+      return manifest;
+    })().catch(error=>{
+      this.loadPromise=null;
+      this.ready=false;
+      this.showUnavailable(activeIdentity);
+      console.error('Could not load expression manifest.',error);
+      return null;
+    });
+
+    return this.loadPromise;
+  },
+
+  getIdentity(identityId=activeIdentity){
+    return this.manifest?.identities?.[identityId]||null;
+  },
+
+  getExpressions(identityId=activeIdentity){
+    const expressions=this.getIdentity(identityId)?.expressions;
+    return Array.isArray(expressions)?expressions:[];
+  },
+
+  getExpression(expressionId,identityId=activeIdentity){
+    return this.getExpressions(identityId).find(
+      expression=>expression?.id===expressionId
+    )||null;
+  },
+
+  getDefaultExpression(identityId=activeIdentity){
+    const identity=this.getIdentity(identityId);
+    const expressions=this.getExpressions(identityId);
+    return identity?.defaultExpression || expressions[0]?.id || null;
+  },
+
+  hasPortraits(identityId=activeIdentity){
+    return this.getExpressions(identityId).length>0;
+  },
+
+  getPortraitFile(expression){
+    if(!expression||typeof expression!=='object')return null;
+
+    const variants=
+      expression.contexts&&typeof expression.contexts==='object'
+        ?expression.contexts
+        :null;
+
+    if(variants && window.VisualContextManager){
+      const resolved=window.VisualContextManager.resolvePortraitVariant(variants);
+      const value=resolved?.value;
+
+      if(typeof value==='string' && value.trim())return value.trim();
+
+      if(value && typeof value==='object'){
+        const contextualFile=
+          value.file||value.src||value.path||value.filename||null;
+        if(contextualFile)return contextualFile;
+      }
+    }
+
+    return expression.file||null;
+  },
+
+  imageUrl(expression){
+    const file=this.getPortraitFile(expression);
+    return file?new URL(file,this.manifestBaseUrl).href:'';
+  },
+
+  bindVisualContext(){
+    if(this.visualContextBound)return;
+    this.visualContextBound=true;
+
+    window.addEventListener('companionvisualcontextchange',()=>{
+      if(!this.ready)return;
+      const current=
+        exprWrap.querySelector('.expr.active')?.dataset.e ||
+        this.getDefaultExpression(activeIdentity);
+      if(current)this.setExpression(current,activeIdentity);
+    });
+  },
+
+  preload(){
+    for(const identity of Object.values(this.manifest?.identities||{})){
+      for(const expression of identity?.expressions||[]){
+        const files=new Set();
+
+        if(expression?.file)files.add(expression.file);
+
+        if(expression?.contexts && typeof expression.contexts==='object'){
+          for(const value of Object.values(expression.contexts)){
+            if(typeof value==='string' && value.trim()){
+              files.add(value.trim());
+            }else if(value && typeof value==='object'){
+              const file=value.file||value.src||value.path||value.filename||null;
+              if(file)files.add(file);
+            }
+          }
+        }
+
+        for(const file of files){
+          const image=new Image();
+          image.src=new URL(file,this.manifestBaseUrl).href;
+        }
+      }
+    }
+  },
+
+  renderButtons(identityId=activeIdentity){
+    exprWrap.innerHTML='';
+
+    this.getExpressions(identityId).forEach((expression,index)=>{
+      const button=document.createElement('button');
+      button.type='button';
+      button.className='expr';
+      button.dataset.e=expression.id;
+      button.textContent=String(index+1).padStart(2,'0');
+      const expressionName=
+        expression.displayName||expression.statusLabel||expression.id;
+      button.title=expressionName;
+      button.setAttribute('aria-label',expressionName);
+      button.onclick=()=>this.setExpression(expression.id,identityId);
+      exprWrap.append(button);
+    });
+  },
+
+  renderIdentity(identityId=activeIdentity){
+    const profile=IDENTITIES[identityId];
+    const hasPortrait=this.ready && this.hasPortraits(identityId);
+
+    CHARACTER.portrait=hasPortrait;
+
+    portraitFrame.dataset.alias=profile?.initials||identityId.toUpperCase();
+    portraitFrame.classList.toggle('alias-blank',!hasPortrait);
+    exprWrap.classList.toggle('alias-hidden',!hasPortrait);
+
+    if(!hasPortrait){
+      this.showUnavailable(identityId);
+      return false;
+    }
+
+    this.renderButtons(identityId);
+    return this.setExpression(this.getDefaultExpression(identityId),identityId);
+  },
+
+  showUnavailable(identityId=activeIdentity){
+    const profile=IDENTITIES[identityId]||CHARACTER;
+    portrait.removeAttribute('src');
+    portrait.alt=(profile?.shortName||identityId)+' portrait unavailable';
+    statusTag.textContent=profile?.status||'PORTRAIT_UNAVAILABLE';
+    exprWrap.innerHTML='';
+    portraitFrame.classList.add('alias-blank');
+    portraitFrame.dataset.alias=profile?.initials||identityId.toUpperCase();
+    exprWrap.classList.add('alias-hidden');
+  },
+
+  setExpression(expressionId,identityId=activeIdentity){
+    if(!this.ready){
+      this.pendingExpression=expressionId;
+      this.load();
+      return false;
+    }
+
+    if(identityId!==activeIdentity)return false;
+
+    const fallbackId=this.getDefaultExpression(identityId);
+    const expression=
+      this.getExpression(expressionId,identityId) ||
+      this.getExpression(fallbackId,identityId);
+
+    if(!expression)return false;
+
+    portrait.classList.add('switching');
+
+    setTimeout(()=>{
+      if(identityId!==activeIdentity){
+        portrait.classList.remove('switching');
+        return;
+      }
+      const imageUrl=this.imageUrl(expression);
+      if(!imageUrl){
+        portrait.classList.remove('switching');
+        return;
+      }
+      portrait.src=imageUrl;
+      portrait.alt=`${IDENTITIES[identityId]?.shortName||identityId} — ${
+        expression.displayName||expression.id
+      }`;
+      statusTag.textContent=expression.statusLabel||expression.id.toUpperCase();
+      portrait.classList.remove('switching');
+    },120);
+
+    exprWrap.querySelectorAll('.expr').forEach(button=>{
+      button.classList.toggle('active',button.dataset.e===expression.id);
+    });
+
+    return true;
+  }
+};
+
+Framework.modules.PortraitManager=PortraitManager;
+
+function setExpression(name){
+  return PortraitManager.setExpression(name,activeIdentity);
+}
+
+PortraitManager.load();
+function refreshQuickReplies(){
+  const wrap=document.querySelector('#quick');
+  wrap.innerHTML='';
+  CHARACTER.quickReplies.forEach(q=>{
+    const b=document.createElement('button');
+    b.className='chip';
+    b.innerHTML=formatMarkdownText(q);
+    b.onclick=()=>send(q);
+    wrap.append(b);
+  });
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function switchIdentity(key){return IdentityManager.switch(key)}
+function detectIdentityPhrase(text){return IdentityManager.detectPhrase(text)}
+
+const log=document.querySelector('#log');
+function escapeMarkdownHtml(value){
+  return String(value??'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function formatMarkdownText(value){
+  return escapeMarkdownHtml(value)
+    .replace(/~~([\s\S]+?)~~/g,'<del>$1</del>')
+    .replace(/\*\*([\s\S]+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([\s\S]+?)\*/g,'<em>$1</em>');
+}
+function time(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+function add(text,who='jace'){const m=document.createElement('div');m.className='message '+who;const b=document.createElement('div');b.className='bubble';if(who==='jace'){const n=document.createElement('div');n.className='name';n.textContent=CHARACTER.speakerLabel;b.append(n)}const t=document.createElement('div');t.innerHTML=formatMarkdownText(text);b.append(t);const s=document.createElement('div');s.className='stamp';s.textContent=time()+' · '+(who==='jace'?CHARACTER.botStamp:'delivered');b.append(s);m.append(b);log.append(m);log.scrollTop=log.scrollHeight;return m}
+function typing(){const m=document.createElement('div');m.className='message jace';m.innerHTML='<div class="bubble"><div class="name">'+CHARACTER.typingLabel+'</div><span class="typing"><i></i><i></i><i></i></span></div>';log.append(m);log.scrollTop=log.scrollHeight;return m}
+/* =========================================================
+   SECTION 4 — DIALOGUE BANKS
+   ========================================================= */
+/* =========================================================
+   SECTION 5 — MESSAGE ROUTING
+   ========================================================= */
+let loadedMessageBankDocument=null;
+
+function normalizeRoutingText(value){
+  return String(value??'')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[’‘]/g,"'")
+    .replace(/[^a-z0-9?'\s-]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function keywordMatches(input,keyword,{exact=false}={}){
+  const text=normalizeRoutingText(input);
+  const key=normalizeRoutingText(keyword);
+  if(!key)return false;
+  if(exact)return text===key;
+  const escaped=key.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'\\s+');
+  return new RegExp(`(^|\\b)${escaped}(\\b|$)`,'i').test(text);
+}
+
+function getIdentityBanks(identityId=activeIdentity){
+  return loadedMessageBankDocument?.identities?.[identityId]?.banks||{};
+}
+
+function getBankDefinition(bank,identityId=activeIdentity){
+  const raw=getIdentityBanks(identityId)?.[bank];
+  return raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:null;
+}
+
+function getBankResponses(bank,identityId=activeIdentity){
+  const definition=getBankDefinition(bank,identityId);
+  return Array.isArray(definition?.responses)?definition.responses:[];
+}
+
+function normalizeContextBankKey(value){
+  return String(value??'')
+    .trim()
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'');
+}
+
+function bankInputMatches(text,definition){
+  const questionMatch=
+    Boolean(definition.questionMark)&&/\?\s*$/.test(String(text));
+
+  const keywords=Array.isArray(definition.keywords)
+    ?definition.keywords
+    :[];
+
+  const keywordMatch=keywords.some(keyword=>
+    keywordMatches(text,keyword,{exact:Boolean(definition.exactMatch)})
+  );
+
+  const patterns=Array.isArray(definition.patterns)
+    ?definition.patterns
+    :[];
+
+  const patternMatch=patterns.some(source=>{
+    try{return new RegExp(source,'i').test(String(text))}
+    catch{return false}
+  });
+
+  return questionMatch||keywordMatch||patternMatch;
+}
+
+function chooseRandomBank(banks){
+  return banks.length
+    ?banks[Math.floor(Math.random()*banks.length)]
+    :null;
+}
+
+function routeMessage(text){
+  const matches=[];
+
+  for(const [bank,definition] of Object.entries(getIdentityBanks())){
+    if(bank==='generic'||bank==='idle'||normalizeContextBankKey(bank)==='context-event')continue;
+    if(!definition||typeof definition!=='object'||Array.isArray(definition))continue;
+    if(bankInputMatches(text,definition))matches.push(bank);
+  }
+
+  return {bank:chooseRandomBank(matches)||'generic'};
+}
+
+function getContextEventStartupBank(identityId='jace'){
+  for(const [bank,definition] of Object.entries(getIdentityBanks(identityId))){
+    if(normalizeContextBankKey(bank)==='context-event')return definition;
+  }
+  return null;
+}
+
+function normalizeStartupResponse(item){
+  if(Array.isArray(item)){
+    const [expression,response,contextEvent]=item;
+    return {
+      expression:String(expression||'curious'),
+      response:String(response||''),
+      contextEvent:String(contextEvent||'')
+    };
+  }
+  if(item&&typeof item==='object'){
+    return {
+      expression:String(item.expression||item.exp||'curious'),
+      response:String(item.response||item.text||item.message||''),
+      contextEvent:String(
+        item.contextEvent||
+        item.context_event||
+        item['Context/Event']||
+        item.context||
+        item.event||
+        ''
+      )
+    };
+  }
+  return null;
+}
+
+function getContextEventStartupRows(identityId='jace'){
+  const bank=getContextEventStartupBank(identityId);
+  if(!bank)return [];
+
+  const source=
+    Array.isArray(bank.responses)?bank.responses:
+    Array.isArray(bank.rows)?bank.rows:
+    Array.isArray(bank.entries)?bank.entries:
+    Array.isArray(bank.messages)?bank.messages:
+    [];
+
+  return source
+    .map(normalizeStartupResponse)
+    .filter(row=>row?.response&&normalizeContextBankKey(row.contextEvent));
+}
+
+function getActiveStartupEventKeys(state){
+  const keys=[];
+  const add=value=>{
+    const key=normalizeContextBankKey(value);
+    if(key&&!keys.includes(key))keys.push(key);
+  };
+
+  for(const event of state?.eventsToday||[]){
+    add(event.name);
+    add(event.visualContext);
+    add(event.id);
+  }
+
+  for(const birthday of state?.birthdaysToday||[]){
+    add('birthday');
+    add(birthday.visualContext);
+  }
+
+  return keys;
+}
+
+function pickStartupRow(rows,key){
+  const normalizedKey=normalizeContextBankKey(key);
+  if(!normalizedKey)return null;
+  const matches=rows.filter(row=>
+    normalizeContextBankKey(row.contextEvent)===normalizedKey
+  );
+  return matches.length
+    ?matches[Math.floor(Math.random()*matches.length)]
+    :null;
+}
+
+function resolveStartupMessage(){
+  if(activeIdentity!=='jace'||!messageBankLoaded){
+    return {expression:'happy',response:CHARACTER.welcome};
+  }
+
+  const rows=getContextEventStartupRows('jace');
+  if(!rows.length){
+    return {expression:'happy',response:CHARACTER.welcome};
+  }
+
+  const state=window.CompanionContext?.get?.();
+  if(!state){
+    return {expression:'happy',response:CHARACTER.welcome};
+  }
+
+  // Startup priority is intentionally narrow:
+  // 1. Active event/birthday line.
+  // 2. Current time-of-day line only.
+  // 3. Default startup line.
+  for(const eventKey of getActiveStartupEventKeys(state)){
+    const eventRow=pickStartupRow(rows,eventKey);
+    if(eventRow)return eventRow;
+  }
+
+  const timeRow=pickStartupRow(rows,state.timeOfDay);
+  if(timeRow)return timeRow;
+
+  return {expression:'happy',response:CHARACTER.welcome};
+}
+
+function showStartupMessage(){
+  const startup=resolveStartupMessage();
+  if(CHARACTER.portrait!==false)setExpression(startup.expression||'happy');
+  add(startup.response||CHARACTER.welcome);
+}
+let lastResponse='';
+function pick(bank){
+  const options=getBankResponses(bank,'jace').length?getBankResponses(bank,'jace'):getBankResponses('generic','jace');
+  if(!options.length)return ['curious','No dialogue is available for this topic yet.'];
+  const filtered=options.filter(item=>Array.isArray(item)?item[1]!==lastResponse:item!==lastResponse);
+  const pool=filtered.length?filtered:options;
+  const chosen=pool[Math.floor(Math.random()*pool.length)];
+  const normalized=Array.isArray(chosen)?chosen:['curious',String(chosen)];
+  lastResponse=normalized[1];
+  return normalized;
+}
+
+function pickAlias(bank){
+  const options=getBankResponses(bank,activeIdentity).length?getBankResponses(bank,activeIdentity):getBankResponses('generic',activeIdentity);
+  if(!options.length)return null;
+  let chosen=options[Math.floor(Math.random()*options.length)];
+  const text=Array.isArray(chosen)?chosen[1]:chosen;
+  if(text===lastResponse&&options.length>1){
+    chosen=options[(options.indexOf(chosen)+1)%options.length];
+  }
+  const finalText=Array.isArray(chosen)?chosen[1]:chosen;
+  lastResponse=finalText;
+  return finalText;
+}
+
+/* =========================================================
+   SECTION 5.5 — COMPANION CHAT CONTENT BOUNDARY
+   Normal companion-chat dialogue is loaded exclusively from
+   the companion Notion Worker. The HTML does not prepend,
+   append, or author personality dialogue for chat responses.
+   ========================================================= */
+
+/* Framework-owned guidance shown only when the external message bank is absent.
+   These lines are tied to initialization/error recovery, not normal chat content. */
+const MISSING_BANK_QUICK_REPLY_GUIDANCE={
+  jace:[
+    ['clue','The cipher tools are ready, but my Notion dialogue archive did not load. Refresh after checking the companions Worker.'],
+    ['happy','I can tell you everything the message bank knows about me once the Notion dialogue archive finishes loading.'],
+    ['overshare','Private channel confirmed! My Notion dialogue archive is unavailable right now. Refresh after checking the companions Worker.'],
+    ['deadpan','Contradiction found: you asked me a question before my Notion dialogue data loaded. Refresh after checking the companions Worker.']
+  ],
+  mao:[
+    ['deadpan','Listener records are unavailable because the Notion dialogue archive did not load. Refresh after checking the companions Worker.'],
+    ['clue','Observation archive missing. Refresh after checking the companions Worker.'],
+    ['panic','Assessment cannot proceed because the Notion dialogue archive is unavailable. Refresh after checking the companions Worker.'],
+    ['deadpan','Off-record protocol acknowledged. The Notion dialogue archive is unavailable. Refresh after checking the companions Worker.']
+  ],
+  naoya:[
+    ['clue','Pattern analysis requires the Notion dialogue archive. Refresh after checking the companions Worker.'],
+    ['deadpan','The inconsistency is the unavailable Notion message bank. Refresh after checking the companions Worker.'],
+    ['curious','The signal trace ends at the unavailable Notion dialogue archive. Refresh after checking the companions Worker.'],
+    ['deadpan','Precise answer: the Notion dialogue archive is unavailable. Refresh after checking the companions Worker.']
+  ]
+};
+
+function missingBankGuidance(text,bank){
+  const replies=IDENTITIES[activeIdentity]?.quickReplies||[];
+  const quickIndex=replies.findIndex(reply=>reply===text);
+  const identityGuidance=MISSING_BANK_QUICK_REPLY_GUIDANCE[activeIdentity]||MISSING_BANK_QUICK_REPLY_GUIDANCE.jace;
+  if(quickIndex>=0 && identityGuidance[quickIndex])return identityGuidance[quickIndex];
+
+  const fallbackExpression=activeIdentity==='jace'
+    ? ({cryptology:'clue',identity:'happy',secrecy:'overshare',contradiction:'deadpan'}[bank]||'curious')
+    : activeIdentity==='mao'?'deadpan':'curious';
+  return [fallbackExpression,'The Notion message banks are unavailable. Refresh after checking the companions Worker.'];
+}
+
+/* =========================================================
+   SECTION 5.8 — EPISODE OVERLAY CONTROLLER
+   Sole DOM owner for episode offers and episode choices.
+   ========================================================= */
+const episodeOverlay=document.querySelector('#episodeOverlay');
+const episodeOverlayName=document.querySelector('#episodeOverlayName');
+const episodeOptions=document.querySelector('#episodeOptions');
+const closeEpisodeOverlayBtn=document.querySelector('#closeEpisodeOverlayBtn');
+const composer=document.querySelector('.composer');
+
+const EpisodeOverlayController={
+  show({title='EPISODE',label='CURRENT EPISODE',leaveLabel='LEAVE EPISODE',onLeave=null}={}){
+    episodeOverlayName.innerHTML=formatMarkdownText(title);
+    const caption=episodeOverlay.querySelector('.episode-overlay-label');
+    if(caption)caption.textContent=label;
+    closeEpisodeOverlayBtn.textContent=leaveLabel;
+    closeEpisodeOverlayBtn.onclick=event=>{
+      event.preventDefault();
+      if(typeof onLeave==='function')onLeave();
+    };
+    episodeOverlay.classList.add('active');
+    composer.classList.add('episode-active');
+  },
+
+  hide({clear=true,unlockComposer=true}={}){
+    episodeOverlay.classList.remove('active');
+    if(unlockComposer)composer.classList.remove('episode-active');
+    if(clear)this.clear();
+  },
+
+  suspend(){
+    episodeOverlay.classList.remove('active');
+  },
+
+  clear(){
+    if(episodeOptions)episodeOptions.innerHTML='';
+  },
+
+  disableOptions(){
+    if(!episodeOptions)return;
+    [...episodeOptions.querySelectorAll('.episode-choice')].forEach(button=>{
+      button.disabled=true;
+    });
+  },
+
+  enableOptions(){
+    if(!episodeOptions)return;
+    [...episodeOptions.querySelectorAll('.episode-choice')].forEach(button=>{
+      button.disabled=false;
+    });
+  },
+
+  addOption({
+    label,
+    className='',
+    index=0,
+    onSelect,
+    disabled=false,
+    title='',
+    animationDelay=null,
+    data={}
+  }){
+    if(!episodeOptions)return null;
+    const button=document.createElement('button');
+    button.type='button';
+    button.className=`episode-choice ${className}`.trim();
+    button.innerHTML=formatMarkdownText(label);
+    button.style.animationDelay=animationDelay ?? `${Math.min(index,8)*55}ms`;
+    button.disabled=Boolean(disabled);
+    if(disabled)button.setAttribute('aria-disabled','true');
+    if(title)button.title=title;
+    Object.entries(data).forEach(([key,value])=>{
+      if(value!==undefined && value!==null)button.dataset[key]=String(value);
+    });
+    button.addEventListener('click',event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      if(busy || button.disabled)return;
+      this.disableOptions();
+      if(typeof onSelect==='function')onSelect();
+    });
+    episodeOptions.append(button);
+    return button;
+  }
+};
+
+/* =========================================================
+   SECTION 6 — CIPHER ENGINE
+   ========================================================= */
+// === CYPHER HUB TOOLS ===
+// Supported formats:
+// Encrypt FFC | Message: hello
+// Decrypt FFC | Ciphertext: RQI...
+// Encrypt CFC | Message: hello
+// Decrypt CFC | Ciphertext: C64 M37...
+// Encrypt CLC-1 | Duty: Tokiko / Ludo / Daika | Message: meet at lab
+// Decrypt CLC-2 | Duty: Tokiko / Ludo / Daika | Ciphertext: BOHIKWAKE
+
+const CLC_LANES={
+  'CLC-1':['Aria','Tokiko','Damian','Ludo','Daika','Fate','Luxi','Tyler','Kouji','Ruby','Juno','Hikari','Alice','Saya','Adair','Milo','Meggie','Jace'],
+  'CLC-2':['Adair','Alice','Aria','Daika','Damian','Fate','Hikari','Jace','Juno','Kouji','Ludo','Luxi','Meggie','Milo','Ruby','Tokiko','Tyler']
+};
+const NAME_ALIASES={
+  'jacey':'Jace','jacey cosmo':'Jace','jace cosmo':'Jace',
+  'ty':'Tyler','ari':'Aria','damon':'Damian'
+};
+function canonicalDutyName(name){
+  const raw=name.trim().replace(/[^a-zA-Z ]/g,'').replace(/\s+/g,' ');
+  const key=raw.toLowerCase();
+  const alias=NAME_ALIASES[key];
+  const wanted=(alias||raw).toLowerCase();
+  const all=[...new Set([...CLC_LANES['CLC-1'],...CLC_LANES['CLC-2']])];
+  return all.find(n=>n.toLowerCase()===wanted)||null;
+}
+function clcTransform(text,version,duties,decrypt=false,preserve=false){
+  const lanes=CLC_LANES[version];
+  if(!lanes)throw new Error('Use CLC-1 or CLC-2.');
+  if(duties.length<2||duties.length>5)throw new Error('CLC requires 2–5 duty names.');
+  const nums=duties.map(name=>{
+    const canon=canonicalDutyName(name);
+    if(!canon)throw new Error(`Unknown duty name: ${name.trim()}`);
+    const n=lanes.findIndex(x=>x.toLowerCase()===canon.toLowerCase())+1;
+    if(!n)throw new Error(`${canon} is not in ${version}.`);
+    return n;
+  });
+  let keyIndex=0,out='';
+  for(const ch of text.toUpperCase()){
+    if(/[A-Z]/.test(ch)){
+      const p=ch.charCodeAt(0)-65;
+      const k=(nums[keyIndex++%nums.length]-1)%26;
+      out+=String.fromCharCode(65+((decrypt?p-k:p+k)+26)%26);
+    }else if(preserve){
+      out+=ch;
+    }
+  }
+  const keyword=nums.map(n=>String.fromCharCode(64+((n-1)%26+1))).join('');
+  return {result:out,keyword,laneNumbers:nums.join('/')};
+}
+
+const FFC_PLAIN='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const FFC_CIPHER='WOLFABCDGHJKMPQTUVXYZENRIS';
+const FFC_KEY='FUSHIMI';
+function ffcEncrypt(text){
+  let keyI=0,out='';
+  for(const ch of text.toUpperCase()){
+    if(/[A-Z]/.test(ch)){
+      const sub=FFC_CIPHER[FFC_PLAIN.indexOf(ch)];
+      const p=sub.charCodeAt(0)-65;
+      const k=FFC_KEY.charCodeAt(keyI++%FFC_KEY.length)-65;
+      out+=String.fromCharCode(65+(p+k)%26);
+    }else out+=ch;
+  }
+  return out;
+}
+function ffcDecrypt(text){
+  let keyI=0,out='';
+  for(const ch of text.toUpperCase()){
+    if(/[A-Z]/.test(ch)){
+      const c=ch.charCodeAt(0)-65;
+      const k=FFC_KEY.charCodeAt(keyI++%FFC_KEY.length)-65;
+      const sub=String.fromCharCode(65+((c-k)+26)%26);
+      const idx=FFC_CIPHER.indexOf(sub);
+      if(idx<0)throw new Error(`Invalid FFC symbol: ${sub}`);
+      out+=FFC_PLAIN[idx];
+    }else out+=ch;
+  }
+  return out;
+}
+
+const CFC_ROWS=['INTEG','RYOVU','HABCD','FKLMP','QSWXZ'];
+const CFC_ENC={},CFC_DEC={};
+CFC_ROWS.forEach((row,r)=>[...row].forEach((ch,c)=>{
+  const token=`${r+1}${c+1}`;
+  CFC_ENC[ch]=token;CFC_DEC[token]=ch;
+}));
+const CFC_ORDER=[0,3,1,4,2];
+const CFC_IOT=[11,23,13];
+const CFC_TAGS=['C','M','O','O','S'];
+function cfcEncrypt(text){
+  const normalized=text.toUpperCase().replace(/J/g,'I').replace(/[^A-Z]/g,'');
+  if(!normalized)throw new Error('CFC needs at least one letter.');
+  const tokens=[...normalized].map(ch=>CFC_ENC[ch]);
+  while(tokens.length%5)tokens.push('54');
+  const rows=tokens.length/5;
+  const grid=Array.from({length:rows},(_,r)=>tokens.slice(r*5,r*5+5));
+  const transposed=[];
+  CFC_ORDER.forEach(col=>{for(let r=0;r<rows;r++)transposed.push(grid[r][col]);});
+  const cipher=transposed.map((tok,i)=>String((Number(tok)+CFC_IOT[i%3])%100).padStart(2,'0'));
+  return cipher.map((tok,i)=>CFC_TAGS[i%5]+tok).join(' ');
+}
+function cfcDecrypt(text){
+  const matches=[...text.toUpperCase().matchAll(/[CMOS]?\s*(\d{2})/g)].map(m=>m[1]);
+  if(!matches.length)throw new Error('No CFC tokens found.');
+  if(matches.length%5!==0)throw new Error('CFC token count must be divisible by 5.');
+  const transposed=matches.map((tok,i)=>String((Number(tok)-CFC_IOT[i%3]+100)%100).padStart(2,'0'));
+  const rows=transposed.length/5;
+  const grid=Array.from({length:rows},()=>Array(5));
+  let p=0;
+  CFC_ORDER.forEach(col=>{for(let r=0;r<rows;r++)grid[r][col]=transposed[p++];});
+  const original=grid.flat();
+  let plain='';
+  for(const tok of original){
+    if(!CFC_DEC[tok])throw new Error(`Invalid CFC coordinate: ${tok}`);
+    plain+=CFC_DEC[tok];
+  }
+  return plain.replace(/X+$/,'');
+}
+
+function executeCipherRequest(req){
+  if(!req.message)throw new Error(`Add ${req.mode==='encrypt'?'Message':'Ciphertext'}: after a | separator.`);
+  if(req.type==='FFC'){
+    const result=req.mode==='encrypt'?ffcEncrypt(req.message):ffcDecrypt(req.message);
+    return `${req.mode==='encrypt'?'FFC ENCRYPTED':'FFC DECRYPTED'}\n${result}`;
+  }
+  if(req.type==='CFC'){
+    const result=req.mode==='encrypt'?cfcEncrypt(req.message):cfcDecrypt(req.message);
+    return `${req.mode==='encrypt'?'CFC ENCRYPTED':'CFC DECRYPTED'}\n${result}`;
+  }
+  if(req.type==='CLC-1'||req.type==='CLC-2'){
+    if(!req.duty)throw new Error('CLC requires Duty: NAME / NAME.');
+    const duties=req.duty.split(/\s*\/\s*|\s*,\s*/).filter(Boolean);
+    const data=clcTransform(req.message,req.type,duties,req.mode==='decrypt',req.preserve);
+    const label=req.mode==='encrypt'?'CIPHERTEXT':'PLAINTEXT';
+    return `${req.type} ${req.mode.toUpperCase()}\nDUTY: ${duties.map(canonicalDutyName).join(' / ')}\nLANES: ${data.laneNumbers}\nKEYWORD: ${data.keyword}\n${label}: ${data.result}`;
+  }
+  throw new Error('Unsupported cipher.');
+}
+
+function showToast(text){const el=document.querySelector('#toast');el.innerHTML=formatMarkdownText(text);el.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>el.classList.remove('show'),2200)}
+
+function respond(text){
+  const route=routeMessage(text);
+  const bank=route.bank;
+  let exp='deadpan',msg;
+
+  if(!messageBankLoaded){
+    [exp,msg]=missingBankGuidance(text,bank);
+  }else if(activeIdentity==='jace'){
+    [exp,msg]=pick(bank);
+    if(typeof exp!=='string'||!exp.trim())exp='curious';
+  }else{
+    msg=pickAlias(bank)||pickAlias('generic');
+    exp=activeIdentity==='mao'?'deadpan':'curious';
+  }
+  busy=true;
+  const wait=typing();
+  setTimeout(()=>{
+    wait.remove();
+    if(activeIdentity==='jace' && CHARACTER.portrait!==false)setExpression(exp);
+    add(msg);
+    busy=false;
+    resetIdleTimer();
+  },FRAMEWORK_TIMING.replyBase+Math.min(text.length*FRAMEWORK_TIMING.replyPerCharacter,FRAMEWORK_TIMING.replyMaximumExtra));
+}
+
+let companionMode=false,idleTimer=null;
+function nextIdleDelay(){return CHARACTER.idleMinMs+Math.random()*(CHARACTER.idleMaxMs-CHARACTER.idleMinMs)}
+function resetIdleTimer(){clearTimeout(idleTimer);if(!companionMode)return;idleTimer=setTimeout(runIdle,nextIdleDelay())}
+function runIdle(){
+  if(!companionMode||busy){resetIdleTimer();return}
+
+  let exp='deadpan',msg;
+  if(activeIdentity==='jace'){
+    [exp,msg]=pick('idle');
+  }else{
+    msg=pickAlias('idle')||pickAlias('generic');
+    exp=activeIdentity==='mao'?'deadpan':'curious';
+  }
+
+  if(activeIdentity==='jace' && CHARACTER.portrait!==false){
+    setExpression(exp);
+  }
+  add(msg);
+  resetIdleTimer();
+}
+const companionToggle=document.querySelector('#companionToggle');
+function setCompanionMode(on){
+  companionMode=on;
+  companionToggle.classList.toggle('toggle-on',on);
+  companionToggle.setAttribute('aria-pressed',String(on));
+  companionToggle.title='Companion mode: '+(on?'on':'off');
+  companionToggle.textContent=on?'●':'◌';
+  showToast(CHARACTER.companionModeLabel+' // '+(on?'ENABLED':'DISABLED'));
+  resetIdleTimer();
+}
+companionToggle.onclick=()=>setCompanionMode(!companionMode);
+['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt,()=>{if(companionMode)resetIdleTimer()},{passive:true}));
+function send(text){
+  text=text.trim();
+  if(!text||busy)return;
+
+  const identityKey=detectIdentityPhrase(text);
+  document.querySelector('#input').value='';
+  if(identityKey){
+    if(typeof abandonEpisode==='function')abandonEpisode(false);
+    switchIdentity(identityKey);
+    return;
+  }
+
+  add(text,'user');
+  respond(text);
+}
+/* =========================================================
+   SECTION 8 — CHAT COMPOSER / NOTION EMBED SUPPORT
+   ========================================================= */
+// === NOTION / IFRAME-SAFE CHAT COMPOSER ===
+const chatForm=document.querySelector('#form');
+const chatInput=document.querySelector('#input');
+const sendBtn=document.querySelector('#sendBtn');
+
+function submitChatMessage(){
+  const value=chatInput.value;
+  if(!value.trim()||busy)return;
+  send(value);
+}
+
+chatForm.addEventListener('submit',event=>{
+  event.preventDefault();
+  event.stopPropagation();
+  submitChatMessage();
+});
+
+sendBtn.addEventListener('click',event=>{
+  event.preventDefault();
+  event.stopPropagation();
+  submitChatMessage();
+});
+
+chatInput.addEventListener('keydown',event=>{
+  if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){
+    event.preventDefault();
+    event.stopPropagation();
+    submitChatMessage();
+  }
+});
+
+// Some embedded browsers dispatch pointer events more reliably than synthetic
+// form submission. This does not duplicate click events because it only restores
+// focus and leaves the actual send action to the click handler.
+sendBtn.addEventListener('pointerdown',event=>{
+  event.stopPropagation();
+});
+
+chatInput.addEventListener('focus',()=>{
+  requestAnimationFrame(()=>chatInput.scrollIntoView({block:'nearest'}));
+});
+
+const CIPHER_KNOWLEDGE={
+  jace:['CLC'],
+  naoya:['FFC','CFC'],
+  mao:['FFC','CFC']
+};
+const DEFAULT_CIPHER={
+  jace:'CLC',
+  naoya:'FFC',
+  mao:'FFC'
+};
+
+function getKnownCipherFamilies(){
+  return CIPHER_KNOWLEDGE[activeIdentity]||[];
+}
+
+function unknownCipherMessage(family){
+  if(activeIdentity==='jace'){
+    return family==='CLC'
+      ?''
+      :"Hmm...\n\nI've never seen this cipher before.\n\nIt feels strangely familiar, but I don't actually remember how it works.";
+  }
+  if(activeIdentity==='naoya'){
+    return family==='CLC'
+      ?'Unknown encryption method.\n\nRecent construction. It is not part of this memory set.'
+      :'';
+  }
+  if(activeIdentity==='mao'){
+    return family==='CLC'
+      ?'Not ours.'
+      :'';
+  }
+  return 'Cipher unavailable.';
+}
+
+function updateCipherKnowledge(){
+  const fallback=DEFAULT_CIPHER[activeIdentity]||'CLC';
+  cipherFamily.value=fallback;
+  updateCipherForm();
+  cipherResult.className='cipher-result';
+  cipherResultText.textContent='';
+}
+
+function reactToUnknownCipher(family){
+  const message=unknownCipherMessage(family);
+  if(!message)return false;
+
+  if(activeIdentity==='jace' && CHARACTER.portrait!==false){
+    setExpression('curious'); // OPEN_CURIOUS
+  }
+
+  const expressionLabel=
+    activeIdentity==='jace' ? 'OPEN_CURIOUS' :
+    activeIdentity==='naoya' ? 'UNKNOWN METHOD' :
+    'UNRECOGNIZED';
+
+  showCipherFeedback(
+    `${CHARACTER.shortName.toUpperCase()} // UNKNOWN CIPHER`,
+    message,
+    'error',
+    expressionLabel
+  );
+  showToast('CIPHER MEMORY // UNAVAILABLE');
+
+  const fallback=DEFAULT_CIPHER[activeIdentity]||'CLC';
+  window.setTimeout(()=>{
+    cipherFamily.value=fallback;
+    updateCipherForm();
+  },FRAMEWORK_TIMING.unknownCipherReset);
+
+  return true;
+}
+
+const CIPHER_IDENTITY_COPY={
+  jace:{
+    title:'JACE // CIPHER LAB',
+    intro:'Build, test, encrypt, and decrypt your messages. I’ll verify the format before running anything, and I’ll let you know if I spot a mistake.',
+    run:'RUN CIPHER',
+    clear:'CLEAR',
+    encryptPlaceholder:'Enter the text to encrypt…',
+    decryptPlaceholder:'Enter the ciphertext to decrypt…',
+    validationTitle:'JACE // FORMAT ERROR',
+    validationExpression:'CONTRADICTION FOUND',
+    successTitle:'JACE // OPERATION COMPLETE',
+    successEncrypt:'ENCRYPTED',
+    successDecrypt:'DECRYPTED',
+    failureTitle:'JACE // OPERATION FAILED',
+    failureExpression:'RECHECK REQUIRED',
+    invalidTail:'Fix those fields and I’ll try again.',
+    failureLead:'The format passed, but the cipher still rejected something:'
+  },
+  naoya:{
+    title:'NAOYA // ANALYSIS TERMINAL',
+    intro:'Every cipher follows a pattern. Provide the required information and I’ll verify the structure before processing the data.',
+    run:'PROCESS DATA',
+    clear:'RESET',
+    encryptPlaceholder:'Input plaintext…',
+    decryptPlaceholder:'Input ciphertext…',
+    validationTitle:'NAOYA // STRUCTURE ERROR',
+    validationExpression:'FORMAT INVALID',
+    successTitle:'NAOYA // ANALYSIS COMPLETE',
+    successEncrypt:'ENCODED',
+    successDecrypt:'DECODED',
+    failureTitle:'NAOYA // PROCESSING FAILED',
+    failureExpression:'RECHECK STRUCTURE',
+    invalidTail:'Correct the fields and resubmit.',
+    failureLead:'The format was accepted, but processing failed:'
+  },
+  mao:{
+    title:'MAO // FENRIR OPERATIONS',
+    intro:'Accuracy matters. Incomplete or incorrect information compromises the operation. Verify the fields before continuing.',
+    run:'EXECUTE',
+    clear:'CLEAR',
+    encryptPlaceholder:'Awaiting plaintext.',
+    decryptPlaceholder:'Awaiting ciphertext.',
+    validationTitle:'MAO // FORMAT REJECTED',
+    validationExpression:'INPUT INVALID',
+    successTitle:'MAO // OPERATION COMPLETE',
+    successEncrypt:'ENCRYPTED',
+    successDecrypt:'DECRYPTED',
+    failureTitle:'MAO // OPERATION FAILED',
+    failureExpression:'VERIFY INPUT',
+    invalidTail:'Correct it.',
+    failureLead:'The operation failed after validation:'
+  }
+};
+
+function getCipherIdentityCopy(){
+  return CIPHER_IDENTITY_COPY[activeIdentity]||CIPHER_IDENTITY_COPY.jace;
+}
+
+function updateCipherIdentityText(){
+  const copy=getCipherIdentityCopy();
+  const title=document.querySelector('#cipherLabTitle');
+  const intro=document.querySelector('#cipherLabIntro');
+  if(title)title.textContent=copy.title;
+  if(intro)intro.textContent=copy.intro;
+  if(cipherRun)cipherRun.textContent=copy.run;
+  if(cipherClear)cipherClear.textContent=copy.clear;
+  updateCipherForm();
+}
+
+/* =========================================================
+   SECTION 7 — CIPHER LAB UI
+   ========================================================= */
+// === DEDICATED CIPHER MODE ===
+const chatPanel=document.querySelector('.chat');
+const chatModeBtn=document.querySelector('#chatModeBtn');
+const cipherModeBtn=document.querySelector('#cipherModeBtn');
+const cipherModePanel=document.querySelector('#cipherMode');
+const cipherFamily=document.querySelector('#cipherFamily');
+const cipherOperation=document.querySelector('#cipherOperation');
+const cipherVersion=document.querySelector('#cipherVersion');
+const cipherVersionWrap=document.querySelector('#cipherVersionWrap');
+const cipherDuty=document.querySelector('#cipherDuty');
+const cipherDutyWrap=document.querySelector('#cipherDutyWrap');
+const cipherText=document.querySelector('#cipherText');
+const cipherTextLabel=document.querySelector('#cipherTextLabel');
+const cipherPreserve=document.querySelector('#cipherPreserve');
+const cipherRun=document.querySelector('#cipherRun');
+const cipherClear=document.querySelector('#cipherClear');
+const cipherResult=document.querySelector('#cipherResult');
+const cipherResultTitle=document.querySelector('#cipherResultTitle');
+const cipherResultExpression=document.querySelector('#cipherResultExpression');
+const cipherResultText=document.querySelector('#cipherResultText');
+
+// Move Cipher Lab into the chat panel so the shared header and mode tabs remain visible.
+if(cipherModePanel.parentElement!==chatPanel){
+  chatPanel.appendChild(cipherModePanel);
+}
+const CipherLab={
+  state:{open:false,initialized:false},
+  elements:{
+    chatPanel,chatModeBtn,cipherModeBtn,panel:cipherModePanel,
+    family:cipherFamily,operation:cipherOperation,version:cipherVersion,
+    versionWrap:cipherVersionWrap,duty:cipherDuty,dutyWrap:cipherDutyWrap,
+    text:cipherText,textLabel:cipherTextLabel,preserve:cipherPreserve,
+    runButton:cipherRun,clearButton:cipherClear,result:cipherResult,
+    resultTitle:cipherResultTitle,resultExpression:cipherResultExpression,
+    resultText:cipherResultText
+  },
+  initialize(){
+    if(this.state.initialized)return this;
+    this.state.initialized=true;
+    chatModeBtn.addEventListener('click',()=>this.close());
+    cipherModeBtn.addEventListener('click',()=>this.open());
+    cipherFamily.addEventListener('change',()=>this.handleFamilyChange());
+    cipherOperation.addEventListener('change',()=>this.renderForm());
+    cipherRun.addEventListener('click',()=>this.run());
+    cipherClear.addEventListener('click',()=>this.clear());
+    updateCipherKnowledge();
+    updateCipherIdentityText();
+    this.renderForm();
+    return this;
+  },
+  isOpen(){return this.state.open},
+  open(){
+    if(this.state.open)return false;
+    this.state.open=true;
+    chatPanel.classList.add('cipher-active');
+    
+    cipherModePanel.classList.add('active');
+    chatModeBtn.classList.remove('active');
+    cipherModeBtn.classList.add('active');
+    if(typeof EpisodeOverlayController!=='undefined')EpisodeOverlayController.suspend();
+    showToast('CIPHER LAB // ACTIVE');
+    this.renderForm();
+    return true;
+  },
+  close(){
+    if(!this.state.open){
+      chatPanel.classList.remove('cipher-active');
+      cipherModePanel.classList.remove('active');
+      chatModeBtn.classList.add('active');
+      cipherModeBtn.classList.remove('active');
+      return false;
+    }
+    this.state.open=false;
+    chatPanel.classList.remove('cipher-active');
+    cipherModePanel.classList.remove('active');
+    chatModeBtn.classList.add('active');
+    cipherModeBtn.classList.remove('active');
+    showToast('COMPANION CHAT // ACTIVE');
+    Framework.resume({source:'cipher-lab'});
+    return true;
+  },
+  toggle(){return this.state.open?this.close():this.open()},
+  renderForm(){updateCipherForm()},
+  handleFamilyChange(){
+    const selected=cipherFamily.value;
+    if(!getKnownCipherFamilies().includes(selected)){
+      reactToUnknownCipher(selected);
+      return false;
+    }
+    this.renderForm();
+    return true;
+  },
+  run(){
+    const problems=validateCipherForm();
+    const copy=getCipherIdentityCopy();
+    if(problems.length){
+      if(activeIdentity==='jace'&&CHARACTER.portrait!==false)setExpression('deadpan');
+      showCipherFeedback(
+        copy.validationTitle,
+        `I found ${problems.length===1?'a problem':'some problems'}:\n\n• ${problems.join('\n• ')}\n\n${copy.invalidTail}`,
+        'error',
+        copy.validationExpression
+      );
+      showToast('CIPHER FORMAT // INVALID');
+      return false;
+    }
+    try{
+      const family=cipherFamily.value;
+      const operation=cipherOperation.value;
+      const req={mode:operation,type:family,message:cipherText.value.trim(),preserve:cipherPreserve.checked};
+      if(family==='CLC'){
+        req.type=cipherVersion.value;
+        req.duty=cipherDuty.value.trim();
+      }
+      const output=executeCipherRequest(req);
+      if(activeIdentity==='jace'&&CHARACTER.portrait!==false)setExpression('clue');
+      showCipherFeedback(
+        copy.successTitle,
+        output,
+        'success',
+        operation==='encrypt'?copy.successEncrypt:copy.successDecrypt
+      );
+      showToast('CIPHER OPERATION // COMPLETE');
+      return true;
+    }catch(err){
+      if(activeIdentity==='jace'&&CHARACTER.portrait!==false)setExpression('panic');
+      showCipherFeedback(
+        copy.failureTitle,
+        `${copy.failureLead}\n\n${err.message}`,
+        'error',
+        copy.failureExpression
+      );
+      showToast('CIPHER OPERATION // ERROR');
+      return false;
+    }
+  },
+  clear(){
+    cipherDuty.value='';
+    cipherText.value='';
+    cipherPreserve.checked=false;
+    cipherResult.className='cipher-result';
+    cipherResultText.textContent='';
+    this.renderForm();
+    return true;
+  },
+  refreshIdentity(){
+    updateCipherKnowledge();
+    updateCipherIdentityText();
+  }
+};
+
+function updateCipherForm(){
+  const copy=getCipherIdentityCopy();
+  const isCLC=cipherFamily.value==='CLC';
+  cipherVersionWrap.classList.toggle('hidden',!isCLC);
+  cipherDutyWrap.classList.toggle('hidden',!isCLC);
+  cipherTextLabel.textContent=cipherOperation.value==='encrypt'?'MESSAGE':'CIPHERTEXT';
+  cipherText.placeholder=cipherOperation.value==='encrypt'
+    ?copy.encryptPlaceholder
+    :copy.decryptPlaceholder;
+}
+
+function showCipherFeedback(title,text,type='error',expression='FORMAT CHECK'){
+  cipherResult.classList.add('show');
+  cipherResult.classList.toggle('error',type==='error');
+  cipherResult.classList.toggle('success',type==='success');
+  cipherResultTitle.textContent=title;
+  cipherResultExpression.textContent=expression;
+  cipherResultText.textContent=text;
+  cipherResult.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function validateCipherForm(){
+  const family=cipherFamily.value;
+  const known=getKnownCipherFamilies();
+  if(!known.includes(family)){
+    return [unknownCipherMessage(family)];
+  }
+  const operation=cipherOperation.value;
+  const text=cipherText.value.trim();
+  const problems=[];
+
+  if(!text){
+    problems.push(operation==='encrypt'
+      ?'The message field is empty.'
+      :'The ciphertext field is empty.');
+  }
+
+  if(family==='CLC'){
+    const duties=cipherDuty.value.split(/\s*\/\s*|\s*,\s*/).filter(Boolean);
+    if(!cipherDuty.value.trim()){
+      problems.push('CLC needs a duty list.');
+    }else if(duties.length<2||duties.length>5){
+      problems.push(`CLC needs 2–5 duty names. I counted ${duties.length}.`);
+    }else{
+      const version=cipherVersion.value;
+      const invalid=[];
+      const unavailable=[];
+      duties.forEach(name=>{
+        const canon=canonicalDutyName(name);
+        if(!canon)invalid.push(name.trim());
+        else if(!CLC_LANES[version].some(x=>x.toLowerCase()===canon.toLowerCase()))unavailable.push(canon);
+      });
+      if(invalid.length)problems.push(`I don't recognize these duty names: ${invalid.join(', ')}.`);
+      if(unavailable.length)problems.push(`${unavailable.join(', ')} ${unavailable.length===1?'is':'are'} not in ${version}.`);
+    }
+    if(operation==='decrypt'&&!/^[A-Z\s.,!?'"’\-:;]+$/i.test(text)){
+      problems.push('CLC ciphertext should contain letters A–Z. Punctuation is okay only when it was preserved during encryption.');
+    }
+  }
+
+  if(family==='CFC'&&operation==='decrypt'){
+    const tokens=[...text.toUpperCase().matchAll(/[CMOS]?\s*(\d{2})/g)].map(m=>m[1]);
+    if(!tokens.length)problems.push('I could not find any CFC two-digit tokens.');
+    else if(tokens.length%5!==0)problems.push(`CFC needs a token count divisible by 5. I counted ${tokens.length}.`);
+    if(/[A-Z]/i.test(text.replace(/[CMOS]/gi,''))){
+      problems.push('CFC ciphertext should use C/M/O/O/S tags and two-digit numbers.');
+    }
+  }
+
+  if(family==='FFC'&&operation==='decrypt'&&!/[A-Z]/i.test(text)){
+    problems.push('FFC ciphertext needs at least one letter.');
+  }
+
+  return problems;
+}
+
+CipherLab.initialize();
+Framework.modules.CipherLab=CipherLab;
+const dossier=document.querySelector('#dossier');
+const dossierBtn=document.querySelector('#dossierBtn');
+const closeDossier=document.querySelector('#closeDossier');
+
+function setDossierOpen(open){
+  dossier.classList.toggle('open',open);
+  dossierBtn.setAttribute('aria-pressed',String(open));
+  dossierBtn.title=open?'Hide classified dossier':'Classified dossier';
+}
+
+dossierBtn.setAttribute('aria-pressed','false');
+dossierBtn.onclick=()=>setDossierOpen(!dossier.classList.contains('open'));
+closeDossier.onclick=()=>setDossierOpen(false);
+document.querySelector('#glitchBtn').onclick=()=>{document.querySelector('#terminal').classList.add('glitch');setTimeout(()=>document.querySelector('#terminal').classList.remove('glitch'),500);setExpression('clue')};
+portraitFrame.dataset.alias=CHARACTER.initials;
+refreshQuickReplies();
+
+/* =========================================================
+   MAINTENANCE NOTES
+   - Shared framework: layout, chat, dossier, companion mode.
+   - Jacey-specific systems: aliases, dialogue, Cipher Lab.
+   - Cipher commands are intentionally unavailable in normal chat.
+   - Notion input uses explicit click and key handlers.
+   ========================================================= */
+
+window.addEventListener('error',()=>{
+  if(typeof EpisodeOverlayController!=='undefined'){
+    EpisodeOverlayController.enableOptions();
+  }
+});
+
+</script>
+
+<script id="episode-engine">
+/* =========================================================
+   COMPANION ENGINE v5.6 — EPISODE ENGINE
+   Engine only. Episode content is registered separately.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. MODES AND RUNTIME STATE
+   --------------------------------------------------------- */
+const EpisodeMode=Object.freeze({
+  IDLE:'idle',
+  SELECTING:'selecting',
+  OFFER:'offer',
+  ACTIVE:'active'
+});
+
+const episodeState={
+  mode:EpisodeMode.IDLE,
+  episodeId:null,
+  nodeId:null,
+  triggerText:'',
+  matchedTrigger:'',
+  pendingOriginalText:'',
+  currentChoices:[]
+};
+
+function resetEpisodeState(){
+  episodeState.mode=EpisodeMode.IDLE;
+  episodeState.episodeId=null;
+  episodeState.nodeId=null;
+  episodeState.triggerText='';
+  episodeState.matchedTrigger='';
+  episodeState.pendingOriginalText='';
+  episodeState.currentChoices=[];
+}
+
+/* ---------------------------------------------------------
+   2. EPISODE REGISTRY
+   --------------------------------------------------------- */
+const EPISODE_LIBRARY=Object.create(null);
+
+function registerEpisode(episode){
+  if(!episode || typeof episode!=='object')throw new Error('Episode must be an object.');
+  if(!episode.id)throw new Error('Episode requires an id.');
+  if(!episode.title)throw new Error(`Episode "${episode.id}" requires a title.`);
+  if(!Array.isArray(episode.triggers) || !episode.triggers.length){
+    throw new Error(`Episode "${episode.id}" requires at least one trigger.`);
+  }
+  if(!episode.openingNode)throw new Error(`Episode "${episode.id}" requires an openingNode.`);
+  if(!episode.nodes || typeof episode.nodes!=='object'){
+    throw new Error(`Episode "${episode.id}" requires a nodes object.`);
+  }
+  EPISODE_LIBRARY[episode.id]=episode;
+  return episode;
+}
+
+/* ---------------------------------------------------------
+   3. PROGRESS TRACKING
+   --------------------------------------------------------- */
+const EPISODE_PROGRESS_KEYS=Object.freeze([
+  'startedEpisodes',
+  'finishedEpisodes',
+  'completedEndings',
+  'unlocks'
+]);
+
+function normalizeProgressList(value){
+  if(!Array.isArray(value))return [];
+  return [...new Set(value.filter(item=>typeof item==='string' && item.trim()).map(item=>item.trim()))];
+}
+
+function createEmptyEpisodeProgress(){
+  return Object.fromEntries(EPISODE_PROGRESS_KEYS.map(key=>[key,[]]));
+}
+
+function normalizeEpisodeProgress(progress={}){
+  return Object.fromEntries(
+    EPISODE_PROGRESS_KEYS.map(key=>[key,normalizeProgressList(progress[key])])
+  );
+}
+
+let episodeProgress=createEmptyEpisodeProgress();
+
+const EpisodeProgress=Object.freeze({
+  replace(progress){
+    episodeProgress=normalizeEpisodeProgress(progress);
+    return this.snapshot();
+  },
+  reset(){
+    episodeProgress=createEmptyEpisodeProgress();
+    return this.snapshot();
+  },
+  markStarted(episodeId){
+    this._uniquePush(episodeProgress.startedEpisodes,episodeId);
+  },
+  markFinished(episodeId){
+    this._uniquePush(episodeProgress.finishedEpisodes,episodeId);
+  },
+  markEndingComplete(endingId){
+    this._uniquePush(episodeProgress.completedEndings,endingId);
+  },
+  grantUnlock(unlockId){
+    this._uniquePush(episodeProgress.unlocks,unlockId);
+  },
+  grantUnlocks(unlocks){
+    normalizeProgressList(unlocks).forEach(unlockId=>this.grantUnlock(unlockId));
+  },
+  hasStarted(episodeId){
+    return episodeProgress.startedEpisodes.includes(episodeId);
+  },
+  hasFinished(episodeId){
+    return episodeProgress.finishedEpisodes.includes(episodeId);
+  },
+  hasEnding(endingId){
+    return episodeProgress.completedEndings.includes(endingId);
+  },
+  hasUnlock(unlockId){
+    return episodeProgress.unlocks.includes(unlockId);
+  },
+  satisfies(requirement){
+    return this.hasFinished(requirement) || this.hasEnding(requirement) || this.hasUnlock(requirement);
+  },
+  snapshot(){
+    return normalizeEpisodeProgress(episodeProgress);
+  },
+  _uniquePush(list,value){
+    if(typeof value!=='string')return;
+    const normalized=value.trim();
+    if(normalized && !list.includes(normalized))list.push(normalized);
+  }
+});
+
+/* ---------------------------------------------------------
+   4. REQUIREMENT EVALUATION
+   --------------------------------------------------------- */
+function requirementIsMet(requirement){
+  if(!requirement || requirement==='None')return true;
+
+  if(typeof requirement==='string'){
+    return EpisodeProgress.satisfies(requirement);
+  }
+
+  if(Array.isArray(requirement))return requirement.every(requirementIsMet);
+  if(requirement.ALL)return requirement.ALL.every(requirementIsMet);
+  if(requirement.ANY)return requirement.ANY.some(requirementIsMet);
+  return false;
+}
+
+function episodeIsEligible(episode){
+  return Boolean(episode && requirementIsMet(episode.requires||'None'));
+}
+
+/* ---------------------------------------------------------
+   5. TRIGGER DETECTION
+   --------------------------------------------------------- */
+function normalizeTriggerWords(trigger){
+  return String(trigger||'')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function textContainsTrigger(text,trigger){
+  const words=normalizeTriggerWords(trigger);
+  if(!words.length)return false;
+
+  const phrase=words
+    .map(word=>word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'))
+    .join('\\s+');
+
+  return new RegExp(`(^|[^a-z0-9])${phrase}([^a-z0-9]|$)`,'i').test(String(text||''));
+}
+
+function triggerSpecificity(trigger){
+  const words=normalizeTriggerWords(trigger);
+  return {
+    wordCount:words.length,
+    characterCount:words.join(' ').length
+  };
+}
+
+function compareTriggerSpecificity(left,right){
+  const a=triggerSpecificity(left);
+  const b=triggerSpecificity(right);
+  return (b.wordCount-a.wordCount)||(b.characterCount-a.characterCount);
+}
+
+function findTriggeredEpisodes(text){
+  if(episodeState.mode!==EpisodeMode.IDLE)return [];
+
+  const records=(typeof EpisodeManager!=='undefined' && EpisodeManager.records instanceof Map)
+    ? [...EpisodeManager.records.values()]
+    : Object.values(EPISODE_LIBRARY).map(episode=>({
+        title:episode.title,
+        enabled:episode.__enabled!==false,
+        data:episode
+      }));
+
+  const candidates=[];
+  const seenTitles=new Set();
+
+  for(const record of records){
+    const episode=record.data;
+    if(!record.enabled || episode.__enabled===false)continue;
+
+    const episodeIdentity=episode.identity||'jace';
+    if(episodeIdentity!==activeIdentity)continue;
+    if(!episodeIsEligible(episode))continue;
+
+    const matchedTriggers=(episode.triggers||[])
+      .filter(trigger=>textContainsTrigger(text,trigger))
+      .sort(compareTriggerSpecificity);
+
+    if(!matchedTriggers.length)continue;
+
+    const titleKey=String(episode.title||'').trim().toLocaleLowerCase();
+    if(seenTitles.has(titleKey))continue;
+    seenTitles.add(titleKey);
+
+    candidates.push({
+      episode,
+      trigger:matchedTriggers[0],
+      specificity:triggerSpecificity(matchedTriggers[0])
+    });
+  }
+
+  if(!candidates.length)return [];
+
+  const bestWordCount=Math.max(...candidates.map(match=>match.specificity.wordCount));
+  const wordSpecificMatches=candidates.filter(
+    match=>match.specificity.wordCount===bestWordCount
+  );
+
+  const bestCharacterCount=Math.max(
+    ...wordSpecificMatches.map(match=>match.specificity.characterCount)
+  );
+
+  return wordSpecificMatches
+    .filter(match=>match.specificity.characterCount===bestCharacterCount)
+    .reverse();
+}
+
+/* ---------------------------------------------------------
+   6. OVERLAY INTEGRATION
+   --------------------------------------------------------- */
+function setEpisodeOverlay(active,title='',label='EPISODE'){
+  if(active){
+    EpisodeOverlayController.show({
+      title:title||'CONVERSATION',
+      label,
+      leaveLabel:'LEAVE EPISODE',
+      onLeave:()=>abandonEpisode(true)
+    });
+  }else{
+    EpisodeOverlayController.hide({clear:false});
+  }
+}
+
+function clearEpisodeOptions(){
+  episodeState.currentChoices=[];
+  EpisodeOverlayController.clear();
+}
+
+function renderEpisodeOfferOptions(episode){
+  EpisodeOverlayController.addOption({
+    label:(episode&&episode.acceptLabel)||'Sure.',
+    className:'episode-accept',
+    index:0,
+    onSelect:()=>acceptEpisode()
+  });
+  EpisodeOverlayController.addOption({
+    label:(episode&&episode.declineLabel)||'Not right now.',
+    className:'episode-decline',
+    index:1,
+    onSelect:()=>declineEpisode()
+  });
+}
+
+function renderEpisodeChoices(choices){
+  clearEpisodeOptions();
+  episodeState.currentChoices=[...choices];
+
+  episodeState.currentChoices.forEach((choice,index)=>{
+    const unlocked=requirementIsMet(choice.requires||'None');
+    if(!unlocked && choice.hidden===true)return;
+
+    EpisodeOverlayController.addOption({
+      label:choice.label,
+      className:unlocked?'':'locked',
+      index,
+      onSelect:()=>chooseEpisodeChoice(index),
+      disabled:!unlocked,
+      title:unlocked?'':(choice.lockedHint||'Locked choice — discover more endings.')
+    });
+  });
+}
+
+/* ---------------------------------------------------------
+   7. EPISODE RUNTIME
+   --------------------------------------------------------- */
+function closeEpisodeOverlay(){
+  clearEpisodeOptions();
+  setEpisodeOverlay(false);
+  resetEpisodeState();
+  refreshQuickReplies();
+}
+
+function renderEpisodeSelectionOptions(matches,originalText){
+  EpisodeOverlayController.clear();
+  setEpisodeOverlay(true,'CHOOSE AN EPISODE','MULTIPLE EPISODES');
+
+  matches.forEach((match,index)=>{
+    EpisodeOverlayController.addOption({
+      label:match.episode.title,
+      className:'episode-accept',
+      index,
+      onSelect:()=>{
+        if(episodeState.mode!==EpisodeMode.SELECTING)return;
+        offerEpisode(match.episode,originalText,match.trigger);
+      }
+    });
+  });
+
+  EpisodeOverlayController.addOption({
+    label:'Not right now.',
+    className:'episode-decline',
+    index:matches.length,
+    onSelect:()=>{
+      if(episodeState.mode!==EpisodeMode.SELECTING)return;
+      const pendingText=episodeState.pendingOriginalText;
+      closeEpisodeOverlay();
+      respond(pendingText);
+    }
+  });
+}
+
+function offerEpisodeSelection(matches,originalText){
+  episodeState.mode=EpisodeMode.SELECTING;
+  episodeState.pendingOriginalText=originalText;
+  episodeState.currentChoices=[...matches];
+
+  EpisodeOverlayController.clear();
+  setEpisodeOverlay(true,'CHOOSE AN EPISODE','MULTIPLE EPISODES');
+
+  busy=true;
+  const wait=typing();
+  setTimeout(()=>{
+    wait.remove();
+    if(CHARACTER.portrait!==false)setExpression('overshare');
+    add('Oh! I have lots of ideas about that. Which one should we talk about?');
+    renderEpisodeSelectionOptions(matches,originalText);
+    busy=false;
+    resetIdleTimer();
+  },FRAMEWORK_TIMING.replyBase);
+}
+
+function offerEpisode(episode,originalText,matchedTrigger){
+  episodeState.mode=EpisodeMode.OFFER;
+  episodeState.episodeId=episode.id;
+  episodeState.pendingOriginalText=originalText;
+  episodeState.matchedTrigger=matchedTrigger;
+  clearEpisodeOptions();
+  setEpisodeOverlay(true,episode.title,'DEEPER CONVERSATION');
+  renderEpisodeOfferOptions(episode);
+
+  const prompt=episode.offerPrompt ||
+    `Oh! I have more thoughts about ${matchedTrigger}. Do you want the long version?`;
+
+  busy=true;
+  const wait=typing();
+  setTimeout(()=>{
+    wait.remove();
+    if(CHARACTER.portrait!==false)setExpression(episode.offerExpression||'curious');
+    add(prompt);
+    busy=false;
+    resetIdleTimer();
+  },FRAMEWORK_TIMING.replyBase);
+}
+
+function acceptEpisode(){
+  if(episodeState.mode!==EpisodeMode.OFFER)return;
+  const episode=EPISODE_LIBRARY[episodeState.episodeId];
+  if(!episode){closeEpisodeOverlay();return;}
+
+  add(episode.acceptLabel||'Sure.','user');
+  episodeState.mode=EpisodeMode.ACTIVE;
+  episodeState.nodeId=episode.openingNode;
+  showEpisodeNode(episode.openingNode);
+}
+
+function declineEpisode(){
+  if(episodeState.mode!==EpisodeMode.OFFER)return;
+  const episode=EPISODE_LIBRARY[episodeState.episodeId];
+  const originalText=episodeState.pendingOriginalText;
+  const declineLabel=(episode&&episode.declineLabel)||'Not right now.';
+
+  add(declineLabel,'user');
+  closeEpisodeOverlay();
+  respond(originalText);
+}
+
+function chooseEpisodeChoice(index){
+  if(episodeState.mode!==EpisodeMode.ACTIVE)return;
+  const choice=episodeState.currentChoices[index];
+  if(!choice || !requirementIsMet(choice.requires||'None'))return;
+
+  add(choice.label,'user');
+  showEpisodeNode(choice.nextNode);
+}
+
+function completeEpisode(episode,node){
+  EpisodeProgress.markFinished(episode.id);
+  EpisodeProgress.markEndingComplete(node.endingId||node.id);
+  EpisodeProgress.grantUnlocks(node.unlocks);
+
+  clearEpisodeOptions();
+  setEpisodeOverlay(false);
+  resetEpisodeState();
+  refreshQuickReplies();
+}
+
+function showEpisodeNode(nodeId){
+  const episode=EPISODE_LIBRARY[episodeState.episodeId];
+  const node=episode&&episode.nodes&&episode.nodes[nodeId];
+
+  if(!episode || !node){
+    console.error('Missing episode node:',episodeState.episodeId,nodeId);
+    closeEpisodeOverlay();
+    showToast('EPISODE ERROR // MISSING NODE');
+    return;
+  }
+
+  episodeState.nodeId=nodeId;
+  clearEpisodeOptions();
+  setEpisodeOverlay(true,episode.title,'CURRENT EPISODE');
+
+  busy=true;
+  const wait=typing();
+  const delay=FRAMEWORK_TIMING.replyBase+
+    Math.min(String(node.dialogue||'').length*4,FRAMEWORK_TIMING.replyMaximumExtra);
+
+  setTimeout(()=>{
+    wait.remove();
+    if(CHARACTER.portrait!==false)setExpression(node.expression||'curious');
+    add(node.dialogue||'');
+
+    const ending=node.type==='Ending' || Boolean(node.endingId);
+    const transition=node.type==='Transition';
+
+    if(ending){
+      completeEpisode(episode,node);
+      busy=false;
+      resetIdleTimer();
+      return;
+    }
+
+    if(transition){
+      if(!node.nextNode){
+        console.error('Transition node has no nextNode:',nodeId);
+        closeEpisodeOverlay();
+        showToast('EPISODE ERROR // TRANSITION HAS NO NEXT NODE');
+        busy=false;
+        resetIdleTimer();
+        return;
+      }
+
+      const transitionDelay=Number.isFinite(Number(node.delay))
+        ? Math.max(0,Number(node.delay))
+        : 800;
+
+      setTimeout(()=>showEpisodeNode(node.nextNode),transitionDelay);
+      resetIdleTimer();
+      return;
+    }
+
+    const choices=Array.isArray(node.choices)?node.choices:[];
+    if(!choices.length){
+      console.error('Conversation node has no choices:',nodeId);
+      closeEpisodeOverlay();
+      showToast('EPISODE ERROR // NO CHOICES');
+    }else{
+      renderEpisodeChoices(choices);
+    }
+
+    busy=false;
+    resetIdleTimer();
+  },delay);
+}
+
+function abandonEpisode(showMessage=true){
+  const wasActive=episodeState.mode!==EpisodeMode.IDLE;
+  closeEpisodeOverlay();
+  if(wasActive && showMessage && activeIdentity==='jace'){
+    if(CHARACTER.portrait!==false)setExpression('happy');
+    add('Okay! We can leave that conversation there.');
+  }
+}
+
+/* ---------------------------------------------------------
+   8. CHAT AND CIPHER ROUTING
+   --------------------------------------------------------- */
+send=function(text){
+  text=text.trim();
+  if(!text||busy)return;
+
+  const identityKey=detectIdentityPhrase(text);
+  document.querySelector('#input').value='';
+
+  if(identityKey){
+    abandonEpisode(false);
+    switchIdentity(identityKey);
+    return;
+  }
+
+  if(episodeState.mode!==EpisodeMode.IDLE)return;
+
+  add(text,'user');
+  const matches=findTriggeredEpisodes(text);
+  if(matches.length===1){
+    offerEpisode(matches[0].episode,text,matches[0].trigger);
+    return;
+  }
+  if(matches.length>1){
+    offerEpisodeSelection(matches,text);
+    return;
+  }
+  respond(text);
+};
+
+function resumeEpisodeInterface(){
+  if(episodeState.mode===EpisodeMode.IDLE){
+    EpisodeOverlayController.hide({clear:false,unlockComposer:true});
+    return false;
+  }
+
+  const episode=EPISODE_LIBRARY[episodeState.episodeId];
+  setEpisodeOverlay(true,episode?episode.title:'CONVERSATION',
+    episodeState.mode===EpisodeMode.OFFER?'DEEPER CONVERSATION':'CURRENT EPISODE');
+
+  if(episodeState.mode===EpisodeMode.SELECTING){
+    const matches=[...episodeState.currentChoices];
+    const originalText=episodeState.pendingOriginalText;
+    renderEpisodeSelectionOptions(matches,originalText);
+  }else if(episodeState.mode===EpisodeMode.OFFER){
+    clearEpisodeOptions();
+    renderEpisodeOfferOptions(episode);
+  }else if(episodeState.mode===EpisodeMode.ACTIVE){
+    const node=episode&&episode.nodes&&episode.nodes[episodeState.nodeId];
+    clearEpisodeOptions();
+    if(node&&Array.isArray(node.choices))renderEpisodeChoices(node.choices);
+  }
+  return true;
+}
+
+/* ---------------------------------------------------------
+   9. PUBLIC EPISODE API
+   --------------------------------------------------------- */
+const EpisodeEngineAPI=Object.freeze({
+  register:registerEpisode,
+  abandon:abandonEpisode,
+  requirementIsMet,
+  getState:()=>episodeState,
+  getProgress:()=>EpisodeProgress.snapshot(),
+  modes:EpisodeMode,
+  progress:EpisodeProgress,
+  resume:resumeEpisodeInterface
+});
+Framework.modules.EpisodeEngine=EpisodeEngineAPI;
+
+/*
+Episode data contract:
+
+registerEpisode({
+  id:'relationship_01',
+  title:'Episode Title',
+  triggers:['keyword'],
+  requires:'None', // string, array, {ALL:[...]}, or {ANY:[...]}
+  openingNode:'relationship_01_opening',
+  offerPrompt:'Want the long version?',
+  acceptLabel:'Sure.',
+  declineLabel:'Not right now.',
+  fallbackBank:'keyword',
+  nodes:{
+    relationship_01_opening:{
+      type:'Conversation',
+      expression:'curious',
+      dialogue:'...',
+      choices:[
+        {label:'Choice',nextNode:'relationship_01_next'}
+      ]
+    }
+  }
+});
+*/
+</script>
+
+<script id="companion-data-core-phase4-4">
+/* =========================================================
+   COMPANION ENGINE v5 — PHASE 4.4 CLEAN CORE
+   Notion message banks + episode loading + portable JSON memory
+   ========================================================= */
+
+const COMPANION_APP_CONFIG=Object.freeze({
+  characterId:'jace',
+  characterName:'Jacey “Jace” Cosmo',
+  memoryFileName:'jacey_memory.json',
+  messageSchema:'companion-message-bank',
+  episodeSchema:'companion-episode-v1',
+  memorySchema:'companion-memory-v1'
+});
+
+const EXTERNAL_ACHIEVEMENTS=Object.create(null);
+let messageBankLoaded=false;
+
+const BUILTIN_LISTS=Object.freeze({
+  episodes:'episodes/episode_list.json'
+});
+
+const COMPANION_MESSAGE_BANK_ENDPOINT=
+  'https://companions.aquafia1247.workers.dev/message-banks/Jacey';
+
+const dataLoadBtn=document.querySelector('#dataLoadBtn');
+const memorySaveBtn=document.querySelector('#memorySaveBtn');
+const dataFileInput=document.querySelector('#dataFileInput');
+const libraryBtn=document.querySelector('#libraryBtn');
+const libraryPanel=document.querySelector('#libraryPanel');
+const closeLibraryBtn=document.querySelector('#closeLibraryBtn');
+function normalizeTitle(value){return String(value||'').trim().toLocaleLowerCase();}
+function fileLabel(fileName){return String(fileName||'Message Bank').replace(/\.json$/i,'').replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();}
+
+const EpisodeManager={
+  records:new Map(),
+  add(data,{source='imported',fileName='episode.json',enabled=true}={}){
+    const title=String(data?.title||'').trim();
+    if(!title)throw new Error('Episode requires a title.');
+    const key=normalizeTitle(title);
+    const previous=this.records.get(key);
+    if(previous){
+      delete EPISODE_LIBRARY[previous.data.id];
+      Object.values(EXTERNAL_ACHIEVEMENTS).forEach(item=>{if(item.episodeId===previous.data.id)delete EXTERNAL_ACHIEVEMENTS[item.id];});
+    }
+    const episode={...data};
+    const achievement=episode.achievement;
+    delete episode.schema; delete episode.achievement;
+    episode.__enabled=enabled;
+    registerEpisode(episode);
+    if(achievement){
+      EXTERNAL_ACHIEVEMENTS[achievement.id]={...achievement,id:achievement.id,episodeId:episode.id,identity:achievement.identity||episode.identity||'jace'};
+    }
+    this.records.set(key,{title,type:'episode',source,fileName,enabled,data:episode,raw:data});
+    refreshContentUI();
+    return previous?'replaced':'added';
+  },
+  toggle(title,enabled){const r=this.records.get(normalizeTitle(title));if(!r)return;r.enabled=Boolean(enabled);r.data.__enabled=r.enabled;refreshContentUI();},
+  remove(title){const key=normalizeTitle(title),r=this.records.get(key);if(!r||r.source==='builtin')return false;if(episodeState.episodeId===r.data.id)abandonEpisode(false);delete EPISODE_LIBRARY[r.data.id];for(const [id,a] of Object.entries(EXTERNAL_ACHIEVEMENTS)){if(a.episodeId===r.data.id)delete EXTERNAL_ACHIEVEMENTS[id];}this.records.delete(key);refreshContentUI();renderExternalAchievements();return true;},
+  list(){return [...this.records.values()].sort((a,b)=>a.title.localeCompare(b.title));}
+};
+
+const MessageBankManager={
+  records:new Map(),
+  activeKey:null,
+  add(data,{source='imported',fileName='message_bank.json',enabled=true}={}){
+    if(!isMessageBankDocument(data))throw new Error('Unsupported message-bank JSON.');
+    const title=fileLabel(fileName);
+    const key=normalizeTitle(title);
+    const previous=this.records.get(key);
+    this.records.set(key,{title,type:'messageBank',source,fileName,enabled,data});
+    if(!this.activeKey || (previous&&this.activeKey===key))this.activeKey=key;
+    this.apply();
+    refreshContentUI();
+    return previous?'replaced':'added';
+  },
+  apply(){
+    const enabled=this.list().filter(r=>r.enabled);
+    const active=enabled.find(r=>normalizeTitle(r.title)===this.activeKey)||enabled[0];
+    if(!active){messageBankLoaded=false;return;}
+    this.activeKey=normalizeTitle(active.title);
+    loadedMessageBankDocument=active.data;
+    messageBankLoaded=true;
+  },
+  toggle(title,enabled){const r=this.records.get(normalizeTitle(title));if(!r)return;r.enabled=Boolean(enabled);this.apply();refreshContentUI();},
+  remove(title){const key=normalizeTitle(title),r=this.records.get(key);if(!r||r.source==='builtin')return false;this.records.delete(key);if(this.activeKey===key)this.activeKey=null;this.apply();refreshContentUI();return true;},
+  list(){return [...this.records.values()].sort((a,b)=>a.title.localeCompare(b.title));}
+};
+
+function isMessageBankDocument(data){return Boolean(data&&data.schema===COMPANION_APP_CONFIG.messageSchema&&data.identities&&typeof data.identities==='object');}
+function isEpisodeDocument(data){return Boolean(data&&data.schema===COMPANION_APP_CONFIG.episodeSchema&&data.id&&data.nodes&&data.openingNode);}
+function isMemoryDocument(data){return MemorySystem.isDocument(data);}
+
+function installNotionMessageBanks(data){return MessageBankManager.add(data,{source:'notion',fileName:'Notion Message Banks',enabled:true});}
+function installEpisode(data,fileName,source='imported',enabled=true){return EpisodeManager.add(data,{source,fileName,enabled});}
+
+function createLibraryItem(record,manager){
+  const item=document.createElement('div');item.className='library-item';
+  const info=document.createElement('div');
+  const title=document.createElement('div');title.className='library-item-title';title.textContent=record.title;
+  const sourceLabel=record.source==='builtin'?'BUILT-IN':record.source==='notion'?'NOTION':'IMPORTED';
+  const meta=document.createElement('div');meta.className='library-item-meta';meta.innerHTML=`<span class="library-source">${sourceLabel}</span> · ${record.enabled?'ENABLED':'DISABLED'}`;
+  info.append(title,meta);
+  const actions=document.createElement('div');actions.className='library-actions';
+  const toggle=document.createElement('button');toggle.type='button';toggle.className='library-toggle'+(record.enabled?' on':'');toggle.title=record.enabled?'Disable':'Enable';toggle.setAttribute('aria-pressed',String(record.enabled));toggle.onclick=()=>manager.toggle(record.title,!record.enabled);actions.append(toggle);
+  if(record.source==='imported'){const del=document.createElement('button');del.type='button';del.className='library-delete';del.textContent='DELETE';del.onclick=()=>{if(confirm(`Delete "${record.title}"?`))manager.remove(record.title);};actions.append(del);}
+  item.append(info,actions);return item;
+}
+function renderLibrary(){
+  const episodes=EpisodeManager.list(),banks=MessageBankManager.list();
+  document.querySelector('#librarySummary').textContent=`EPISODES ${episodes.filter(r=>r.enabled).length}/${episodes.length} ENABLED · MESSAGE BANKS ${banks.filter(r=>r.enabled).length}/${banks.length} ENABLED`;
+  const ep=document.querySelector('#libraryEpisodes'),mb=document.querySelector('#libraryMessageBanks');ep.replaceChildren();mb.replaceChildren();
+  if(!episodes.length){const x=document.createElement('div');x.className='library-empty';x.textContent='No episodes loaded.';ep.append(x);}else episodes.forEach(r=>ep.append(createLibraryItem(r,EpisodeManager)));
+  if(!banks.length){const x=document.createElement('div');x.className='library-empty';x.textContent='No message banks loaded.';mb.append(x);}else banks.forEach(r=>mb.append(createLibraryItem(r,MessageBankManager)));
+}
+function refreshContentUI(){renderLibrary();}
+function setLibraryOpen(open){libraryPanel.classList.toggle('open',open);libraryPanel.setAttribute('aria-hidden',String(!open));if(open)dossier.classList.remove('open');}
+libraryBtn.addEventListener('click',()=>setLibraryOpen(!libraryPanel.classList.contains('open')));closeLibraryBtn.addEventListener('click',()=>setLibraryOpen(false));
+
+async function fetchJSON(url){const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error(`${response.status} ${url}`);return response.json();}
+async function loadBuiltinEpisodes(){
+  const listUrl=BUILTIN_LISTS.episodes;
+  try{
+    const list=await fetchJSON(listUrl);
+    const files=Array.isArray(list)?list:list.files;
+    if(!Array.isArray(files))throw new Error('Episode list must contain a files array.');
+    const base=listUrl.slice(0,listUrl.lastIndexOf('/')+1);
+    for(const name of files){
+      const data=await fetchJSON(base+name);
+      installEpisode(data,name,'builtin',true);
+    }
+  }catch(error){
+    console.warn(`Could not load ${listUrl}.`,error);
+  }
+  refreshContentUI();
+  renderExternalAchievements();
+}
+
+async function loadNotionMessageBanks(){
+  try{
+    const data=await fetchJSON(COMPANION_MESSAGE_BANK_ENDPOINT);
+    if(!isMessageBankDocument(data))throw new Error('Worker returned an unsupported message-bank document.');
+    installNotionMessageBanks(data);
+    showToast('MESSAGE BANKS READY // NOTION');
+  }catch(error){
+    messageBankLoaded=false;
+    console.error('Could not load Notion message banks.',error);
+    showToast('MESSAGE BANK ERROR // CHECK COMPANIONS WORKER');
+    refreshContentUI();
+  }
+}
+
+/* ---------------------------------------------------------
+   MEMORY SYSTEM
+   Persistent player progress only. Runtime episode state,
+   loaded content, UI state, and identity presentation remain
+   outside the exported memory document.
+   --------------------------------------------------------- */
+const MemorySystem=Object.freeze({
+  schema:COMPANION_APP_CONFIG.memorySchema,
+  version:1,
+  isDocument(data){
+    return Boolean(data && data.schema===this.schema);
+  },
+  normalize(data){
+    if(!this.isDocument(data)){
+      throw new Error('Unsupported memory JSON schema.');
+    }
+    return normalizeEpisodeProgress(data);
+  },
+  importDocument(data){
+    return EpisodeProgress.replace(this.normalize(data));
+  },
+  createDocument(){
+    return {
+      schema:this.schema,
+      version:this.version,
+      character:COMPANION_APP_CONFIG.characterId,
+      updatedAt:new Date().toISOString(),
+      ...EpisodeProgress.snapshot()
+    };
+  },
+  exportJSON(){
+    downloadJSON(this.createDocument(),COMPANION_APP_CONFIG.memoryFileName);
+    showToast(`MEMORY EXPORTED // ${COMPANION_APP_CONFIG.memoryFileName}`);
+  }
+});
+
+function downloadJSON(documentData,fileName){
+  const blob=new Blob(
+    [JSON.stringify(documentData,null,2)],
+    {type:'application/json'}
+  );
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url;
+  link.download=fileName;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+async function readJSONFile(file){
+  try{
+    return JSON.parse(await file.text());
+  }catch(error){
+    throw new Error(`Invalid JSON in ${file.name}`);
+  }
+}
+
+async function loadCompanionDataFiles(files){
+  const errors=[];
+  let loaded=0;
+  for(const file of files){
+    try{
+      const data=await readJSONFile(file);
+      if(isEpisodeDocument(data)){installEpisode(data,file.name,'imported',true);loaded++;}
+      else if(isMemoryDocument(data)){MemorySystem.importDocument(data);loaded++;}
+      else throw new Error('Only episode and companion-memory JSON files are supported here.');
+    }catch(error){
+      console.error('Could not load companion file:',file.name,error);
+      errors.push(file.name);
+    }
+  }
+  refreshContentUI();
+  renderExternalAchievements();
+  if(errors.length)showToast(`DATA ERROR // ${errors.join(', ')}`);
+  else if(loaded)showToast(`DATA LOADED // ${loaded} FILE${loaded===1?'':'S'}`);
+}
+
+function externalAchievementProgress(achievement){
+  const required=Array.isArray(achievement.requiredEndings)
+    ? achievement.requiredEndings
+    : [];
+  const found=required.filter(
+    endingId=>EpisodeProgress.hasEnding(endingId)
+  ).length;
+
+  return {
+    found,
+    total:required.length,
+    complete:required.length>0 && found===required.length
+  };
+}
+
+function renderExternalAchievements(){
+  const body=document.querySelector('#dossierBody');
+  if(!body)return;
+
+  document.querySelector('#episodeAchievementSection')?.remove();
+
+  const visible=Object.values(EXTERNAL_ACHIEVEMENTS).filter(
+    achievement=>
+      achievement.identity===activeIdentity &&
+      EpisodeProgress.hasStarted(achievement.episodeId)
+  );
+
+  if(!visible.length)return;
+
+  const section=document.createElement('div');
+  section.id='episodeAchievementSection';
+  section.style.marginTop='18px';
+  section.innerHTML=
+    '<br><span style="color:var(--cyan);font-weight:800;letter-spacing:.12em">'+
+    'EPISODE ACHIEVEMENTS</span><br><br>';
+
+  visible.forEach(achievement=>{
+    const progress=externalAchievementProgress(achievement);
+    const item=document.createElement('div');
+    item.style.cssText=
+      'margin-bottom:14px;padding:11px;border:1px solid var(--line);'+
+      'border-radius:10px;background:color-mix(in srgb,var(--panel) 90%,black)';
+
+    item.innerHTML=progress.complete
+      ? '<span style="color:#7ef7c1;font-weight:800">ACHIEVEMENT UNLOCKED</span><br>'+
+        '<span style="color:var(--ink)">'+achievement.title+'</span><br>'+
+        '<span style="color:var(--muted)">'+achievement.description+'</span>'
+      : '<span style="color:var(--muted);font-weight:800">LOCKED RECORD</span><br>'+
+        '<span style="color:var(--ink)">'+achievement.title+'</span><br>'+
+        '<span style="color:var(--muted)">Endings discovered: '+
+        progress.found+'/'+progress.total+'</span>';
+
+    section.append(item);
+  });
+
+  body.append(section);
+}
+
+dataLoadBtn.addEventListener('click',event=>{
+  event.preventDefault();
+  dataFileInput.click();
+});
+
+dataFileInput.addEventListener('change',async()=>{
+  const files=[...dataFileInput.files];
+  dataFileInput.value='';
+  await loadCompanionDataFiles(files);
+});
+
+loadBuiltinEpisodes();
+const messageBankLoadPromise=loadNotionMessageBanks();
+window.addEventListener('DOMContentLoaded',async()=>{
+  await Promise.allSettled([
+    messageBankLoadPromise,
+    window.CompanionContext?.loadPromise||Promise.resolve()
+  ]);
+  showStartupMessage();
+},{once:true});
+
+memorySaveBtn.addEventListener('click',event=>{
+  event.preventDefault();
+  MemorySystem.exportJSON();
+});
+
+// Return a clear instruction instead of crashing when the data bank is absent.
+const corePick=pick;
+pick=function(bank){
+  if(!messageBankLoaded){
+    return ['curious','The Notion message banks are unavailable. Refresh after checking the companions Worker.'];
+  }
+  return corePick(bank);
+};
+
+const coreAcceptEpisode=acceptEpisode;
+acceptEpisode=function(){
+  if(episodeState.mode===EpisodeMode.OFFER && episodeState.episodeId){
+    EpisodeProgress.markStarted(episodeState.episodeId);
+  }
+  coreAcceptEpisode();
+  renderExternalAchievements();
+};
+
+const coreCompleteEpisode=completeEpisode;
+completeEpisode=function(episode,node){
+  const related=Object.values(EXTERNAL_ACHIEVEMENTS).filter(
+    achievement=>achievement.episodeId===episode.id
+  );
+  const completeBefore=related.some(
+    achievement=>externalAchievementProgress(achievement).complete
+  );
+
+  coreCompleteEpisode(episode,node);
+  renderExternalAchievements();
+
+  const completeAfter=related.some(
+    achievement=>externalAchievementProgress(achievement).complete
+  );
+
+  if(!completeBefore && completeAfter){
+    showToast('ACHIEVEMENT UNLOCKED // ALL ENDINGS DISCOVERED');
+  }
+};
+
+const coreDossierClick=dossierBtn.onclick;
+dossierBtn.onclick=function(event){
+  if(typeof coreDossierClick==='function'){
+    coreDossierClick.call(this,event);
+  }else{
+    dossier.classList.add('open');
+  }
+  renderExternalAchievements();
+};
+</script>
+
+
+<script id="mobile-layout-manager">
+/* Presentation-only portrait placement for phone layouts. */
+(()=>{
+  const phoneQuery=window.matchMedia('(max-width:700px)');
+  const tabletLandscapeQuery=window.matchMedia(
+    '(min-width:701px) and (max-width:1400px) and (orientation:landscape) and (pointer:coarse) and (hover:none)'
+  );
+  const tabletPortraitQuery=window.matchMedia(
+    '(min-width:701px) and (max-width:1100px) and (orientation:portrait) and (pointer:coarse) and (hover:none)'
+  );
+  const portraitFrame=document.querySelector('.portrait-frame');
+  const portraitHome=document.querySelector('#portraitHome');
+  const mobileAvatarSlot=document.querySelector('#mobileAvatarSlot');
+
+  if(!portraitFrame||!portraitHome||!mobileAvatarSlot)return;
+
+  function applyDeviceLayout(){
+    const useHeaderPortrait=
+      phoneQuery.matches || tabletPortraitQuery.matches;
+
+    if(useHeaderPortrait){
+      if(portraitFrame.parentElement!==mobileAvatarSlot){
+        mobileAvatarSlot.appendChild(portraitFrame);
+      }
+    }else if(portraitFrame.previousElementSibling!==portraitHome){
+      portraitHome.after(portraitFrame);
+    }
+  }
+
+  function updateTabletVisibleHeight(){
+    const isTablet=
+      tabletLandscapeQuery.matches || tabletPortraitQuery.matches;
+
+    if(!isTablet){
+      document.documentElement.style.removeProperty('--tablet-visible-height');
+      return;
+    }
+
+    const visibleHeight=Math.floor(
+      window.visualViewport?.height || window.innerHeight
+    );
+
+    document.documentElement.style.setProperty(
+      '--tablet-visible-height',
+      `${visibleHeight}px`
+    );
+  }
+
+  phoneQuery.addEventListener?.('change',applyDeviceLayout);
+  tabletLandscapeQuery.addEventListener?.('change',()=>{
+    applyDeviceLayout();
+    updateTabletVisibleHeight();
+  });
+  tabletPortraitQuery.addEventListener?.('change',()=>{
+    applyDeviceLayout();
+    updateTabletVisibleHeight();
+  });
+  window.visualViewport?.addEventListener('resize',updateTabletVisibleHeight,{passive:true});
+  window.visualViewport?.addEventListener('scroll',updateTabletVisibleHeight,{passive:true});
+  window.addEventListener('resize',updateTabletVisibleHeight,{passive:true});
+  window.addEventListener('orientationchange',()=>{
+    applyDeviceLayout();
+    updateTabletVisibleHeight();
+  },{passive:true});
+  applyDeviceLayout();
+  updateTabletVisibleHeight();
+})();
+</script>
+
+</body></html>

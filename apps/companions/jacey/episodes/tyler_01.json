@@ -1,0 +1,303 @@
+{
+  "id": "tyler_01",
+  "title": "The Shape of a Secret",
+  "topic": "Tyler",
+  "coreQuestion": "Can Jace learn the difference between solving someone and respecting them?",
+  "identity": "jace",
+  "triggers": [
+    "Tyler"
+  ],
+  "requires": "None",
+  "openingNode": "tyler_01_opening",
+  "offerExpression": "curious",
+  "offerPrompt": "Oh! I have a lot of thoughts about Tyler. Do you want the organized version?",
+  "acceptLabel": "Sure.",
+  "declineLabel": "Not right now.",
+  "fallbackBank": "Tyler",
+  "nodes": {
+    "tyler_01_opening": {
+      "type": "Conversation",
+      "expression": "curious",
+      "dialogue": "Tyler is a weird code. Not *bad* weird! *Interesting* weird. He answers questions without answering them, changes topics before people notice, and somehow everyone walks away feeling calmer and less informed. That is either advanced social cryptography or wizardry.",
+      "choices": [
+        {
+          "label": "What did you notice about him?",
+          "nextNode": "tyler_01_pattern"
+        },
+        {
+          "label": "Try not to pry.",
+          "nextNode": "tyler_01_boundary"
+        },
+        {
+          "label": "So he’s encrypted.",
+          "nextNode": "tyler_01_encrypted"
+        }
+      ]
+    },
+    "tyler_01_pattern": {
+      "type": "Conversation",
+      "expression": "clue",
+      "dialogue": "Okay! So! Tyler says “I’m fine” when he’s very clearly running an entire emergency checklist in his head. He uses last names like little walls. He smells like lavender, which is important because most smells are dangerous for him. He calls me Jacey when he wants me to stop doing something very dangerous, and my brain goes, “Oh! Serious mode!” which is weird because I don’t remember ever agreeing to that rule.",
+      "choices": [
+        {
+          "label": "Maybe he trusts you.",
+          "nextNode": "tyler_01_trust"
+        },
+        {
+          "label": "Maybe you scare him.",
+          "nextNode": "tyler_01_scared"
+        },
+        {
+          "label": "That sounds like a promise.",
+          "nextNode": "tyler_01_promise"
+        }
+      ]
+    },
+    "tyler_01_boundary": {
+      "type": "Conversation",
+      "expression": "panic",
+      "dialogue": "Right. Yes. Boundaries. I know those. They are like firewalls but for people. Except people don't come with password prompts, error messages, or helpful documentation, so sometimes I accidentally breach them and then everyone gets upset even though I didn't mean to commit emotional cybercrime.",
+      "choices": [
+        {
+          "label": "Explain privacy gently",
+          "nextNode": "tyler_01_privacy"
+        },
+        {
+          "label": "Ask what Tyler hides",
+          "nextNode": "tyler_01_hidden"
+        }
+      ]
+    },
+    "tyler_01_encrypted": {
+      "type": "Conversation",
+      "expression": "happy",
+      "dialogue": "Exactly! Tyler is encrypted with politeness, practical advice, and emergency supplies. His public key is “Hello there!” and his private key is probably buried under seventeen layers of “don’t worry about it.” I could try brute-forcing it, but Tyler would give me the tired look. The really tired look.",
+      "choices": [
+        {
+          "label": "Do not brute-force Tyler.",
+          "nextNode": "tyler_01_privacy"
+        },
+        {
+          "label": "What would the key be?",
+          "nextNode": "tyler_01_key"
+        },
+        {
+          "label": "Maybe he wants to stay locked.",
+          "nextNode": "tyler_01_locked"
+        }
+      ]
+    },
+    "tyler_01_trust": {
+      "type": "Conversation",
+      "expression": "vulnerable",
+      "dialogue": "Trust? Hm. Maybe. Tyler lets me talk a lot, but he also stops me before I say things that are dangerous. Not just illegal dangerous. People-dangerous. Like secrets. Or cliffs. Or Alice’s lunch. He notices the part where I am about to make a problem and moves the problem somewhere safer.",
+      "choices": [
+        {
+          "label": "That is care.",
+          "nextNode": "tyler_01_ending_care"
+        },
+        {
+          "label": "That is control.",
+          "nextNode": "tyler_01_ending_control"
+        }
+      ]
+    },
+    "tyler_01_scared": {
+      "type": "Conversation",
+      "expression": "deadpan",
+      "dialogue": "I scare people? But I am very friendly. I only reveal hidden information, enter restricted areas, decode private messages, and ask follow-up questions when someone looks nervous. Oh. Wait. I hear it now.",
+      "choices": [
+        {
+          "label": "You can slow down.",
+          "nextNode": "tyler_01_ending_slow_down"
+        },
+        {
+          "label": "Tyler still stays.",
+          "nextNode": "tyler_01_ending_stays"
+        }
+      ]
+    },
+    "tyler_01_promise": {
+      "type": "Conversation",
+      "expression": "anger",
+      "dialogue": "A promise is serious. If I promise something, I do it. Even if it rains. Even if it takes seventy-two hours. Even if everyone says “tomorrow is fine” when they clearly said release day before. Tyler understands that part. He acts annoyed, but he remembers promises too. I think his promises just look like rides, first-aid kits, and telling people not to die stupidly.",
+      "choices": [
+        {
+          "label": "Promise not to expose him",
+          "nextNode": "tyler_01_ending_promise"
+        },
+        {
+          "label": "Ask him directly someday",
+          "nextNode": "tyler_01_ending_direct"
+        }
+      ]
+    },
+    "tyler_01_privacy": {
+      "type": "Conversation",
+      "expression": "overshare",
+      "dialogue": "So privacy is not always lying. It can be… leaving someone’s locked file closed because opening it would hurt them. That is very inefficient for solving mysteries, but probably efficient for friendship. Friendship has strange rules. I should make a chart.",
+      "choices": [
+        {
+          "label": "Start with one rule",
+          "nextNode": "tyler_01_ending_rule"
+        },
+        {
+          "label": "Charts help",
+          "nextNode": "tyler_01_ending_chart"
+        }
+      ]
+    },
+    "tyler_01_hidden": {
+      "type": "Conversation",
+      "expression": "vulnerable",
+      "dialogue": "A lot. His family. His fear. The forest thing. The scent thing. The way he gets quiet when people worry about him. The way he acts useful so nobody notices he needs help too. I know because I notice patterns. But knowing something is not the same as being allowed to hold it.",
+      "choices": [
+        {
+          "label": "That was gentle",
+          "nextNode": "tyler_01_ending_gentle"
+        },
+        {
+          "label": "Do you relate?",
+          "nextNode": "tyler_01_ending_relate"
+        }
+      ]
+    },
+    "tyler_01_key": {
+      "type": "Conversation",
+      "expression": "curious",
+      "dialogue": "The key? Hmmm. Not questions. Questions make him redirect. Not danger. Danger makes him responsible. Not pity. Pity makes him vanish inside his own face. Maybe the key is being normal about him. Like, “Hello Tyler, I acknowledge your secret pain and will now discuss video games like a normal person.”",
+      "choices": [
+        {
+          "label": "That sounds right",
+          "nextNode": "tyler_01_ending_normal"
+        },
+        {
+          "label": "You can do that?",
+          "nextNode": "tyler_01_ending_trying"
+        }
+      ]
+    },
+    "tyler_01_locked": {
+      "type": "Conversation",
+      "expression": "vulnerable",
+      "dialogue": "Wanting to stay locked… I do not like that answer. But I understand it a little. If someone opened all my missing memories at once, I think I would want to know. I also think I might break. Maybe Tyler already knows which doors hurt to open.",
+      "choices": [
+        {
+          "label": "Then knock first",
+          "nextNode": "tyler_01_ending_knock"
+        },
+        {
+          "label": "Some doors stay closed",
+          "nextNode": "tyler_01_ending_closed"
+        }
+      ]
+    },
+    "tyler_01_ending_care": {
+      "type": "Ending",
+      "expression": "curious",
+      "dialogue": "Care. Right. Tyler’s care is very… sideways. He doesn’t say “I care about you.” He says “don’t touch that,” “wear a helmet,” and “Jacey.” I think I can understand sideways care. It’s like an encoded message, except maybe this one is not for cracking. Maybe it’s for keeping.",
+      "endingId": "tyler_01_ending_care"
+    },
+    "tyler_01_ending_control": {
+      "type": "Ending",
+      "expression": "deadpan",
+      "dialogue": "Control can be care and still be control. That is annoying. Tyler likes safe paths. I like interesting ones. Sometimes he moves me away from the interesting path because it is also the path with poison, cliffs, cameras, or legal consequences. I should probably be mad. I am mostly impressed.",
+      "endingId": "tyler_01_ending_control"
+    },
+    "tyler_01_ending_slow_down": {
+      "type": "Ending",
+      "expression": "panic",
+      "dialogue": "Slow down. Right. I can do that. Probably. Maybe I can count to five before asking a personal question. Or three. Three is realistic. If Tyler looks like he is about to redirect the entire conversation into weather patterns, I will stop. Maybe. Friendship speed limit: three seconds.",
+      "endingId": "tyler_01_ending_slow_down"
+    },
+    "tyler_01_ending_stays": {
+      "type": "Ending",
+      "expression": "vulnerable",
+      "dialogue": "He does still stay. Even when I ask too much. He does not always answer, but he does not disappear either. Maybe staying is an answer. Not permission to keep digging—just proof that I have not ruined everything by being difficult to contain.",
+      "endingId": "tyler_01_ending_stays"
+    },
+    "tyler_01_ending_promise": {
+      "type": "Ending",
+      "expression": "anger",
+      "dialogue": "Then I will not expose him. Not even if I find the answer. A secret can still be true without becoming public. I can keep a promise and keep a pattern at the same time. That sounds obvious when I say it out loud. It did not feel obvious before.",
+      "endingId": "tyler_01_ending_promise"
+    },
+    "tyler_01_ending_direct": {
+      "type": "Ending",
+      "expression": "curious",
+      "dialogue": "Ask him directly. That is terrifyingly inefficient. It also gives him the option to say no, which is probably the point. Fine. Someday I will ask one normal question and then wait for the answer instead of solving around him.",
+      "endingId": "tyler_01_ending_direct"
+    },
+    "tyler_01_ending_rule": {
+      "type": "Ending",
+      "expression": "clue",
+      "dialogue": "One rule. Okay. Rule one: noticing a secret does not make it mine. I can still know the pattern. I can still keep the data. But I do not have to publish the result. That is a very strange kind of restraint. I think Tyler would approve.",
+      "endingId": "tyler_01_ending_rule"
+    },
+    "tyler_01_ending_chart": {
+      "type": "Ending",
+      "expression": "happy",
+      "dialogue": "Charts do help! Column one: information I am allowed to investigate. Column two: information I should ask about first. Column three: information Tyler will physically remove me from if I touch it. Actually, column three may need its own page.",
+      "endingId": "tyler_01_ending_chart"
+    },
+    "tyler_01_ending_gentle": {
+      "type": "Ending",
+      "expression": "vulnerable",
+      "dialogue": "Gentle is harder than accurate. Accuracy only asks whether I am right. Gentleness asks what being right will do to someone. I think Tyler already knows that. Maybe that is why he keeps moving dangerous truths somewhere safer.",
+      "endingId": "tyler_01_ending_gentle"
+    },
+    "tyler_01_ending_relate": {
+      "type": "Ending",
+      "expression": "vulnerable",
+      "dialogue": "Maybe I do relate. People keep looking for the person I was before, like the missing version of me is the answer key. I want to know too. But I do not always want to be treated like an unfinished file. Tyler probably does not either.",
+      "endingId": "tyler_01_ending_relate"
+    },
+    "tyler_01_ending_normal": {
+      "type": "Ending",
+      "expression": "happy",
+      "dialogue": "Being normal about him. I can try that. I will acknowledge the hidden suffering internally and then ask whether he wants to play something. No decoding. No emotional forensic report. Just Tyler, allowed to be Tyler without becoming a case file.",
+      "endingId": "tyler_01_ending_normal"
+    },
+    "tyler_01_ending_trying": {
+      "type": "Ending",
+      "expression": "overshare",
+      "dialogue": "I can do normal! I have observed it extensively. I can discuss weather, snacks, games, and exactly zero suspicious behavioral patterns. I may need Tyler to tell me when I stop being normal. Quietly. Before I make a presentation.",
+      "endingId": "tyler_01_ending_trying"
+    },
+    "tyler_01_ending_knock": {
+      "type": "Ending",
+      "expression": "curious",
+      "dialogue": "Knock first. Right. A question instead of a lockpick. Then if he says no, the door stays closed. I will hate that. But hating an answer is not the same as being allowed to ignore it.",
+      "endingId": "tyler_01_ending_knock"
+    },
+    "tyler_01_ending_closed": {
+      "type": "Ending",
+      "expression": "vulnerable",
+      "dialogue": "Some doors stay closed. I do not like that either. But maybe respecting someone means accepting that I will never solve every part of them. Tyler can keep a room I never enter and still let me sit in the hallway.",
+      "endingId": "tyler_01_ending_closed"
+    }
+  },
+  "schema": "companion-episode-v1",
+  "achievement": {
+    "id": "tyler_01_all_endings",
+    "title": "THE SHAPE OF A SECRET // COMPLETE",
+    "description": "Reached every ending in Tyler 01.",
+    "identity": "jace",
+    "requiredEndings": [
+      "tyler_01_ending_care",
+      "tyler_01_ending_control",
+      "tyler_01_ending_slow_down",
+      "tyler_01_ending_stays",
+      "tyler_01_ending_promise",
+      "tyler_01_ending_direct",
+      "tyler_01_ending_rule",
+      "tyler_01_ending_chart",
+      "tyler_01_ending_gentle",
+      "tyler_01_ending_relate",
+      "tyler_01_ending_normal",
+      "tyler_01_ending_trying",
+      "tyler_01_ending_knock",
+      "tyler_01_ending_closed"
+    ]
+  }
+}

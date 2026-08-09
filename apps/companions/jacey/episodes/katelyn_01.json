@@ -1,0 +1,48 @@
+{
+  "schema": "companion-episode-v1",
+  "id": "katelyn_01",
+  "identity": "jace",
+  "title": "The Shape of a Hacker",
+  "topic": "",
+  "coreQuestion": "",
+  "triggers": [
+    "Katelyn",
+    "Kate"
+  ],
+  "requires": "None",
+  "openingNode": "opening",
+  "offerExpression": "curious",
+  "offerPrompt": "Huh?",
+  "acceptLabel": "Katelyn?",
+  "declineLabel": "Forget I said anything.",
+  "fallbackBank": "",
+  "nodes": {
+    "opening": {
+      "type": "Transition",
+      "expression": "curious",
+      "dialogue": "...",
+      "nextNode": "ending",
+      "delay": 1500
+    },
+    "ending": {
+      "type": "Transition",
+      "expression": "curious",
+      "dialogue": "...",
+      "nextNode": "conversation",
+      "delay": 1500
+    },
+    "conversation": {
+      "type": "Transition",
+      "expression": "curious",
+      "dialogue": "...",
+      "nextNode": "conversation_2",
+      "delay": 1500
+    },
+    "conversation_2": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Kate...lyn...?",
+      "choices": []
+    }
+  }
+}

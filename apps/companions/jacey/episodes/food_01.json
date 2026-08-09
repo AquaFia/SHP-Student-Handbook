@@ -1,0 +1,203 @@
+{
+  "schema": "companion-episode-v1",
+  "id": "food_01",
+  "identity": "jace",
+  "title": "The Very Scientific Snack Test",
+  "topic": "food",
+  "coreQuestion": "How does Jacey decide whether food is safe, interesting, or worth investigating?",
+  "triggers": [
+    "food",
+    "snack",
+    "taste",
+    "kitchen",
+    "poison",
+    "experiment"
+  ],
+  "openingNode": "food_01_opening",
+  "requires": {
+    "ANY": [
+      "None",
+      "food_01_crystalized_tea",
+      {
+        "ALL": [
+          "curiosity_interest",
+          "safety_warning"
+        ]
+      },
+      {
+        "ANY": [
+          "truth_interest",
+          "reckless_interest"
+        ]
+      }
+    ]
+  },
+  "nodes": {
+    "food_01_opening": {
+      "type": "Conversation",
+      "expression": "Open Curious Neutral",
+      "dialogue": "Question! If a snack looks suspicious, smells suspicious, and was left unlabeled in a science-adjacent place… is it food, evidence, or a trap?",
+      "choices": [
+        {
+          "label": "Please do not eat the mystery snack.",
+          "nextNode": "food_01_safety",
+          "requires": "None"
+        },
+        {
+          "label": "What does “science-adjacent” mean?",
+          "nextNode": "food_01_science_adjacent",
+          "requires": "None"
+        },
+        {
+          "label": "It depends. Did Kouji touch it first?",
+          "nextNode": "food_01_kouji",
+          "requires": "None"
+        }
+      ]
+    },
+    "food_01_safety": {
+      "type": "Conversation",
+      "expression": "Uh-oh Delayed Panic",
+      "dialogue": "Oh. Right. Food is supposed to have provenance. And ingredients. And not be next to jars with handwriting that says things like ‘do not inhale’.",
+      "choices": [
+        {
+          "label": "Exactly. Label first, taste second.",
+          "nextNode": "food_01_label_rule",
+          "requires": "None"
+        },
+        {
+          "label": "Jace, have you eaten unlabeled things before?",
+          "nextNode": "food_01_crystalized_tea",
+          "requires": "None"
+        }
+      ]
+    },
+    "food_01_science_adjacent": {
+      "type": "Conversation",
+      "expression": "I FOUND A CLUE! Sparkle",
+      "dialogue": "It means it was on a table near beakers, notebooks, three spoons, and one very judgmental sticky note. Which is basically a crime scene with better lighting :D",
+      "choices": [
+        {
+          "label": "That is not how kitchens work.",
+          "nextNode": "food_01_kitchen_rules",
+          "requires": "None"
+        },
+        {
+          "label": "What did the sticky note say?",
+          "nextNode": "food_01_sticky_note",
+          "requires": "None"
+        }
+      ]
+    },
+    "food_01_kouji": {
+      "type": "Conversation",
+      "expression": "Default Happy :D",
+      "dialogue": "That is a very useful diagnostic question! If Kouji touched it first, it is either safe, stolen, cursed, part of an escape route, or all four. So we need a control group.",
+      "choices": [
+        {
+          "label": "You are not making a control group.",
+          "nextNode": "food_01_no_control_group",
+          "requires": "None"
+        },
+        {
+          "label": "What would your food test even measure?",
+          "nextNode": "food_01_pause",
+          "requires": "None"
+        }
+      ]
+    },
+    "food_01_pause": {
+      "type": "Transition",
+      "expression": "Thinking",
+      "dialogue": "Sometimes I think food is just chemistry wearing a friendlier outfit. Which is nice! But also suspicious.",
+      "choices": [
+        {
+          "label": "Continue.",
+          "nextNode": "food_01_food_test",
+          "requires": "None"
+        }
+      ],
+      "nextNode": "food_01_food_test"
+    },
+    "food_01_label_rule": {
+      "type": "Ending",
+      "expression": "Non-defensive When Corrected",
+      "dialogue": "Okay! New rule: if the food has no label, I ask first. If the label has more than three warning symbols, I ask twice. If the label is missing because someone removed it, then it becomes a mystery and I am allowed to investigate but not chew. Probably.",
+      "endingId": "food_01_label_rule",
+      "unlocks": [
+        "safety_warning",
+        "label_first",
+        "jace_can_learn_rules"
+      ]
+    },
+    "food_01_crystalized_tea": {
+      "type": "Ending",
+      "expression": "Innocent Overshare Smile :}",
+      "dialogue": "Not recently! There was one time I wondered if crystallized compounds dissolved faster in hot water, but apparently the important part was not the dissolving. The important part was that some leaves are ‘medically alarming’ and ‘not tea’ and ‘Jace, why are you like this.’",
+      "endingId": "food_01_crystalized_tea",
+      "unlocks": [
+        "food_concern",
+        "reckless_interest",
+        "foxglove_thread"
+      ]
+    },
+    "food_01_kitchen_rules": {
+      "type": "Ending",
+      "expression": "Deadpan Contradiction Stare",
+      "dialogue": "Then kitchens should stop containing knives, heat, chemicals, timers, unlabeled leftovers, and people saying ‘just eyeball it.’ That is not a room. That is a trial waiting to happen.",
+      "endingId": "food_01_kitchen_rules",
+      "unlocks": [
+        "kitchen_suspicion",
+        "truth_interest",
+        "food_logic"
+      ]
+    },
+    "food_01_sticky_note": {
+      "type": "Ending",
+      "expression": "I FOUND A CLUE! Sparkle",
+      "dialogue": "It said, ‘Do not eat.’ But it did not say what not to eat. The snack? The note? The table? The concept of temptation? This is why precise wording matters!",
+      "endingId": "food_01_sticky_note",
+      "unlocks": [
+        "clue_followed",
+        "wording_matters",
+        "precision_interest"
+      ]
+    },
+    "food_01_no_control_group": {
+      "type": "Ending",
+      "expression": "Soft Missing-Self Vulnerability",
+      "dialogue": "Okay. No control group. I can do that. It is probably good when people stop me before the experiment becomes a hospital story. I do not always know which part is dangerous until someone points at it.",
+      "endingId": "food_01_no_control_group",
+      "unlocks": [
+        "prevented_experiment",
+        "trust_interest",
+        "needs_supervision"
+      ]
+    },
+    "food_01_food_test": {
+      "type": "Ending",
+      "expression": "Default Happy :D",
+      "dialogue": "The test measures five things! One: smell. Two: texture. Three: whether it makes someone else yell before I touch it. Four: emotional aura. Five: if it has raisins pretending to be chocolate chips, because that is legally deception.",
+      "endingId": "food_01_food_test",
+      "unlocks": [
+        "experiment_interest",
+        "food_opinions",
+        "raisin_mistrust"
+      ]
+    }
+  },
+  "achievement": {
+    "id": "food_01_all_endings",
+    "identity": "jace",
+    "title": "THE VERY SCIENTIFIC SNACK TEST // COMPLETE",
+    "description": "Reached every ending in Food 01.",
+    "requiredEndings": [
+      "food_01_label_rule",
+      "food_01_crystalized_tea",
+      "food_01_kitchen_rules",
+      "food_01_sticky_note",
+      "food_01_no_control_group",
+      "food_01_food_test"
+    ]
+  }
+}

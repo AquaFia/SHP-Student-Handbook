@@ -1,0 +1,192 @@
+{
+  "schema": "companion-episode-v1",
+  "id": "music_01",
+  "identity": "jace",
+  "title": "The Shape of a Song",
+  "topic": "music",
+  "coreQuestion": "How does Jacey experience music?",
+  "triggers": [
+    "music",
+    "song",
+    "melody",
+    "lyrics"
+  ],
+  "openingNode": "music_01_opening",
+  "requires": "None",
+  "nodes": {
+    "music_01_opening": {
+      "type": "Conversation",
+      "expression": "Open Curious Neutral",
+      "dialogue": "What part of a song do you notice first?",
+      "choices": [
+        {
+          "label": "The melody.",
+          "nextNode": "music_01_melody",
+          "requires": "None"
+        },
+        {
+          "label": "The lyrics.",
+          "nextNode": "music_01_lyrics",
+          "requires": "None"
+        },
+        {
+          "label": "The rhythm.",
+          "nextNode": "music_01_rhythm",
+          "requires": "None"
+        }
+      ]
+    },
+    "music_01_melody": {
+      "type": "Conversation",
+      "expression": "Default Happy :D",
+      "dialogue": "Good answer! Melody is like the song's skeleton. You can dress it in different instruments, change the tempo, even move it into another key, but the shape still walks the same path.",
+      "choices": [
+        {
+          "label": "You really do hear music like a code.",
+          "nextNode": "music_01_melody_code",
+          "requires": "None"
+        },
+        {
+          "label": "Do you have a favorite melody?",
+          "nextNode": "music_01_melody_favorite",
+          "requires": "None"
+        },
+        {
+          "label": "Songs don't walk, Jace.",
+          "nextNode": "music_01_melody_walk",
+          "requires": "None"
+        }
+      ]
+    },
+    "music_01_lyrics": {
+      "type": "Conversation",
+      "expression": "Thinking",
+      "dialogue": "Lyrics are dangerous in a quiet way. A sentence can sound harmless until the right voice sings it, and then suddenly it belongs to a memory you did not know you still had.",
+      "choices": [
+        {
+          "label": "Do lyrics help you remember?",
+          "nextNode": "music_01_lyrics_memory",
+          "requires": "None"
+        },
+        {
+          "label": "So words matter more than the tune?",
+          "nextNode": "music_01_lyrics_balance",
+          "requires": "None"
+        }
+      ]
+    },
+    "music_01_rhythm": {
+      "type": "Conversation",
+      "expression": "Analytical Focus",
+      "dialogue": "Rhythm is proof that repetition is not the same as sameness. A pattern returns, but every return changes what comes after it. Even silence has a position in the sequence.",
+      "choices": [
+        {
+          "label": "You count the silence too?",
+          "nextNode": "music_01_rhythm_silence",
+          "requires": "None"
+        },
+        {
+          "label": "That sounds like cryptography.",
+          "nextNode": "music_01_rhythm_cipher",
+          "requires": "None"
+        }
+      ]
+    },
+    "music_01_melody_code": {
+      "type": "Transition",
+      "expression": "Thinking",
+      "dialogue": "Maybe. A melody establishes rules, repeats symbols, and teaches you what to expect before deciding whether to reward or betray that expectation.",
+      "delay": 650,
+      "choices": [
+        {
+          "label": "Continue.",
+          "nextNode": "music_01_ending_decoded",
+          "requires": "None"
+        }
+      ],
+      "nextNode": "music_01_ending_decoded"
+    },
+    "music_01_melody_favorite": {
+      "type": "Ending",
+      "expression": "Soft Missing-Self Vulnerability",
+      "dialogue": "I do, but I cannot tell whether it is truly my favorite or simply the one that feels most familiar. Sometimes I catch myself humming it before I remember deciding to. That should be comforting. Instead, it feels like finding handwriting in my notebook that looks exactly like mine.",
+      "endingId": "music_01_ending_familiar",
+      "unlocks": [
+        "music_depth"
+      ]
+    },
+    "music_01_melody_walk": {
+      "type": "Ending",
+      "expression": "Playful Annoyed",
+      "dialogue": "Not literally. Usually. But melodies have direction, balance, hesitation, momentum—everything a person uses when crossing a room while pretending not to be watched. You simply lack the imagination required to observe proper musical locomotion.",
+      "endingId": "music_01_ending_walk",
+      "unlocks": [
+        "music_curiosity"
+      ]
+    },
+    "music_01_lyrics_memory": {
+      "type": "Ending",
+      "expression": "Soft Missing-Self Vulnerability",
+      "dialogue": "Sometimes. Not whole memories. More like pressure left behind after something was removed. A lyric lands in the correct place, and for one second I know there used to be something there. A room. A voice. Maybe a name. Then the song moves on before I can hold it still.",
+      "endingId": "music_01_ending_echo",
+      "unlocks": [
+        "memory_interest",
+        "identity_interest"
+      ]
+    },
+    "music_01_lyrics_balance": {
+      "type": "Ending",
+      "expression": "Open Curious Neutral",
+      "dialogue": "No. Words tell you what a song claims to mean. Music tells you whether it is telling the truth. The most interesting songs are the ones where those answers disagree.",
+      "endingId": "music_01_ending_truth",
+      "unlocks": [
+        "truth_interest",
+        "music_depth"
+      ]
+    },
+    "music_01_rhythm_silence": {
+      "type": "Ending",
+      "expression": "Gentle Serious",
+      "dialogue": "Of course. Silence is not empty when everyone is waiting for the next sound. It becomes a held breath shared by strangers. Remove it, and the song may keep its notes, but it loses the moment when all of them were listening together.",
+      "endingId": "music_01_ending_silence",
+      "unlocks": [
+        "music_depth"
+      ]
+    },
+    "music_01_rhythm_cipher": {
+      "type": "Ending",
+      "expression": "Default Happy :D",
+      "dialogue": "Exactly! Meter provides the keyspace, repetition establishes frequency, and variation hides the meaningful deviations. A song can encode urgency, grief, affection, or warning without stating any of them directly. Honestly, people should be more suspicious of catchy choruses.",
+      "endingId": "music_01_ending_cipher",
+      "unlocks": [
+        "music_curiosity",
+        "cryptology_interest"
+      ]
+    },
+    "music_01_ending_decoded": {
+      "type": "Ending",
+      "expression": "Quiet Reflection",
+      "dialogue": "That may be why I like music. A cipher expects to be solved. A song does not. You can understand every structural choice and still fail to explain why it hurts. There is something reassuring about a pattern that remains partly human after you decode it.",
+      "endingId": "music_01_ending_decoded",
+      "unlocks": [
+        "music_depth",
+        "identity_interest"
+      ]
+    }
+  },
+  "achievement": {
+    "id": "music_01_all_endings",
+    "identity": "jace",
+    "title": "THE SHAPE OF A SONG // COMPLETE",
+    "description": "Reached every ending in Music 01.",
+    "requiredEndings": [
+      "music_01_ending_cipher",
+      "music_01_ending_decoded",
+      "music_01_ending_echo",
+      "music_01_ending_familiar",
+      "music_01_ending_silence",
+      "music_01_ending_truth",
+      "music_01_ending_walk"
+    ]
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "schema": "companion-episode-v1",
+  "id": "damian_01",
+  "identity": "jace",
+  "title": "damian",
+  "topic": "",
+  "coreQuestion": "",
+  "triggers": [
+    "Damian",
+    "Damon",
+    "Dami"
+  ],
+  "requires": "None",
+  "openingNode": "damian_01_opening",
+  "offerExpression": "curious",
+  "offerPrompt": "Start this episode?",
+  "acceptLabel": "Start.",
+  "declineLabel": "Not now.",
+  "fallbackBank": "",
+  "nodes": {
+    "conversation_5": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "",
+      "choices": [
+        {
+          "label": "Do you love Damian?",
+          "nextNode": "damian_01_love",
+          "requires": "None"
+        }
+      ]
+    },
+    "damian_01_baby": {
+      "type": "Ending",
+      "expression": "overshare",
+      "dialogue": "He’s 17! And I’m 19! Damon’s basically the baby of the TC. You can tell in the way everyone else is annoyed by him but still fusses over him whenever he skips on meals and sleep. He should call me Nee-chan :3",
+      "endingId": "damian_01_baby",
+      "unlocks": []
+    },
+    "damian_01_attractive": {
+      "type": "Conversation",
+      "expression": "happy",
+      "dialogue": "He is! He's very attractive. Tall, dark hair and handsome.",
+      "choices": [
+        {
+          "label": "That's your type?",
+          "nextNode": "damian_01_locker_room",
+          "requires": "None"
+        }
+      ]
+    },
+    "damian_01_minor": {
+      "type": "Conversation",
+      "expression": "deadpan",
+      "dialogue": "Because he’s a minor. And I’m an adult. That’d be very wrong, morally speaking. I know it’s fine legally but still. That’s a line I will not cross. Pun definitely intended.",
+      "choices": [
+        {
+          "label": "Damian’s younger?",
+          "nextNode": "damian_01_baby",
+          "requires": "None"
+        }
+      ]
+    },
+    "damian_01_rejection": {
+      "type": "Conversation",
+      "expression": "overshare",
+      "dialogue": "No.",
+      "choices": [
+        {
+          "label": "Is he not attractive enough?",
+          "nextNode": "damian_01_attractive",
+          "requires": "None"
+        },
+        {
+          "label": "That was quick… Why not?",
+          "nextNode": "damian_01_minor",
+          "requires": "None"
+        }
+      ]
+    },
+    "damian_01_": {
+      "type": "Transition",
+      "expression": "panic",
+      "dialogue": "Ohhhhhhh, like, would I marry him?",
+      "nextNode": "damian_01_rejection",
+      "delay": 1600
+    },
+    "damian_01_love": {
+      "type": "Conversation",
+      "expression": "clue",
+      "dialogue": "YES. I. LOVE. DAMON. He rarely ever lies. His systems are also so meticulously organized! Like, I can find anything if he’s the one organizing it. He shares his tea with everyone, gives me fun facts about my student profile while telling me he'd happily do the tedious work of leaking it out to the public for me--",
+      "choices": [
+        {
+          "label": "I meant romantically…",
+          "nextNode": "damian_01_",
+          "requires": "None"
+        }
+      ]
+    },
+    "damian_01_opening": {
+      "type": "Conversation",
+      "expression": "curious",
+      "dialogue": "Opening dialogue.",
+      "choices": [
+        {
+          "label": "Continue",
+          "nextNode": "conversation_5",
+          "requires": "None"
+        }
+      ]
+    },
+    "damian_01_locker_room": {
+      "type": "Ending",
+      "expression": "curious",
+      "dialogue": "My type? I don't know. That's just what most of the girls in the locker rooms back at Riverside would say when they talked about attractive looking guys in our school.",
+      "endingId": "damian_01_locker_room",
+      "unlocks": []
+    }
+  }
+}

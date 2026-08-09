@@ -1,0 +1,86 @@
+{
+  "schema": "companion-episode-v1",
+  "id": "kouji_01",
+  "identity": "jace",
+  "title": "kouji",
+  "topic": "",
+  "coreQuestion": "",
+  "triggers": [
+    "Kou",
+    "Kouji"
+  ],
+  "requires": "None",
+  "openingNode": "opening",
+  "offerExpression": "curious",
+  "offerPrompt": "Start this episode?",
+  "acceptLabel": "Start.",
+  "declineLabel": "Not now.",
+  "fallbackBank": "",
+  "nodes": {
+    "opening": {
+      "type": "Conversation",
+      "expression": "curious",
+      "dialogue": "Opening dialogue.",
+      "choices": [
+        {
+          "label": "Continue",
+          "nextNode": "ending",
+          "requires": "None"
+        }
+      ]
+    },
+    "ending": {
+      "type": "Conversation",
+      "expression": "happy",
+      "dialogue": "Episode complete.",
+      "choices": [
+        {
+          "label": "What did you find out about him?",
+          "nextNode": "conversation",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Lots of things! How he's good at lock picking, is a graceful window user and hates cars.",
+      "choices": [
+        {
+          "label": "Cars?",
+          "nextNode": "conversation_2",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_2": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Yeah! Kouji said he hates cars and being inside of any kind of moving vehicle. Something about them being moving death traps.",
+      "choices": [
+        {
+          "label": "Does he drive?",
+          "nextNode": "conversation_3",
+          "requires": "None"
+        },
+        {
+          "nextNode": "conversation_4",
+          "requires": "None",
+          "label": "*Any* vehicle?"
+        }
+      ]
+    },
+    "conversation_3": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Nope! No idea how he gets around the city. Maybe a bike? I offered to drive him home once on my scooter. He said he was willing to gamble with a lot of things in life but my driving was not one of them which... rude. I've never crashed!",
+      "choices": []
+    },
+    "conversation_4": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "All metal boxes are his sworn enemy. In fact, one of our field trips had us on an overnight train ride and he was *so* restless that entire time! Although, he did get excited when we found out that Ty gets motion sickness and couldn't supervise us at all. Kou said some kind of speech about freedom and we proceeded to explore every nook and cranny of each train car. I got bored of following him at some point and went to play some chess with June :D",
+      "choices": []
+    }
+  }
+}
