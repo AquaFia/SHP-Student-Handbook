@@ -7,6 +7,14 @@
       "file": "./companions/aria/aria_companion.html",
       "portrait": "./companions/aria/portraits/aria_neutral.webp",
       "enabled": true
+    },
+    {
+      "id": "jacey-cosmo",
+      "name": "Jacey Cosmo",
+      "subtitle": "Ultimate Cryptologist",
+      "file": "./companions/jacey/jacey_companion.html",
+      "portrait": "./companions/jacey/expressions/J_Happy.webp",
+      "enabled": true
     }
   ]
 }
