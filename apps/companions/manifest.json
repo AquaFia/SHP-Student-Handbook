@@ -12,7 +12,7 @@
       "id": "jacey-cosmo",
       "name": "Jacey Cosmo",
       "subtitle": "Ultimate Cryptologist",
-      "file": "./companions/jacey/jacey_companion.html",
+      "file": "./companions/jacey/companion.html",
       "portrait": "./companions/jacey/expressions/J_Happy.webp",
       "enabled": true
     }
