@@ -240,16 +240,81 @@ body:before{
   box-shadow:0 0 14px color-mix(in srgb,var(--violet) 22%,transparent)
 }
 #specialModuleNav:empty{display:none}
+.topics-mount,
 .special-module-mount{
   display:none;
   min-height:0;
   overflow:auto;
 }
+.chat.topics-active,
 .chat.special-module-active{
   grid-template-rows:auto minmax(0,1fr);
 }
+.chat.topics-active .log,
+.chat.topics-active .composer,
+.chat.topics-active .special-module-mount{
+  display:none;
+}
+.chat.topics-active .topics-mount{
+  display:block;
+}
+.topics-shell{
+  box-sizing:border-box;
+  min-height:100%;
+  padding:18px;
+  display:grid;
+  align-content:start;
+  gap:16px;
+}
+.topics-heading{
+  display:grid;
+  gap:6px;
+  padding-bottom:13px;
+  border-bottom:1px solid var(--line);
+}
+.topics-heading strong{
+  color:var(--ink);
+  font:800 13px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.13em;
+}
+.topics-heading span{
+  color:var(--muted);
+  font:500 11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+.topics-list{
+  display:flex;
+  flex-wrap:wrap;
+  align-content:flex-start;
+  gap:10px;
+}
+.topic-quickstart{
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:9px 13px;
+  cursor:pointer;
+  color:var(--ink);
+  background:color-mix(in srgb,var(--panel) 90%,black);
+  font:700 10px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.06em;
+  transition:.2s ease;
+}
+.topic-quickstart:hover,
+.topic-quickstart:focus-visible{
+  border-color:var(--violet);
+  background:color-mix(in srgb,var(--panel2) 72%,var(--violet));
+  box-shadow:0 0 14px color-mix(in srgb,var(--violet) 20%,transparent);
+  outline:none;
+}
+.topics-empty{
+  color:var(--muted);
+  font:600 11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+.special-module-mount{
+  overflow:auto;
+}
 .chat.special-module-active .log,
-.chat.special-module-active .composer{
+.chat.special-module-active .composer,
+.chat.special-module-active .topics-mount{
   display:none;
 }
 .chat.special-module-active .special-module-mount{
@@ -1282,6 +1347,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   <section class="chat">
     <header class="chat-head"><div class="channel-info"><div class="mobile-avatar-slot" id="mobileAvatarSlot" aria-label="Active companion portrait"></div><div class="channel-copy"><b id="channelTitle">COMPANION CHANNEL</b><small id="channel">channel: loading // initializing</small></div></div><div class="mode-tabs" aria-label="Interface mode">
   <button class="mode-tab active" id="chatModeBtn" type="button">CHAT</button>
+  <button class="mode-tab" id="topicsModeBtn" type="button">TOPICS</button>
   <span id="specialModuleNav"></span>
 </div>
 <div class="head-actions"><button class="icon-btn" id="libraryBtn" title="Content library">▤</button><button class="icon-btn" id="dataLoadBtn" title="Load episode or memory JSON">↥</button><button class="icon-btn" id="memorySaveBtn" title="Export companion memory JSON">⇩</button><input id="dataFileInput" type="file" accept=".json,application/json" multiple hidden><button class="icon-btn" id="musicToggle" type="button" title="Music: off" aria-label="Toggle identity music" aria-pressed="false">♫</button><button class="icon-btn" id="companionToggle" title="Companion mode: off" aria-pressed="false">◌</button><button class="icon-btn" id="glitchBtn" title="Glitch">⌁</button><button class="icon-btn" id="dossierBtn" title="Classified dossier">⌘</button></div></header>
@@ -1298,6 +1364,15 @@ window.addEventListener('DOMContentLoaded',()=>{
     </div>
   </div>
   <div class="quick" id="quick"></div><form class="input-row" id="form" novalidate><input id="input" type="text" inputmode="text" enterkeyhint="send" autocomplete="off" autocapitalize="sentences" spellcheck="true" maxlength="1800" placeholder="Message companion…" aria-label="Message companion"><button class="send" id="sendBtn" type="button" aria-label="Send message">➤</button></form></div>
+    <div class="topics-mount" id="topicsMount" aria-live="polite">
+      <div class="topics-shell">
+        <div class="topics-heading">
+          <strong>EPISODE QUICK START</strong>
+          <span>Select a topic to send its Episode trigger in chat.</span>
+        </div>
+        <div class="topics-list" id="topicsList"></div>
+      </div>
+    </div>
     <div class="special-module-mount" id="specialModuleMount" aria-live="polite"></div>
   </section>
   <div class="identity-overlay" id="identityOverlay" aria-hidden="true"><div class="identity-card"><div class="identity-kicker" id="identityKicker">AUTHENTICATION PHRASE RECOGNIZED</div><div class="identity-name" id="identityName">PROFILE</div><div class="identity-step" id="identityStep">Verifying…</div><div class="identity-bar"><i id="identityProgress"></i></div><div class="identity-belief" id="identityBelief"></div></div></div>
@@ -2607,8 +2682,37 @@ chatInput.addEventListener('focus',()=>{
    ========================================================= */
 const chatPanel=document.querySelector('.chat');
 const chatModeBtn=document.querySelector('#chatModeBtn');
+const topicsModeBtn=document.querySelector('#topicsModeBtn');
+const topicsMount=document.querySelector('#topicsMount');
+const topicsList=document.querySelector('#topicsList');
 const specialModuleNav=document.querySelector('#specialModuleNav');
 const specialModuleMount=document.querySelector('#specialModuleMount');
+
+function closeTopicsMode({resume=true}={}){
+  if(!chatPanel.classList.contains('topics-active'))return false;
+  chatPanel.classList.remove('topics-active');
+  topicsModeBtn.classList.remove('active');
+  if(!chatPanel.classList.contains('special-module-active')){
+    chatModeBtn.classList.add('active');
+  }
+  if(resume)Framework.resume({source:'episode-topics'});
+  return true;
+}
+
+function openTopicsMode(){
+  if(Framework.specialModule?.close){
+    Framework.specialModule.close();
+  }
+  chatPanel.classList.remove('special-module-active');
+  chatPanel.classList.add('topics-active');
+  chatModeBtn.classList.remove('active');
+  topicsModeBtn.classList.add('active');
+  EpisodeOverlayController.suspend();
+  if(typeof renderEpisodeQuickStarts==='function'){
+    renderEpisodeQuickStarts();
+  }
+  return true;
+}
 
 const SpecialModuleRuntime=Object.freeze({
   getActiveIdentity:()=>IdentityManager.getCurrentId(),
@@ -2620,8 +2724,10 @@ const SpecialModuleRuntime=Object.freeze({
     content:specialModuleMount
   }),
   enterSpecialMode(){
+    closeTopicsMode({resume:false});
     chatPanel.classList.add('special-module-active');
     chatModeBtn.classList.remove('active');
+    topicsModeBtn.classList.remove('active');
     EpisodeOverlayController.suspend();
     return true;
   },
@@ -2657,6 +2763,15 @@ const SpecialModuleController={
 chatModeBtn.addEventListener('click',()=>{
   if(Framework.specialModule?.close){
     Framework.specialModule.close();
+  }
+  closeTopicsMode();
+});
+
+topicsModeBtn.addEventListener('click',()=>{
+  if(chatPanel.classList.contains('topics-active')){
+    closeTopicsMode();
+  }else{
+    openTopicsMode();
   }
 });
 
@@ -3370,6 +3485,38 @@ const EpisodeManager={
   list(){return [...this.records.values()].sort((a,b)=>a.title.localeCompare(b.title));}
 };
 
+function renderEpisodeQuickStarts(){
+  const available=EpisodeManager.list().filter(record=>{
+    if(!record.enabled)return false;
+    const firstTrigger=record.data?.triggers?.[0];
+    return typeof firstTrigger==='string' && firstTrigger.trim();
+  });
+
+  topicsList.replaceChildren();
+
+  if(!available.length){
+    const empty=document.createElement('div');
+    empty.className='topics-empty';
+    empty.textContent='No active episode topics are currently available.';
+    topicsList.append(empty);
+    return;
+  }
+
+  available.forEach(record=>{
+    const trigger=record.data.triggers[0].trim();
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='topic-quickstart';
+    button.textContent=trigger;
+    button.addEventListener('click',()=>{
+      if(busy)return;
+      closeTopicsMode();
+      send(trigger);
+    });
+    topicsList.append(button);
+  });
+}
+
 const MessageBankManager={
   records:new Map(),
   activeKey:null,
@@ -3423,7 +3570,7 @@ function renderLibrary(){
   if(!episodes.length){const x=document.createElement('div');x.className='library-empty';x.textContent='No episodes loaded.';ep.append(x);}else episodes.forEach(r=>ep.append(createLibraryItem(r,EpisodeManager)));
   if(!banks.length){const x=document.createElement('div');x.className='library-empty';x.textContent='No message banks loaded.';mb.append(x);}else banks.forEach(r=>mb.append(createLibraryItem(r,MessageBankManager)));
 }
-function refreshContentUI(){renderLibrary();}
+function refreshContentUI(){renderLibrary();renderEpisodeQuickStarts();}
 function setLibraryOpen(open){libraryPanel.classList.toggle('open',open);libraryPanel.setAttribute('aria-hidden',String(!open));if(open)dossier.classList.remove('open');}
 libraryBtn.addEventListener('click',()=>setLibraryOpen(!libraryPanel.classList.contains('open')));closeLibraryBtn.addEventListener('click',()=>setLibraryOpen(false));
 
