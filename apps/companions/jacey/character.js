@@ -107,6 +107,7 @@
           muted: "#9b95b5",
           accent: "#a970ff",
           secondary: "#6d4aff",
+          sigilAccent: "#d62952",
           danger: "#d62952",
           cyan: "#c39cff",
           line: "#38244f"
@@ -169,6 +170,7 @@
           muted: "#b18b8e",
           accent: "#8f1d27",
           secondary: "#4e0d13",
+          sigilAccent: "#d94a57",
           danger: "#d94a57",
           cyan: "#e07a83",
           line: "#512027"
@@ -231,6 +233,7 @@
           muted: "#86aeb0",
           accent: "#20a6a3",
           secondary: "#126568",
+          sigilAccent: "#73e6df",
           danger: "#c34c70",
           cyan: "#73e6df",
           line: "#1f5558"
