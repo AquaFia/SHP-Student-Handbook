@@ -27,7 +27,7 @@
    ========================================================= */
 :root{
   --bg:#08070d;--panel:#10101a;--panel2:#151426;--ink:#f4efff;--muted:#9b95b5;
-  --violet:#a970ff;--blue:#477cff;--red:#d62952;--cyan:#66e8ff;--line:#38244f;
+  --violet:#a970ff;--blue:#477cff;--red:#d62952;--cyan:#66e8ff;--sigil-accent:#d62952;--line:#38244f;
   --glow:0 0 28px rgba(143,87,255,.28);--radius:22px;
 }
 *{box-sizing:border-box}html,body{height:100%}body{margin:0;display:grid;place-items:center;background:
@@ -38,7 +38,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background-ima
 .terminal{width:min(1500px,96vw);height:min(920px,94vh);display:grid;grid-template-columns:clamp(320px,27vw,420px) minmax(0,1fr);border:1px solid #482357;border-radius:var(--radius);overflow:hidden;background:rgba(10,9,18,.91);box-shadow:0 30px 90px rgba(0,0,0,.62),var(--glow);position:relative}
 .terminal:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(110deg,transparent 0 45%,rgba(255,255,255,.035) 50%,transparent 55%);transform:translateX(-120%);animation:sweep 9s infinite}@keyframes sweep{60%,100%{transform:translateX(120%)}}
 .sidebar{position:relative;padding:clamp(16px,1.25vw,24px);background:linear-gradient(180deg,rgba(22,15,35,.98),rgba(10,10,20,.98));border-right:1px solid #32203f;display:flex;flex-direction:column;min-height:0}
-.brand{display:flex;align-items:center;gap:11px;margin-bottom:14px}.sigil{width:39px;height:39px;border-radius:12px;display:grid;place-items:center;background:conic-gradient(from 90deg,var(--violet),var(--blue),var(--red),var(--violet));box-shadow:0 0 22px rgba(169,112,255,.35);font-weight:900}.brand h1{font-size:15px;letter-spacing:.12em;margin:0}.brand small{color:var(--muted);letter-spacing:.18em;font-size:9px}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:14px}.sigil{width:39px;height:39px;border-radius:12px;display:grid;place-items:center;background:conic-gradient(from 90deg,var(--violet),var(--blue),var(--sigil-accent),var(--violet));box-shadow:0 0 22px rgba(169,112,255,.35);font-weight:900}.brand h1{font-size:15px;letter-spacing:.12em;margin:0}.brand small{color:var(--muted);letter-spacing:.18em;font-size:9px}
 .portrait-frame{position:relative;flex:1;min-height:280px;border:1px solid #4b2a61;border-radius:18px;overflow:hidden;background:#090811;box-shadow:inset 0 0 45px rgba(80,32,116,.25)}
 .portrait-frame:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0 3px,rgba(255,255,255,.02) 4px)}
 
@@ -50,8 +50,9 @@ repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 5px)
 .portrait-frame.alias-blank:after{content:"PORTRAIT FILE // UNAVAILABLE";position:absolute;bottom:52px;font:600 10px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.17em;color:var(--muted)}
 .portrait-frame.alias-blank .status-tag{bottom:14px}
 .expressions.alias-hidden{visibility:hidden;pointer-events:none}
-.portrait{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transition:opacity .18s,transform .35s;transform:scale(1.02)}
-.portrait.switching{opacity:.18;transform:scale(1.06) translateX(3px);filter:hue-rotate(35deg)}
+.portrait{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transition:opacity .28s ease,transform .42s ease,filter .28s ease;transform:scale(1.02);will-change:opacity,transform,filter}
+.portrait.switching{opacity:.14;transform:scale(1.055) translateX(3px);filter:hue-rotate(35deg)}
+.portrait.glitch-switching{opacity:.08;transform:scale(1.075) translateX(-5px);filter:hue-rotate(70deg) saturate(1.45);transition-duration:.07s,.09s,.07s}
 .status-tag{position:absolute;left:12px;bottom:12px;z-index:3;padding:7px 10px;border:1px solid rgba(157,112,255,.55);border-radius:999px;background:rgba(8,7,14,.8);backdrop-filter:blur(8px);font:700 10px/1 ui-monospace,SFMono-Regular,monospace;letter-spacing:.09em;color:#d9c9ff}
 .expressions{
   display:grid;
@@ -121,8 +122,38 @@ repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 5px)
   animation:portraitGlitchBounce .42s cubic-bezier(.2,.8,.25,1);
   will-change:transform;
 }
+@keyframes portraitImageGlitch{
+  0%{opacity:0;clip-path:inset(0 0 100% 0);transform:translate3d(0,0,0)}
+  12%{opacity:.72;clip-path:inset(8% 0 70% 0);transform:translate3d(-8px,0,0)}
+  26%{opacity:.48;clip-path:inset(48% 0 34% 0);transform:translate3d(7px,0,0)}
+  41%{opacity:.68;clip-path:inset(70% 0 12% 0);transform:translate3d(-5px,0,0)}
+  57%{opacity:.38;clip-path:inset(24% 0 58% 0);transform:translate3d(9px,0,0)}
+  74%{opacity:.58;clip-path:inset(56% 0 24% 0);transform:translate3d(-6px,0,0)}
+  88%{opacity:.3;clip-path:inset(12% 0 76% 0);transform:translate3d(4px,0,0)}
+  100%{opacity:0;clip-path:inset(100% 0 0 0);transform:translate3d(0,0,0)}
+}
+.portrait-frame.portrait-glitch-active:not(.alias-blank):after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background-image:var(--portrait-glitch-image);
+  background-size:cover;
+  background-position:center top;
+  background-repeat:no-repeat;
+  filter:hue-rotate(72deg) saturate(1.55) contrast(1.08);
+  animation:portraitImageGlitch .42s steps(2,end);
+  will-change:transform,opacity,clip-path;
+}
+.portrait-frame.portrait-glitch-active:not(.alias-blank):before{
+  background:
+    repeating-linear-gradient(to bottom,transparent 0 3px,rgba(255,255,255,.075) 4px),
+    linear-gradient(90deg,rgba(94,234,255,.09),transparent 38%,rgba(255,58,105,.09));
+}
 @media (prefers-reduced-motion: reduce){
-  .portrait-frame.glitch-bounce{animation:none}
+  .portrait-frame.glitch-bounce,
+  .portrait-frame.portrait-glitch-active:not(.alias-blank):after{animation:none}
 }
 
 
@@ -153,7 +184,7 @@ body:before{
   border-right-color:var(--line);
 }
 .sigil{
-  background:conic-gradient(from 90deg,var(--violet),var(--blue),var(--red),var(--violet));
+  background:conic-gradient(from 90deg,var(--violet),var(--blue),var(--sigil-accent),var(--violet));
   box-shadow:0 0 24px color-mix(in srgb,var(--violet) 42%,transparent);
 }
 .portrait-frame{
@@ -1368,7 +1399,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   <button class="mode-tab" id="topicsModeBtn" type="button">TOPICS</button>
   <span id="specialModuleNav"></span>
 </div>
-<div class="head-actions"><button class="icon-btn" id="libraryBtn" title="Content library">▤</button><button class="icon-btn" id="dataLoadBtn" title="Load episode or memory JSON">↥</button><button class="icon-btn" id="memorySaveBtn" title="Export companion memory JSON">⇩</button><input id="dataFileInput" type="file" accept=".json,application/json" multiple hidden><button class="icon-btn" id="musicToggle" type="button" title="Music: off" aria-label="Toggle identity music" aria-pressed="false">♫</button><button class="icon-btn" id="companionToggle" title="Companion mode: off" aria-pressed="false">◌</button><button class="icon-btn" id="glitchBtn" title="Glitch">⌁</button><button class="icon-btn" id="dossierBtn" title="Classified dossier">⌘</button></div></header>
+<div class="head-actions"><button class="icon-btn" id="libraryBtn" title="Content library">▤</button><button class="icon-btn" id="dataLoadBtn" title="Load episode or memory JSON">↥</button><button class="icon-btn" id="memorySaveBtn" title="Export companion memory JSON">⇩</button><input id="dataFileInput" type="file" accept=".json,application/json" multiple hidden><button class="icon-btn" id="musicToggle" type="button" title="Music: off" aria-label="Toggle identity music" aria-pressed="false">♫</button><button class="icon-btn" id="glitchBtn" title="Glitch">⌁</button><button class="icon-btn" id="dossierBtn" title="Classified dossier">⌘</button></div></header>
     <div class="log" id="log"></div>
     <div class="composer">
   <div class="episode-overlay" id="episodeOverlay" aria-live="polite">
@@ -1419,7 +1450,9 @@ const FRAMEWORK_TIMING={
   replyBase:650,
   replyPerCharacter:11,
   replyMaximumExtra:900,
-  dossierSlide:420
+  dossierSlide:420,
+  portraitFadeOut:180,
+  portraitGlitchFadeOut:55
 };
 
 const CompanionCharacter=window.CompanionCharacter;
@@ -1899,7 +1932,7 @@ function applyCharacter(c){
   const r=document.documentElement.style;
   r.setProperty('--bg',c.colors.bg);r.setProperty('--panel',c.colors.panel);r.setProperty('--panel2',c.colors.panel2);
   r.setProperty('--ink',c.colors.ink);r.setProperty('--muted',c.colors.muted);r.setProperty('--violet',c.colors.accent);
-  r.setProperty('--blue',c.colors.secondary);r.setProperty('--red',c.colors.danger);r.setProperty('--cyan',c.colors.cyan);r.setProperty('--line',c.colors.line);
+  r.setProperty('--blue',c.colors.secondary);r.setProperty('--red',c.colors.danger);r.setProperty('--cyan',c.colors.cyan);r.setProperty('--sigil-accent',c.colors.sigilAccent||c.colors.danger||c.colors.cyan);r.setProperty('--line',c.colors.line);
   document.title=c.name+' — Companion Terminal';
   document.querySelector('#sigil').textContent=c.initials;
   document.querySelector('#brandTitle').textContent=c.brand;
@@ -2115,7 +2148,7 @@ const PortraitManager={
     exprWrap.classList.add('alias-hidden');
   },
 
-  setExpression(expressionId,identityId=activeIdentity){
+  setExpression(expressionId,identityId=activeIdentity,options=null){
     if(!this.ready){
       this.pendingExpression=expressionId;
       this.load();
@@ -2147,11 +2180,24 @@ const PortraitManager={
     if(alreadyCurrent)return true;
 
     const token=++this.transitionToken;
-    portrait.classList.add('switching');
+    const glitchTransition=options?.transition==='glitch';
+    const transitionClass=glitchTransition?'glitch-switching':'switching';
+    portrait.classList.remove('switching','glitch-switching');
+    portrait.classList.add(transitionClass);
 
-    setTimeout(()=>{
+    const stagedImage=new Image();
+    stagedImage.src=imageUrl;
+    const decodePromise=
+      typeof stagedImage.decode==='function'
+        ? stagedImage.decode().catch(()=>{})
+        : Promise.resolve();
+
+    Promise.all([
+      decodePromise,
+      sleep(glitchTransition?FRAMEWORK_TIMING.portraitGlitchFadeOut:FRAMEWORK_TIMING.portraitFadeOut)
+    ]).then(()=>{
       if(token!==this.transitionToken || identityId!==activeIdentity){
-        if(token===this.transitionToken)portrait.classList.remove('switching');
+        if(token===this.transitionToken)portrait.classList.remove(transitionClass);
         return;
       }
 
@@ -2164,8 +2210,19 @@ const PortraitManager={
       this.currentIdentity=identityId;
       this.currentExpressionId=expression.id;
       this.currentImageUrl=imageUrl;
-      portrait.classList.remove('switching');
-    },120);
+
+      const finishTransition=()=>{
+        if(token===this.transitionToken && identityId===activeIdentity){
+          portrait.classList.remove(transitionClass);
+        }
+      };
+
+      if(glitchTransition){
+        requestAnimationFrame(finishTransition);
+      }else{
+        requestAnimationFrame(()=>requestAnimationFrame(finishTransition));
+      }
+    });
 
     return true;
   }
@@ -2174,8 +2231,8 @@ const PortraitManager={
 
 Framework.modules.PortraitManager=PortraitManager;
 
-function setExpression(name){
-  return PortraitManager.setExpression(name,activeIdentity);
+function setExpression(name,options=null){
+  return PortraitManager.setExpression(name,activeIdentity,options);
 }
 
 PortraitManager.load();
@@ -2596,11 +2653,12 @@ function respond(text){
   },FRAMEWORK_TIMING.replyBase+Math.min(text.length*FRAMEWORK_TIMING.replyPerCharacter,FRAMEWORK_TIMING.replyMaximumExtra));
 }
 
-let companionMode=false,idleTimer=null;
+const companionMode=true;
+let idleTimer=null;
 function nextIdleDelay(){return CHARACTER.idleMinMs+Math.random()*(CHARACTER.idleMaxMs-CHARACTER.idleMinMs)}
-function resetIdleTimer(){clearTimeout(idleTimer);if(!companionMode)return;idleTimer=setTimeout(runIdle,nextIdleDelay())}
+function resetIdleTimer(){clearTimeout(idleTimer);idleTimer=setTimeout(runIdle,nextIdleDelay())}
 function runIdle(){
-  if(!companionMode||busy){resetIdleTimer();return}
+  if(busy){resetIdleTimer();return}
 
   const dialogueProfile=getIdentityDialogueProfile();
   let exp=dialogueProfile.fallbackExpression,msg;
@@ -2616,18 +2674,8 @@ function runIdle(){
   add(msg);
   resetIdleTimer();
 }
-const companionToggle=document.querySelector('#companionToggle');
-function setCompanionMode(on){
-  companionMode=on;
-  companionToggle.classList.toggle('toggle-on',on);
-  companionToggle.setAttribute('aria-pressed',String(on));
-  companionToggle.title='Companion mode: '+(on?'on':'off');
-  companionToggle.textContent=on?'●':'◌';
-  showToast(CHARACTER.companionModeLabel+' // '+(on?'ENABLED':'DISABLED'));
-  resetIdleTimer();
-}
-companionToggle.onclick=()=>setCompanionMode(!companionMode);
-['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt,()=>{if(companionMode)resetIdleTimer()},{passive:true}));
+['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt,resetIdleTimer,{passive:true}));
+resetIdleTimer();
 function send(text){
   text=text.trim();
   if(!text||busy)return;
@@ -2808,15 +2856,22 @@ document.querySelector('#glitchBtn').onclick=()=>{
   terminal.classList.add('glitch');
   setTimeout(()=>terminal.classList.remove('glitch'),500);
 
-  portraitFrame.classList.remove('glitch-bounce');
-  void portraitFrame.offsetWidth;
-  portraitFrame.classList.add('glitch-bounce');
+  const portraitImage=portrait.currentSrc||portrait.src;
+  if(portraitImage){
+    portraitFrame.style.setProperty('--portrait-glitch-image',`url("${portraitImage.replace(/"/g,'\\\"')}")`);
+  }
 
-  setExpression(CompanionCharacter.expressions.glitch);
+  portraitFrame.classList.remove('glitch-bounce','portrait-glitch-active');
+  void portraitFrame.offsetWidth;
+  portraitFrame.classList.add('glitch-bounce','portrait-glitch-active');
+
+  setExpression(CompanionCharacter.expressions.glitch,{transition:'glitch'});
 };
 portraitFrame.addEventListener('animationend',event=>{
   if(event.animationName==='portraitGlitchBounce'){
     portraitFrame.classList.remove('glitch-bounce');
+  }else if(event.animationName==='portraitImageGlitch'){
+    portraitFrame.classList.remove('portrait-glitch-active');
   }
 });
 portraitFrame.dataset.alias=CHARACTER.initials;
