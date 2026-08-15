@@ -15,6 +15,14 @@
       "file": "./companions/shared/jacey_framework.html?character=jacey",
       "portrait": "./companions/jacey/expressions/J_Happy.webp",
       "enabled": true
+    },
+    {
+      "id": "milo-celestiant",
+      "name": "Milo Celestian",
+      "subtitle": "Ultimate Magician",
+      "file": "./companions/shared/jacey_framework.html?character=milo",
+      "portrait": ".",
+      "enabled": true
     }
   ]
 }
