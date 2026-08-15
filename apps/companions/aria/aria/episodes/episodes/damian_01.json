@@ -1,0 +1,304 @@
+{
+  "schema": "companion-episode-v1",
+  "id": "damian_01",
+  "identity": "Aria",
+  "title": "Damian",
+  "topic": "Damian",
+  "coreQuestion": "What does Aria think of Damian?",
+  "triggers": [
+    "What do you think about Damian?",
+    "Damian",
+    "Tell me about Damian",
+    "What's your impression of Damian?",
+    "What do you think of Damian?"
+  ],
+  "requires": "None",
+  "openingNode": "opening",
+  "offerExpression": "curious",
+  "offerPrompt": "Start this episode?",
+  "acceptLabel": "Start.",
+  "declineLabel": "Not now.",
+  "fallbackBank": "",
+  "nodes": {
+    "opening": {
+      "type": "Conversation",
+      "expression": "curious",
+      "dialogue": "Damian is exactly the kind of person you want in a crisis—and exactly the kind of person you don't want in a room full of fragile egos. He doesn't care if the truth hurts. If you can't cite it, he won't hear it. If your logic's sloppy, he'll gut it in two sentences. I respect that. We need someone who won't let bad information slide just because it sounds good or makes people feel better. The problem is he says it all out loud, in public, with zero cushioning. I've seen him correct people mid-sentence and wonder why they're upset. Useful. Blunt. Occasionally a liability when we need cooperation more than precision.",
+      "choices": [
+        {
+          "label": "Do you think Damian will survive this?",
+          "nextNode": "ending",
+          "requires": "None"
+        },
+        {
+          "label": "What was your first impression of Damian",
+          "nextNode": "meeting",
+          "requires": "None"
+        },
+        {
+          "label": "What do you think of Damian?",
+          "nextNode": "conversation_2",
+          "requires": "None"
+        },
+        {
+          "label": "Do you trust his reasoning?",
+          "nextNode": "conversation",
+          "requires": "None"
+        }
+      ]
+    },
+    "ending": {
+      "type": "Ending",
+      "expression": "happy",
+      "dialogue": "His projected survival probability is above average. He is observant, cautious, academically disciplined, useful during investigations, and unlikely to accept a convenient explanation without testing it. He is also socially isolated, openly abrasive, and capable of making enemies faster than Ludo can perform damage control. His greatest risk is not stupidity. It is pride. If Damian believes his credibility is collapsing, he may prioritize restoring control over preserving cooperation. If information concerning his family or past conduct becomes public, his response could become aggressive and strategically unsound. He can survive this. The more relevant question is whether he can survive being seen accurately.",
+      "endingId": "damian_01_ending",
+      "unlocks": []
+    },
+    "meeting": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "I first met Damian in the library with Ludo. They were the only ones I could actually stand to have around. They weren't idiotic simpletons clinging onto some false hope like the rest. They were realistic and offered me some peace and quiet that I desperately needed. It's not every day that I interact with someone of a similar intellect either. Us three were paired together that day for a class project. After that I invited them to join the Talent Committee. They were just what I needed. Rational. Grounded. A much needed break from the others.",
+      "choices": [
+        {
+          "label": "Do you trust Damian in a crisis?",
+          "nextNode": "conversation",
+          "requires": "None"
+        },
+        {
+          "nextNode": "conversation_6",
+          "requires": "None",
+          "label": "Do you trust Damian?"
+        }
+      ]
+    },
+    "conversation": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "I trust his reasoning. But I do not always trust his judgment about when truth should be delivered privately.",
+      "choices": [
+        {
+          "label": "What do you admire about Damian?",
+          "nextNode": "conversation_4",
+          "requires": "None"
+        },
+        {
+          "label": "Do you trust Damian?",
+          "nextNode": "conversation_6",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_2": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Damian Crosse is methodical, intelligent, abrasive, and structurally useful. He understands evidence provenance, source quality, methodological limitations, and the distinction between a claim being persuasive and a claim being supportable. That places him above a statistically concerning percentage of the student body. He also has the interpersonal delicacy of a dropped filing cabinet. I respect him. Do not interpret that as an endorsement of every sentence he has ever spoken.\n\nDamian... he's one of the more methodical students here. I wouldn't describe him as unfriendly, but he keeps a considerable amount of himself hidden. There are a few directions we could go from there.",
+      "choices": [
+        {
+          "nextNode": "conversation_3",
+          "requires": "None",
+          "label": "Tell me about Damian"
+        },
+        {
+          "label": "What do you admire about Damian?",
+          "nextNode": "conversation_4",
+          "requires": "None"
+        },
+        {
+          "label": "Do you trust Damian's judgement?",
+          "nextNode": "conversation_7",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_3": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Damian is the Ultimate Researcher. He collects information, traces it to its origin, identifies where the method failed, and refuses to accept a conclusion merely because everyone else finds it convenient. He is quiet until someone presents unsupported nonsense as fact. Then he becomes significantly less quiet. He maintains index cards of research methods, annotated files, citation records, and enough organized material to make his dorm resemble a secondary archive. He is useful, difficult, and one of the few people I do not have to simplify myself for. That last statement is not to be repeated.",
+      "choices": [
+        {
+          "label": "What do you admire about Damian?",
+          "nextNode": "conversation_4",
+          "requires": "None"
+        },
+        {
+          "label": "What do you envy about Damian?",
+          "nextNode": "conversation_5",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_4": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "His rigor. Damian does not stop at finding information. He asks who produced it, under what conditions, using which method, with what incentive, and whether the conclusion exceeds what the evidence can actually support. He is also willing to be disliked rather than publicly agree with a false claim. That quality can become arrogance if left unchecked. It remains preferable to cowardice disguised as politeness. I admire that he expects arguments to survive contact with scrutiny.",
+      "choices": [
+        {
+          "label": "What do you envy about Damian?",
+          "nextNode": "conversation_5",
+          "requires": "None"
+        },
+        {
+          "label": "What annoys you about Damian?",
+          "nextNode": "conversation_8",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_5": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "His certainty. Damian can identify a weak argument and reject it without immediately auditing whether the rejection makes him cruel, disloyal, unstable, or fundamentally defective. He trusts his own assessment enough to state it as a conclusion. I tend to continue testing mine after the evidence threshold has already been met. I also envy how naturally he occupies intellectual space. He behaves as though competence entitles him to be heard. Statistically, he is not wrong.",
+      "choices": [
+        {
+          "label": "What annoys you about Damian?",
+          "nextNode": "conversation_8",
+          "requires": "None"
+        },
+        {
+          "label": "What do you think of Damian's Talent?",
+          "nextNode": "conversation_13",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_6": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Yes, within defined parameters. I trust him to verify a source, preserve evidence, identify a methodological failure, and object when a conclusion is unsupported. I trust that if he disagrees with me, he will usually say so directly rather than conceal it behind social approval. I do not trust that pride, reputation, or pressure could never distort his behavior. That would be an irrational conclusion regarding anyone. Trust is not a feeling. It is a log entry that has not yet been contradicted. Damian’s entry remains active.\n\nI trust his read on a room more than I trust most people's full briefings. That is not nothing. I want to be clear that it is not nothing.",
+      "choices": [
+        {
+          "label": "Do you trust Damian's Judgement?",
+          "nextNode": "conversation_7",
+          "requires": "None"
+        },
+        {
+          "label": "Do you think Damian is hiding something?",
+          "nextNode": "conversation_9",
+          "requires": "None"
+        },
+        {
+          "label": "What do you think of Damian's Talent?",
+          "nextNode": "conversation_13",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_7": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "I trust his judgment in the field. I am less certain about what he does with information he decides not to share. The gap between those two things is not nothing.",
+      "choices": [
+        {
+          "label": "What annoys you about Damian?",
+          "nextNode": "conversation_8",
+          "requires": "None"
+        },
+        {
+          "label": "What do you think of Damian's Talent?",
+          "nextNode": "conversation_13",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_8": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "He treats accuracy as though it automatically justifies delivery. It does not. A correct statement can still be strategically mistimed, unnecessarily humiliating, or delivered in a form that guarantees the listener will reject it. \n\nDamian frequently identifies the correct structural weakness and then announces it in public with enough force to create three additional weaknesses. He also reacts poorly to disrespect. More specifically, he sometimes classifies disagreement as disrespect when his credibility feels threatened. That is inefficient. It is also predictable.",
+      "choices": [
+        {
+          "label": "Do you think Damian is hiding something?",
+          "nextNode": "conversation_9",
+          "requires": "None"
+        },
+        {
+          "label": "Do you think Damian will survive this?",
+          "nextNode": "ending",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_9": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Yes. He keeps enough paperwork in his room to conceal half the student archives, which in and of itself is a concern.\n\nHis standards are too rigid to be entirely impersonal. People do not usually build their identity around evidence, integrity, and unimpeachable method unless they have witnessed what happens when those things are absent—or unless they require those principles to separate themselves from something they would prefer not to resemble. He becomes particularly defensive when credibility, family influence, or dishonesty enters the discussion. I do not yet have enough admissible evidence to classify the concealed information. \n\nI have enough to conclude that it exists.",
+      "choices": [
+        {
+          "label": "Do you consider Damian a threat?",
+          "nextNode": "conversation_10",
+          "requires": "None"
+        },
+        {
+          "label": "What do you think of Damian's talent?",
+          "nextNode": "conversation_13",
+          "requires": "None"
+        },
+        {
+          "label": "Do you think Damian will survive this?",
+          "nextNode": "ending",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_10": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Potentially. He knows too much.\n\nDamian is not physically imposing enough to be an immediate tactical concern. That is not the only kind of threat. He can control how information is evaluated. He knows how to identify strong evidence, discredit weak evidence, expose procedural flaws, and construct an argument that survives public scrutiny. In a class trial, that could save everyone. It could also allow him to bury someone beneath technically correct objections while redirecting attention away from his own vulnerabilities. I do not currently classify him as hostile. I classify him as someone whose credibility gives him leverage. He's also an information hoarder, much like myself. Which also gives him leverage. Leverage requires oversight.",
+      "choices": [
+        {
+          "label": "Is Damian capable of hurting someone? Is he dangerous?",
+          "nextNode": "conversation_11",
+          "requires": "None"
+        },
+        {
+          "label": "What countermeasures would you use against him?",
+          "nextNode": "conversation_12",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_11": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Yes. To an extent. Damian is capable of hurting people without physical contact. He knows how to dismantle credibility, expose contradictions, isolate weaknesses in a person’s account, and present the result in a form that makes recovery difficult. His bluntness already causes harm when he treats emotional damage as an irrelevant side effect. Under sufficient pressure, he may also justify unethical behavior if he believes failure would destroy his reputation, future, or family standing. That possibility does not make him malicious. It makes him dangerous in the same way any highly intelligent person with something to lose is dangerous.",
+      "choices": [
+        {
+          "nextNode": "conversation_12",
+          "requires": "None",
+          "label": "What countermeasures would you use against him?"
+        }
+      ]
+    },
+    "conversation_12": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "First, I would remove his ability to control the evidence environment. All critical evidence would be duplicated, independently timestamped, and distributed across multiple custodians. No single researcher would control source access, interpretation, or citation records. I would require all major conclusions to include their methodology, assumptions, limitations, and alternative explanations. I would also separate public debate from private verification. Damian is strongest when he can force others to defend themselves immediately and under pressure. Do not challenge him with vague accusations. Bring artifacts.\n\nIf deception were suspected, I would introduce several claims of varying reliability and observe which ones he attacks, protects, or redirects away from. Most importantly, I would ensure Ludo was not used as an indirect pressure point. Damian’s judgment is more vulnerable where his few genuine attachments are concerned.",
+      "choices": [
+        {
+          "nextNode": "ending",
+          "requires": "None",
+          "label": "Do you think Damian will survive this?"
+        }
+      ]
+    },
+    "conversation_13": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Ultimate Researcher is accurate. Damian’s strength is not memorization. It is evaluation. He can distinguish primary from secondary sources, track provenance, compare contradictory records, identify methodological limitations, manage citations, and synthesize information without pretending the inconsistencies do not exist. He would be invaluable during an investigation. He is also capable of organizing an amount of information that would render most students functionally useless. \n\nHis talent becomes dangerous when evidence stops being a means of determining truth and becomes a means of winning.  That boundary should be monitored.",
+      "choices": [
+        {
+          "label": "Do you think Damian will survive this?",
+          "nextNode": "ending",
+          "requires": "None"
+        }
+      ]
+    }
+  },
+  "character": {
+    "id": "damian",
+    "displayName": "Damian Crosse",
+    "aliases": [
+      "Damian Crosse",
+      "Damian"
+    ]
+  }
+}

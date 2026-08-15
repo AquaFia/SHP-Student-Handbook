@@ -1,0 +1,21 @@
+{
+  "schema": "episode-repository-manifest",
+  "schemaVersion": 1,
+  "id": "tokiko_01",
+  "activeRevisionId": "revision-001",
+  "latestRevisionId": "revision-001",
+  "previousActiveRevisionId": null,
+  "updatedAt": "2026-08-03T00:19:00Z",
+  "revisions": [
+    {
+      "revisionId": "revision-001",
+      "status": "active",
+      "createdAt": "2026-08-03T00:19:00Z",
+      "activatedAt": "2026-08-03T00:19:00Z"
+    }
+  ],
+  "metadata": {
+    "schemaVersion": 1,
+    "format": "studio-authored"
+  }
+}
