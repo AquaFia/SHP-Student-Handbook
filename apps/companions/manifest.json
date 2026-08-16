@@ -12,8 +12,8 @@
       "id": "aria-matsuda-2",
       "name": "Aria Matsuda 2.0",
       "subtitle": "Ultimate Robotics Engineer",
-      "file": "./companions/shared/aria_framework.html?character=aria_2.0",
-      "portrait": "./companions/aria_2.0/portraits/aria_fear.webp",
+      "file": "./companions/shared/aria_framework.html?character=aria_2_0",
+      "portrait": "./companions/aria_2_0/portraits/aria_fear.webp",
       "enabled": true
     },
     {
