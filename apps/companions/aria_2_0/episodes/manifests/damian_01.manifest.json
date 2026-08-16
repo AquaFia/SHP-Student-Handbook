@@ -1,0 +1,23 @@
+{
+  "schema": "episode-repository-manifest",
+  "schemaVersion": 1,
+  "id": "damian_01",
+  "activeRevisionId": "revision-001",
+  "latestRevisionId": "revision-001",
+  "previousActiveRevisionId": null,
+  "updatedAt": "2026-08-05T00:47:40Z",
+  "revisions": [
+    {
+      "revisionId": "revision-001",
+      "status": "active",
+      "createdAt": "2026-08-05T00:47:40Z",
+      "activatedAt": "2026-08-05T00:47:40Z"
+    }
+  ],
+  "metadata": {
+    "schemaVersion": 1,
+    "format": "studio-authored",
+    "sourceFile": "damian_01.json",
+    "sourceSha256": "d129842ab0a55fa7cbe89e8c7854f6b52f2ee30a42cb5651d79cc6c7f4cd9551"
+  }
+}

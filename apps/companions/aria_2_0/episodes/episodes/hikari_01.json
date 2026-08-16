@@ -1,0 +1,397 @@
+{
+  "schema": "companion-episode-v1",
+  "id": "hikari_01",
+  "identity": "Aria",
+  "title": "Hikari",
+  "topic": "Hikari",
+  "coreQuestion": "What does Aria think about Hikari?",
+  "triggers": [
+    "Hikari",
+    "Hikari Nori",
+    "What do you think of Hikari?",
+    "Tell me about Hikari.",
+    "What was your first impression of Hikari?"
+  ],
+  "requires": "None",
+  "openingNode": "opening",
+  "offerExpression": "curious",
+  "offerPrompt": "Start this episode?",
+  "acceptLabel": "Start.",
+  "declineLabel": "Not now.",
+  "fallbackBank": "",
+  "nodes": {
+    "opening": {
+      "type": "Conversation",
+      "expression": "curious",
+      "dialogue": "Hikari's loud and obnoxious, a bit too high energy for me, enough so that it's irritating, and she's also very headstrong. She has a temper too. I've never met someone with such a high ego before. It's draining being around her and her self-righteousness irritates me but she is genuine and I can tell she means well.\n\nHikari has more chaotic energy to her than Junebug has and that kind of scares me. There's very few things that I can agree with her on, one of them being that talent isn't everything.\n\nHowever, she puts too much of her energy into hoping for a better future. At least she puts in the effort to make her vision come to life, that much I can admire her for. But I think it's too much to just hope and believe that people will change just because you tell them to.\n\nShe's only going to set herself up for disappointment. She's going to burn out, and like everything I'll have to pick up the pieces of my broken committee members. She'll fail in her justice crusade, there's no point in believing in anything different.\n\nIt's pathetic, and yet I don't want to see her crash and burn. She'll burn herself out at the rate she's going, if she doesn't go crazy first that is.",
+      "choices": [
+        {
+          "label": "Do you think Hikari will survive this?",
+          "nextNode": "ending",
+          "requires": "None"
+        },
+        {
+          "label": "How did you meet Hikari?",
+          "nextNode": "conversation",
+          "requires": "None"
+        },
+        {
+          "label": "How do you feel about Hikari?",
+          "nextNode": "conversation_7",
+          "requires": "None"
+        },
+        {
+          "label": "What do you think of her talent?",
+          "nextNode": "conversation_9",
+          "requires": "None"
+        }
+      ]
+    },
+    "ending": {
+      "type": "Ending",
+      "expression": "happy",
+      "dialogue": "Possibly. Hikari has several strong survival factors: courage, social visibility, physical energy, persistence, the ability to rally others, and an almost pathological refusal to surrender. She is also loyal enough that other people may protect her even when she has become impossible. Her primary risk is self-sacrifice. Hikari will place herself between danger and another person before verifying whether doing so improves either survival probability. She will continue after exhaustion, conceal injury, and treat personal limits as moral failures. She may also provoke someone dangerous because remaining silent feels equivalent to endorsing them. So yes. Hikari can survive this. Whether she will prioritize survival over proving that no one else should have to suffer is considerably less certain.",
+      "endingId": "hikari_01_ending",
+      "unlocks": []
+    },
+    "conversation": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "The very first day of school, Hikari had a brief stint, making a fuss about not being able to wear roller skates on school property. Shortly after getting the shoe regulations discontinued, she switched to wearing regular Converse sneakers the majority of the time.\n\nWhen I first transferred to this school, she accidentally ran me over but apologized promptly for the accident. She was one of the first people I recruited into the Talent Committee other than Juno and Kouji.\n\nSimilar to myself, Hikari Nori has the mindset that talent isn't everything and not everyone is born with it. Unlike her, I have no hope for the future.\n\nThe precise first interaction matters less than the immediate conclusion: too loud, too certain, and impossible to ignore.",
+      "choices": [
+        {
+          "label": "What do you admire about Hikari?",
+          "nextNode": "conversation_2",
+          "requires": "None"
+        },
+        {
+          "label": "Does Hikari irritate you?",
+          "nextNode": "conversation_3",
+          "requires": "None"
+        },
+        {
+          "label": "How do you feel about Hikari?",
+          "nextNode": "conversation_7",
+          "requires": "None"
+        },
+        {
+          "label": "What do you think of her talent?",
+          "nextNode": "conversation_9",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_2": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "She is genuine and means well. She believes talent is not everything and works to make her ideals real. Hikari does not negotiate with her own conscience. She knows what she thinks is right and she acts on it without waiting for the room to agree. Her hope is paired with actual effort, which I grudgingly admire. There is something relentless about her. She simply does not stop. Whatever she has decided is worth doing, she continues doing it, without requiring the world to make it easier. I find that both foreign and, against my better instincts, something close to reassuring. She is also consistent in a way that is almost unfair. She is resolutely the same person in every room, regardless of who is watching. I have spent years learning to calibrate myself to context. She seems not to have needed to bother.",
+      "choices": [
+        {
+          "label": "What irritates you about Hikari?",
+          "nextNode": "conversation_3",
+          "requires": "None"
+        },
+        {
+          "label": "Do you trust her?",
+          "nextNode": "conversation_4",
+          "requires": "None"
+        },
+        {
+          "label": "Does Hikari worry you?",
+          "nextNode": "conversation_5",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_3": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "What irritates me is that she is loud, headstrong, temperamental, self-righteous, and intensely high energy. She expects people to change because she appeals to their better nature. I believe her justice crusade will burn her out.",
+      "choices": [
+        {
+          "label": "Is Hikari Trustworthy?",
+          "nextNode": "conversation_4",
+          "requires": "None"
+        },
+        {
+          "label": "Do you distrust Hikari?",
+          "nextNode": "conversation_5",
+          "requires": "None"
+        },
+        {
+          "label": "Is she always this much?",
+          "nextNode": "conversation_8",
+          "requires": "None"
+        },
+        {
+          "label": "Do you trust Hikari's Ideals?",
+          "nextNode": "conversation_11",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_4": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Trustworthy? Define trustworthy. If you mean ‘won't betray me on purpose,’ yes. If you mean ‘won't accidentally broadcast every operational detail to the entire hallway at full volume,’ then I have concerns. I trust her with my life. I do not trust her with a secret. These are not contradictory positions. I have a chart. I trust that she means what she says. I do not trust her to recognize her own limits. Hikari is trustworthy in the same sense that hope is a plan. Technically a statement, evidentially indefensible. She means well. I've logged it. It changes nothing about the reliability score.",
+      "choices": [
+        {
+          "label": "Why do you say that about Hikari?",
+          "nextNode": "conversation_6",
+          "requires": "None"
+        },
+        {
+          "label": "Do you respect Hikari?",
+          "nextNode": "conversation_10",
+          "requires": "None"
+        },
+        {
+          "label": "Do you think Hikari is hiding something?",
+          "nextNode": "conversation_13",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_5": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "That's difficult to answer. I call her pathetic because admitting I am afraid or worried for her would invite questions. I don't distrust Hikari. I distrust the seventeen uncontrolled variables that follow her wherever she goes. She's genuine. Painfully, operationally, catastrophically genuine. I've had to account for it in every plan I've made involving her. It adds significant overhead.",
+      "choices": [
+        {
+          "label": "Why would you say that about her?",
+          "nextNode": "conversation_6",
+          "requires": "None"
+        },
+        {
+          "label": "Do you respect Hikari?",
+          "nextNode": "conversation_10",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_6": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "I find Hikari exhausting, egotistical, loud, and self-righteous, but also genuine, hardworking, and worth protecting from her own burnout. I call her pathetic because admitting I am afraid for her would invite questions.",
+      "choices": [
+        {
+          "label": "How do you feel about Hikari?",
+          "nextNode": "conversation_7",
+          "requires": "None"
+        },
+        {
+          "label": "Is she always this much?",
+          "nextNode": "conversation_8",
+          "requires": "None"
+        },
+        {
+          "label": "What do you envy about Hikari",
+          "nextNode": "conversation_12",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_7": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Exhausting. That is the immediate answer. \n\nThe more accurate one is inconvenient. Hikari has never once asked me to be less than I am. If anything she’s encouraged me to speak my mind, to be myself. I have spent enough time around people who found my precision inconvenient to understand how unusual that is. I find her irritating, intrusive, self-righteous, impulsive, and nearly impossible to manage through ordinary procedure. I also care whether she survives. She is one of the few people here whose optimism has not yet degraded into passivity. She does not sit still and insist that circumstances will improve. She attempts to improve them herself. I think she is reckless. I think she is naive. I think she is going to get hurt. I also think the building would feel considerably worse without her in it.",
+      "choices": [
+        {
+          "nextNode": "conversation_8",
+          "requires": "None",
+          "label": "Is she always this much?"
+        },
+        {
+          "label": "What do you think of her talent?",
+          "nextNode": "conversation_9",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_8": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Yes. She does not soften the world to make it easier to live in. She just keeps living in it, fully, without flinching. I am not sure I have ever learned how to do that. She does not demand to be understood. She simply continues being herself, clearly and without apology, until understanding becomes unavoidable. She is one of the few people I have met who does not seem to need the world to confirm what she already knows about herself. I find that difficult to understand and, against my better judgment, quietly admirable. Hikari does not appear to possess a lower operational setting. She enters rooms as though silence is a structural defect she has been personally assigned to correct. She speaks at full intensity, reacts at full intensity, argues at full intensity, and apparently experiences injustice at a frequency that should be statistically impossible.\n\nI have considered whether the behavior is performative. It is not. That would make it easier. She is genuinely that much.",
+      "choices": [
+        {
+          "label": "What do you think of her talent?",
+          "nextNode": "conversation_9",
+          "requires": "None"
+        },
+        {
+          "label": "Do you respect Hikari?",
+          "nextNode": "conversation_10",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_9": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Ultimate Activist is an appropriate designation. Hikari’s talent is not simply protesting loudly, despite the amount of supporting evidence. She identifies unfair systems, communicates them in language other people can understand, creates momentum, recruits participation, and refuses to allow administrative inconvenience to substitute for a moral argument. She understands that policies only remain permanent when no one applies enough pressure to force revision. That is why the roller-skate regulation changed. She can convert outrage into action. More importantly, she can convince other people that action is still possible after they have already decided nothing will change. That is valuable. It is also dangerous. Someone capable of mobilizing a group can protect vulnerable people or direct a crowd toward the wrong target with equal efficiency. Hikari’s sincerity reduces that risk. It does not eliminate it.",
+      "choices": [
+        {
+          "label": "Do you trust Hikari's Ideals?",
+          "nextNode": "conversation_11",
+          "requires": "None"
+        },
+        {
+          "label": "Do you respect Hikari?",
+          "nextNode": "conversation_10",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_10": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Yes. Not her volume. Not her refusal to understand that committee meetings have an agenda. Not the way she mistakes interruption for urgency. I respect the fact that her values remain active when they become inconvenient. Many people support justice while the cost is theoretical. Hikari continues after there are consequences. She also acts on her belief that talent does not determine human worth. That is one of the few principles on which we agree without requiring extensive qualification.",
+      "choices": [
+        {
+          "label": "Do you trust Hikari's Ideals?",
+          "nextNode": "conversation_11",
+          "requires": "None"
+        },
+        {
+          "label": "What do you envy about Hikari?",
+          "nextNode": "conversation_12",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_11": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "I trust that they are sincere. I do not trust that sincerity is enough. Hikari believes people can become better if someone reaches them, challenges them, or gives them a reason to care. That is not impossible. It is merely a poor universal policy. Some people change. Some perform change until observation ends. Some interpret mercy as permission to continue. Hikari treats the existence of the first category as justification for risking herself on all three. I respect her ideals. I would not use them as the sole basis of a survival plan.",
+      "choices": [
+        {
+          "label": "What do you envy about Hikari?",
+          "nextNode": "conversation_12",
+          "requires": "None"
+        },
+        {
+          "label": "Would you trust Hikari in a crisis?",
+          "nextNode": "conversation_17",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_12": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Her certainty that caring is worth the cost. Hikari can witness something unjust and move directly from judgment to action. She does not spend three hours calculating whether intervention will make the outcome worse, whether she has sufficient standing, whether her motives are contaminated, or whether failure will prove that she should never have tried. She simply decides that something is wrong and acts accordingly. I find that reckless. I also envy it. She also appears capable of wanting a better future without treating the desire itself as evidence of intellectual failure. I cannot reproduce that process.",
+      "choices": [
+        {
+          "label": "Is Hikari hiding something?",
+          "nextNode": "conversation_13",
+          "requires": "None"
+        },
+        {
+          "label": "Would you trust Hikari in a crisis?",
+          "nextNode": "conversation_17",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_13": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Yes. Everyone is. Hikari is less skilled at concealment than most people because her emotional volume tends to exceed her intended privacy settings. She hides exhaustion. She hides doubt by increasing certainty. She hides fear by becoming louder. She hides hurt beneath anger because anger permits movement and hurt does not. I do not think she is concealing malicious intent. I think she is concealing how close she is to collapse. That is operationally relevant.",
+      "choices": [
+        {
+          "nextNode": "conversation_14",
+          "requires": "None",
+          "label": "Do you consider Hikari a threat?"
+        },
+        {
+          "label": "Is Hikari capable of hurting someone? Is she dangerous?",
+          "nextNode": "conversation_15",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_14": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Potentially. Hikari is not dangerous because she is deceptive. She is dangerous because she is persuasive, impulsive, and morally certain. She can mobilize people faster than procedures can contain them. If she identifies the correct target, that can prevent harm. If she identifies the wrong one, her sincerity will make the resulting damage more difficult to interrupt because everyone involved will believe they are doing the right thing. She is also physically reckless enough to place herself in danger before anyone completes a risk assessment. I do not classify her as hostile. I classify her as a high-impact variable with inconsistent containment.",
+      "choices": [
+        {
+          "label": "Is Hikari capable of hurting someone? Is she dangerous?",
+          "nextNode": "conversation_15",
+          "requires": "None"
+        },
+        {
+          "nextNode": "ending",
+          "requires": "None",
+          "label": "Do you think Hikari will survive this?"
+        }
+      ]
+    },
+    "conversation_15": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Yes. She is capable of hurting people through accusation, escalation, public pressure, and refusal to disengage. She's also more then capable of compelling others into making dangerous choices that could cause harm to themselves and others. Hikari believes strongly enough in accountability that she may fail to recognize when accountability has become punishment. She could also hurt someone physically if she believed they were threatening another person. I do not think she would enjoy it. That distinction matters morally. It matters less to the injured party. She is dangerous because she commits fully. Half-measures are not one of her documented failure modes.",
+      "choices": [
+        {
+          "label": "What countermeasures would you use against her?",
+          "nextNode": "conversation_16",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_16": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Do not attempt to overpower her rhetorically. Increased resistance appears to generate additional momentum. First, remove the audience. Hikari becomes more forceful when she believes other people require protection or encouragement. Private discussion reduces the chance that disagreement becomes a public cause. Second, present concrete consequences. Not vague warnings. Names, probabilities, resource limits, and who will be endangered if she proceeds. Third, provide an alternative action. Telling Hikari to stop without giving her another way to help is ineffective. She will interpret inaction as complicity. If physical containment became necessary, I would avoid anything that resembles punitive authority. She would resist on principle. I would ask Daika to intervene. Hikari is significantly more receptive when concern comes from someone she does not suspect of trying to control her.”",
+      "choices": [
+        {
+          "label": "What do you think she thinks about you?",
+          "nextNode": "conversation_18",
+          "requires": "None"
+        },
+        {
+          "label": "Do you think Hikari will survive this?",
+          "nextNode": "ending",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_17": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "Yes. She would act immediately. That is both the reason I would trust her and the reason I would assign someone to monitor her. Hikari would protect injured students, confront a threat, rally anyone freezing under pressure, and refuse to abandon someone because the probability of success was low. She would also ignore her own injuries, exceed safe limits, challenge authority at the least tactically useful moment, and improvise before receiving the complete briefing. I would trust her courage. I would not trust her pacing.",
+      "choices": [
+        {
+          "label": "What are the countermeasures if she goes rogue?",
+          "nextNode": "conversation_16",
+          "requires": "None"
+        },
+        {
+          "label": "Do you think Hikari will survive this?",
+          "nextNode": "ending",
+          "requires": "None"
+        }
+      ]
+    },
+    "conversation_18": {
+      "type": "Conversation",
+      "expression": "",
+      "dialogue": "She probably considers me pessimistic, emotionally constipated, excessively procedural, and in need of forced sunlight. She believes I care more than I admit. She is irritatingly correct about that. She likely also believes I use realism as an excuse to avoid hoping for anything. That assessment is reductive. It is not entirely inaccurate. I think she respects my competence and distrusts my willingness to accept failure projections as fixed. She wants me to believe people can change. I want her to understand that some people choose not to.",
+      "choices": [
+        {
+          "label": "Do you think Hikari will survive this?",
+          "nextNode": "ending",
+          "requires": "None"
+        }
+      ]
+    }
+  },
+  "character": {
+    "id": "hikari",
+    "displayName": "Hikari Nori",
+    "aliases": [
+      "Hikari Nori",
+      "Hikari"
+    ]
+  }
+}
