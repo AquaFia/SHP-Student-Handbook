@@ -1,0 +1,27 @@
+{
+  "id": "topic.liesdefine",
+  "schemaVersion": 1,
+  "activeRevisionId": "draft-001",
+  "latestRevisionId": "draft-001",
+  "updatedAt": "2026-07-26T21:43:32.634Z",
+  "revisions": [
+    {
+      "revisionId": "draft-001",
+      "status": "active",
+      "createdAt": "2026-07-26T20:42:01.971Z",
+      "mergeMode": "extend",
+      "baseRevisionId": null,
+      "approvedAt": "2026-07-26T21:43:27.865Z",
+      "rejectionReason": null,
+      "activatedAt": "2026-07-26T21:43:32.634Z",
+      "previousRevisionId": null
+    }
+  ],
+  "previousActiveRevisionId": null,
+  "cacheToken": "draft-001:1785102212644",
+  "metadata": {
+    "schemaVersion": 1,
+    "source": "topic-repository",
+    "canonicalizedInPhase": "6D.A.6.4g.2-step3"
+  }
+}

@@ -1,0 +1,1448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Companion Episode Studio v0.6.3</title>
+<style>
+:root{
+  --bg:#0a0b12;--panel:#121522;--panel2:#171b2a;--line:#2a3150;--text:#eef2ff;
+  --muted:#98a2c6;--accent:#8c7cff;--accent2:#4cc9f0;--danger:#ff6b81;--warn:#ffd166;
+  --good:#57d38c;--dialogue:#3867d6;--transition:#d98032;--ending:#2f9e69;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font:14px/1.35 Inter,system-ui,sans-serif;overflow:hidden}
+button,input,textarea,select{font:inherit}
+button{background:#222842;border:1px solid #384162;color:var(--text);border-radius:8px;padding:8px 11px;cursor:pointer}
+button:hover{border-color:var(--accent);background:#2a3150}
+button.primary{background:var(--accent);border-color:var(--accent);color:white}
+button.danger{background:#3a1d28;border-color:#7a3144}
+input,textarea,select{width:100%;background:#0e1120;color:var(--text);border:1px solid #303858;border-radius:7px;padding:8px}
+textarea{min-height:74px;resize:vertical}
+label{display:block;color:var(--muted);font-size:12px;margin:9px 0 4px}
+#app{height:100%;display:grid;grid-template-rows:54px minmax(0,1fr) 8px var(--validation-height,138px)}
+header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#10131f;border-bottom:1px solid var(--line)}
+header .title{font-weight:800;letter-spacing:.4px;margin-right:auto}
+header .status{color:var(--muted);font-size:12px}
+header .status.unsaved{color:var(--warn);font-weight:700}
+header .status.saved{color:var(--good)}
+button:disabled{opacity:.42;cursor:not-allowed}
+.choice-order{display:flex;gap:4px;margin-left:auto;margin-right:6px}
+.choice-order button{padding:3px 7px;min-width:29px}
+header select{width:auto;min-width:120px;padding:7px 28px 7px 9px}
+.search-wrap{position:relative;width:260px}
+.search-wrap input{height:34px;padding:7px 9px}
+#searchResults{display:none;position:absolute;right:0;top:39px;width:360px;max-height:360px;overflow:auto;background:#111625;border:1px solid #3a466d;border-radius:9px;box-shadow:0 16px 40px rgba(0,0,0,.55);z-index:80;padding:5px}
+#searchResults.open{display:block}
+.search-result{padding:8px 9px;border-radius:7px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04)}
+.search-result:hover,.search-result.active{background:#222b46}
+.search-result strong{display:block;color:var(--text)}
+.search-result small{display:block;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.graph-node.search-hit{animation:searchFlash 1.3s ease}
+@keyframes searchFlash{0%,100%{box-shadow:0 12px 30px rgba(0,0,0,.42)}35%{box-shadow:0 0 0 5px var(--accent2),0 0 28px var(--accent2)}}
+.section-title.collapsible{cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none}
+.section-title.collapsible::before{content:"▼";font-size:10px;color:var(--muted)}
+.section-title.collapsible.collapsed::before{content:"▶"}
+.collapsed-item{display:none!important}
+#canvasContextMenu{position:fixed;z-index:90;min-width:190px;background:#121827;border:1px solid #3a466d;border-radius:9px;padding:6px;box-shadow:0 14px 40px rgba(0,0,0,.5);display:none}
+#canvasContextMenu button{width:100%;text-align:left;background:transparent;border:0;padding:8px 9px}
+#canvasContextMenu button:hover{background:#222b46}
+.recovery-banner{position:fixed;left:50%;top:72px;transform:translateX(-50%);z-index:100;background:#171d30;border:1px solid var(--accent);border-radius:10px;padding:12px 14px;box-shadow:0 14px 40px rgba(0,0,0,.55);display:flex;gap:10px;align-items:center}
+.recovery-banner span{color:var(--text)}
+.recovery-banner[hidden]{display:none!important}
+.toolbar-group{display:flex;align-items:center;gap:6px;padding-left:8px;border-left:1px solid var(--line)}
+#workspace{min-height:0;display:grid;grid-template-columns:var(--left-panel-width,360px) 8px minmax(280px,1fr) 8px var(--right-panel-width,360px)}
+.panel-resizer{position:relative;background:#0d101a;cursor:col-resize;touch-action:none;z-index:20}
+.panel-resizer::before{content:"";position:absolute;top:0;bottom:0;left:3px;width:2px;background:#2a3150;transition:background .12s,box-shadow .12s}
+.panel-resizer:hover::before,.panel-resizer.dragging::before{background:var(--accent);box-shadow:0 0 8px color-mix(in srgb,var(--accent) 60%,transparent)}
+body.resizing-panels{cursor:col-resize;user-select:none}
+body.resizing-validation{cursor:row-resize;user-select:none}
+.panel{background:var(--panel);border-right:1px solid var(--line);overflow:auto}
+#sidebar{padding:12px}
+#inspector{border-right:0;border-left:1px solid var(--line);padding:12px}
+.section-title{font-weight:800;margin:3px 0 10px;letter-spacing:.5px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.stack{display:grid;gap:7px}
+.sep{border:0;border-top:1px solid var(--line);margin:14px 0}
+#nodeList{display:grid;gap:6px}
+.node-list-item{padding:8px;border:1px solid var(--line);border-radius:7px;background:#111625;cursor:pointer}
+.node-list-item.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.node-list-item small{display:block;color:var(--muted);margin-top:2px}
+#canvasWrap{position:relative;overflow:hidden;background:
+  linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),#090b12;
+  background-size:24px 24px}
+#canvas{position:absolute;left:0;top:0;width:100000px;height:100000px;transform-origin:0 0;overflow:visible}
+#connections{position:absolute;left:0;top:0;width:100000px;height:100000px;overflow:visible;pointer-events:none}
+.edge{fill:none;stroke:#63709a;stroke-width:2}
+.edge.missing{stroke:var(--danger);stroke-dasharray:7 5}
+.graph-node{position:absolute;width:290px;background:linear-gradient(180deg,#171d30,#111624);
+border:1px solid #424c70;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.42);user-select:none;transition:box-shadow .12s,border-color .12s}
+.graph-node:hover{border-color:#6573a3;box-shadow:0 15px 34px rgba(0,0,0,.5)}
+.graph-node.drop-target{outline:3px solid var(--accent2);outline-offset:3px}
+.graph-node.selected{outline:2px solid var(--accent);outline-offset:2px}
+.graph-node .head{padding:10px 12px;font-weight:800;border-radius:11px 11px 0 0;cursor:grab;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.graph-node .head .node-kind{display:flex;gap:7px;align-items:center}
+.graph-node .head .node-id{font-size:11px;opacity:.9;max-width:none;white-space:normal;overflow-wrap:anywhere}
+
+.graph-node.dialogue .head{background:var(--dialogue)}
+.graph-node.transition .head{background:var(--transition)}
+.graph-node.ending .head{background:var(--ending)}
+.graph-node .body{padding:12px;color:#d8def5;white-space:pre-wrap;min-height:62px;overflow:visible;border-bottom:1px solid rgba(255,255,255,.05);cursor:text}
+.graph-node .body:hover{background:rgba(255,255,255,.025)}
+.graph-node .section-label{padding:8px 12px 4px;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#7f8bb2;font-weight:800}
+.graph-node .meta{padding:8px 11px;color:var(--muted);font-size:11px}
+.graph-node .route-row{position:relative;padding:9px 34px 9px 30px;border-top:1px solid rgba(255,255,255,.055);font-size:12px;color:#c5cdee;white-space:normal;overflow:visible;overflow-wrap:anywhere;cursor:crosshair}
+.graph-node .route-row:hover{background:rgba(76,201,240,.08)}
+.graph-node .route-row::before{content:"";position:absolute;left:12px;top:50%;transform:translateY(-50%);width:9px;height:9px;border-radius:50%;background:var(--route-color,var(--accent2));box-shadow:0 0 8px color-mix(in srgb,var(--route-color,var(--accent2)) 50%,transparent)}
+.graph-node .route-row.missing-route{color:var(--danger);background:rgba(255,107,129,.06)}
+.graph-node .route-row.missing-route::before{background:var(--danger)}
+.graph-node .route-row:first-of-type{border-top:0}
+.graph-node .route-port{position:absolute;right:-9px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;background:var(--route-color,var(--accent2));border:3px solid #08101a;cursor:crosshair;pointer-events:auto}
+.graph-node .route-port:hover{transform:translateY(-50%) scale(1.2);box-shadow:0 0 12px var(--accent2)}
+.graph-node .input-port{position:absolute;left:-8px;top:48px;width:16px;height:16px;border-radius:50%;background:#8996bd;border:3px solid #08101a;pointer-events:none}
+.edge{fill:none;stroke:#7180ad;stroke-width:2.6;filter:drop-shadow(0 0 3px rgba(113,128,173,.3))}
+.edge-label{font-size:11px;fill:#dbe3ff;paint-order:stroke;stroke:#0a0b12;stroke-width:5px;stroke-linejoin:round;pointer-events:none}
+.edge.preview{stroke:var(--accent2);stroke-dasharray:8 5}
+.orientation-note{font-size:11px;color:var(--muted)}
+.graph-node .port{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--accent2);right:-7px;border:2px solid #08101a}
+#emptyInspector{color:var(--muted);padding:16px 0}
+.choice-card{border:1px solid var(--line);background:#101420;border-radius:9px;padding:9px;margin:8px 0;cursor:pointer}
+.choice-card.selected{border-color:var(--accent2);box-shadow:0 0 0 1px var(--accent2) inset}
+#choices{max-height:none;overflow:visible;padding-right:0}
+.requirements-section{margin-top:12px}
+.requirements-section .requirement-builder{min-height:120px}
+.requirement-title{font-weight:800;margin:0 0 6px}
+.requirement-context{font-size:12px;color:var(--muted);margin-bottom:7px}
+.choice-card .choice-head{display:flex;align-items:center;justify-content:space-between;font-weight:700}
+.choice-card .choice-head button{padding:4px 7px}
+.check{display:flex;align-items:center;gap:7px;margin-top:9px;color:var(--text)}
+.check input{width:auto}
+#validationResizer{position:relative;background:#0d101a;cursor:row-resize;touch-action:none;z-index:25}
+#validationResizer::before{content:"";position:absolute;left:0;right:0;top:3px;height:2px;background:#2a3150;transition:background .12s,box-shadow .12s}
+#validationResizer:hover::before,#validationResizer.dragging::before{background:var(--accent);box-shadow:0 0 8px color-mix(in srgb,var(--accent) 60%,transparent)}
+#validation{min-height:0;background:#0f121d;border-top:1px solid var(--line);padding:9px 12px;overflow:auto}
+#validation h3{margin:0 0 6px;display:flex;align-items:center;gap:8px}
+#validation h3 .validation-hint{font-size:11px;font-weight:400;color:var(--muted)}
+.issue{padding:5px 7px;margin:2px 0;color:var(--muted);border-radius:6px}
+.issue.clickable{cursor:pointer}
+.issue.clickable:hover{background:#191e30}
+.issue.error{color:var(--danger)}
+.issue.warn{color:var(--warn)}
+.issue.info{color:var(--accent2)}
+.issue.ok{color:var(--good)}
+.help{color:var(--muted);font-size:12px}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 7px;font-size:11px;color:var(--muted)}
+#fileInput{display:none}
+.requirement-builder{border:1px solid var(--line);border-radius:9px;background:#0d1120;padding:8px;display:grid;gap:8px}
+.req-row{border:1px solid #303858;border-radius:8px;background:#111625;padding:8px;display:grid;gap:7px}
+.req-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}
+.req-head select{grid-column:1;grid-row:1;margin:0;width:100%;min-height:38px}
+.req-head .req-value{grid-column:1/-1;grid-row:2;min-width:0}
+.req-head .req-value input{margin:0;width:100%;min-height:42px;font-size:14px}
+.req-head .req-remove{grid-column:2;grid-row:1;margin:0;align-self:stretch}
+.req-head>span{display:none}
+.req-children{display:grid;gap:7px;padding-left:14px;border-left:2px solid #303858}
+.req-child{position:relative}
+.req-child:before{content:"";position:absolute;left:-14px;top:20px;width:12px;border-top:2px solid #303858}
+.req-actions{display:flex;gap:6px;flex-wrap:wrap}
+.req-actions button,.req-remove{padding:5px 8px;font-size:11px}
+.req-help{font-size:11px;color:var(--muted)}
+.achievement-card{border:1px solid var(--line);border-radius:10px;background:#101420;padding:10px;margin-top:8px}
+.achievement-disabled{opacity:.58}
+.array-editor-note{font-size:11px;color:var(--muted);margin-top:3px}
+#contextMenu{position:fixed;z-index:50;min-width:170px;background:#121827;border:1px solid #3a466d;border-radius:9px;padding:6px;box-shadow:0 14px 40px rgba(0,0,0,.5);display:none}
+#contextMenu button{width:100%;text-align:left;background:transparent;border:0;padding:8px 9px}
+#contextMenu button:hover{background:#222b46}
+@media(max-width:1050px){#workspace{--left-panel-width:310px;--right-panel-width:310px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="title">COMPANION EPISODE STUDIO <span class="badge">v0.6.3</span></div>
+  <button id="newBtn">New</button>
+  <button id="importBtn">Import JSON</button>
+  <button id="exportBtn" class="primary">Export JSON</button>
+  <div class="toolbar-group">
+    <button id="undoBtn" title="Undo (Ctrl/Cmd+Z)" disabled>Undo</button>
+    <button id="redoBtn" title="Redo (Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y)" disabled>Redo</button>
+  </div>
+  <div class="toolbar-group">
+    <button id="autoArrangeBtn">Auto Arrange</button>
+    <button id="fitBtn">Fit View</button>
+  </div>
+  <div class="search-wrap">
+    <input id="searchInput" placeholder="Search nodes, dialogue, choices…" autocomplete="off">
+    <div id="searchResults"></div>
+  </div>
+  <input id="fileInput" type="file" accept=".json,application/json">
+  <span id="dirtyStatus" class="status saved">Saved</span>
+  <span id="status" class="status">Ready</span>
+</header>
+
+<div id="workspace">
+  <aside id="sidebar" class="panel">
+    <div class="section-title">Episode</div>
+    <label>ID</label><input id="epId">
+    <label>Identity</label><input id="epIdentity">
+    <label>Title</label><input id="epTitle">
+    <label>Topic</label><input id="epTopic">
+    <hr class="sep">
+    <div class="section-title">Character Metadata</div>
+    <label>Character ID</label><input id="epCharacterId" placeholder="yasuke">
+    <label>Display Name</label><input id="epCharacterDisplayName" placeholder="Yasuke Matsuda">
+    <label>Aliases (one per line)</label><textarea id="epCharacterAliases" placeholder="Yasuke&#10;your brother"></textarea>
+    <label>Core Question</label><textarea id="epCore"></textarea>
+    <label>Triggers (one per line)</label><textarea id="epTriggers"></textarea>
+    <label>Opening Node</label><input id="epOpening">
+    <label>Offer Expression</label><input id="epOfferExpression">
+    <label>Offer Prompt</label><textarea id="epOfferPrompt"></textarea>
+    <div class="row">
+      <div><label>Accept Label</label><input id="epAccept"></div>
+      <div><label>Decline Label</label><input id="epDecline"></div>
+    </div>
+    <label>Fallback Bank</label><input id="epFallback">
+
+    <hr class="sep">
+    <div class="section-title">Episode Requirements</div>
+    <div class="requirement-context">Controls whether this episode can be offered.</div>
+    <div id="epRequiresBuilder" class="requirement-builder"></div>
+
+    <hr class="sep">
+    <div class="section-title">Achievement</div>
+    <label class="check"><input id="achievementEnabled" type="checkbox"> Include achievement</label>
+    <div id="achievementEditor" class="achievement-card" hidden>
+      <label>Achievement ID</label><input id="achievementId">
+      <label>Identity</label><input id="achievementIdentity">
+      <label>Title</label><input id="achievementTitle">
+      <label>Description</label><textarea id="achievementDescription"></textarea>
+      <label>Required Ending IDs (one per line)</label><textarea id="achievementRequiredEndings"></textarea>
+      <div class="array-editor-note">Use endingId values, not node IDs or unlock tokens.</div>
+    </div>
+
+    <hr class="sep">
+    <div class="section-title">Nodes</div>
+    <div class="row">
+      <button data-add="Conversation">+ Dialogue</button>
+      <button data-add="Transition">+ Transition</button>
+    </div>
+    <button data-add="Ending" style="width:100%;margin-top:7px">+ Ending</button>
+    <button id="duplicateBtn" style="width:100%;margin-top:7px" title="Duplicate selected node (Ctrl/Cmd+D)">Duplicate Selected Node</button>
+    <div id="nodeList" style="margin-top:10px"></div>
+  </aside>
+
+  <div id="leftResizer" class="panel-resizer" role="separator" aria-orientation="vertical" aria-label="Resize episode panel" title="Drag to resize. Double-click to reset." tabindex="0"></div>
+
+  <main id="canvasWrap">
+    <div id="canvas">
+      <svg id="connections"></svg>
+      <div id="nodesLayer"></div>
+    </div>
+  </main>
+
+  <div id="rightResizer" class="panel-resizer" role="separator" aria-orientation="vertical" aria-label="Resize node inspector" title="Drag to resize. Double-click to reset." tabindex="0"></div>
+
+  <aside id="inspector" class="panel">
+    <div class="section-title">Selected Node</div>
+    <div id="emptyInspector">Select a node in the graph or node list.</div>
+    <div id="nodeInspector" hidden>
+      <label>Node ID</label><input id="nodeId">
+      <label>Type</label>
+      <select id="nodeType"><option>Conversation</option><option>Transition</option><option>Ending</option></select>
+      <label>Expression</label><input id="nodeExpression" placeholder="Free text">
+      <label>Dialogue</label><textarea id="nodeDialogue"></textarea>
+
+      <div id="transitionFields">
+        <label>Next Node</label><input id="nodeNext">
+        <label>Delay (milliseconds, optional)</label><input id="nodeDelay" type="number" min="0">
+      </div>
+
+      <div id="endingFields">
+        <label>Ending ID</label><input id="nodeEndingId">
+        <label>Unlocks (one per line)</label><textarea id="nodeUnlocks"></textarea>
+      </div>
+
+      <div id="conversationFields">
+        <hr class="sep">
+        <div class="row" style="align-items:center"><div class="section-title">Choices</div><button id="addChoice">+ Add Choice</button></div>
+        <div id="choices"></div>
+
+        <div class="requirements-section">
+          <hr class="sep">
+          <div class="requirement-title section-title">Selected Choice Requirements</div>
+          <div id="choiceRequirementContext" class="requirement-context">Select a choice above.</div>
+          <div id="selectedChoiceRequiresBuilder" class="requirement-builder"></div>
+        </div>
+
+      </div>
+
+      <hr class="sep">
+      <button id="deleteNode" class="danger" style="width:100%">Delete Node</button>
+    </div>
+  </aside>
+</div>
+
+<div id="validationResizer" title="Drag to resize. Double-click to reset."></div>
+<section id="validation">
+  <h3>Validation <span class="validation-hint">Drag the divider above to resize</span></h3>
+  <div id="issues"></div>
+</section>
+</div>
+<div id="contextMenu">
+  <button data-action="duplicate">Duplicate Node</button>
+  <button data-action="set-opening">Set as Opening Node</button>
+  <button data-action="delete">Delete Node</button>
+</div>
+<div id="canvasContextMenu">
+  <button data-create="Conversation">New Conversation Here</button>
+  <button data-create="Transition">New Transition Here</button>
+  <button data-create="Ending">New Ending Here</button>
+  <button data-action="paste-here" id="pasteHereBtn">Paste Here</button>
+</div>
+<div id="recoveryBanner" class="recovery-banner" hidden>
+  <span>A recovery session was found.</span>
+  <button id="restoreRecovery" class="primary">Restore</button>
+  <button id="discardRecovery">Discard</button>
+</div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const clone=v=>JSON.parse(JSON.stringify(v));
+let episode, positions={}, selectedId=null, selectedChoiceIndex=0, pan={x:0,y:0}, scale=1, drag=null, connectionDrag=null;
+let history=[],historyIndex=-1,historyTimer=null,restoringHistory=false,savedSignature="";
+let nodeClipboard=null,searchMatches=[],searchIndex=-1,canvasMenuPoint=null;
+const RECOVERY_KEY="companionEpisodeStudio.recovery.v1";
+
+function editorSnapshot(){
+  return {episode:clone(episode),positions:clone(positions)};
+}
+function snapshotSignature(snapshot=editorSnapshot()){
+  return JSON.stringify(snapshot);
+}
+function hasPendingHistoryChange(){
+  if(!episode||historyIndex<0||!history[historyIndex])return false;
+  return snapshotSignature()!==snapshotSignature(history[historyIndex]);
+}
+function updateHistoryButtons(){
+  const undo=$("#undoBtn"),redo=$("#redoBtn");
+  const pending=hasPendingHistoryChange();
+  if(undo)undo.disabled=historyIndex<=0&&!pending;
+  if(redo)redo.disabled=pending||historyIndex<0||historyIndex>=history.length-1;
+}
+function updateDirtyStatus(){
+  const dirty=snapshotSignature()!==savedSignature;
+  const el=$("#dirtyStatus");
+  if(el){
+    el.textContent=dirty?"● Unsaved Changes":"Saved";
+    el.className="status "+(dirty?"unsaved":"saved");
+  }
+  return dirty;
+}
+function resetHistory({markSaved=false}={}){
+  clearTimeout(historyTimer);
+  history=[editorSnapshot()];
+  historyIndex=0;
+  if(markSaved)savedSignature=snapshotSignature(history[0]);
+  updateHistoryButtons();
+  updateDirtyStatus();
+}
+// History snapshot management
+function commitHistory(){
+  clearTimeout(historyTimer);
+  historyTimer=null;
+  if(restoringHistory||!episode)return;
+  const snap=editorSnapshot(),sig=snapshotSignature(snap);
+  if(historyIndex>=0&&snapshotSignature(history[historyIndex])===sig){
+    updateDirtyStatus();
+    return;
+  }
+  history=history.slice(0,historyIndex+1);
+  history.push(snap);
+  if(history.length>250)history.shift();
+  historyIndex=history.length-1;
+  updateHistoryButtons();
+  updateDirtyStatus();
+}
+function scheduleHistoryCommit(delay=350){
+  if(restoringHistory||!episode)return;
+  clearTimeout(historyTimer);
+  historyTimer=setTimeout(commitHistory,delay);
+  updateHistoryButtons();
+  updateDirtyStatus();
+}
+function restoreSnapshot(snapshot,label){
+  restoringHistory=true;
+  episode=clone(snapshot.episode);
+  positions=clone(snapshot.positions);
+  if(!episode.nodes?.[selectedId]){
+    selectedId=episode.openingNode&&episode.nodes?.[episode.openingNode]
+      ?episode.openingNode:Object.keys(episode.nodes||{})[0]||null;
+  }
+  selectedChoiceIndex=0;
+  bindEpisodeFields();
+  render();
+  restoringHistory=false;
+  updateHistoryButtons();
+  updateDirtyStatus();
+  setStatus(label);
+}
+function undo(){
+  clearTimeout(historyTimer);
+  commitHistory();
+  if(historyIndex<=0)return;
+  historyIndex--;
+  restoreSnapshot(history[historyIndex],"Undid last change");
+}
+function redo(){
+  clearTimeout(historyTimer);
+  if(historyIndex>=history.length-1)return;
+  historyIndex++;
+  restoreSnapshot(history[historyIndex],"Redid change");
+}
+function markSaved(){
+  commitHistory();
+  savedSignature=snapshotSignature();
+  updateDirtyStatus();
+}
+function confirmDiscard(action){
+  return !updateDirtyStatus()||confirm(`Discard unsaved changes and ${action}?`);
+}
+
+function setupPanelResizers(){
+  const workspace=$("#workspace");
+  const defaults={left:360,right:360};
+  const savedLeft=Number(localStorage.getItem("episodeStudio.leftPanelWidth"));
+  const savedRight=Number(localStorage.getItem("episodeStudio.rightPanelWidth"));
+  if(Number.isFinite(savedLeft)&&savedLeft>=210) workspace.style.setProperty("--left-panel-width",savedLeft+"px");
+  if(Number.isFinite(savedRight)&&savedRight>=260) workspace.style.setProperty("--right-panel-width",savedRight+"px");
+  const bind=(handle,side)=>{
+    const prop=side==="left"?"--left-panel-width":"--right-panel-width";
+    const storageKey=side==="left"?"episodeStudio.leftPanelWidth":"episodeStudio.rightPanelWidth";
+    handle.addEventListener("pointerdown",e=>{
+      if(e.button!==0)return;
+      e.preventDefault();handle.setPointerCapture(e.pointerId);handle.classList.add("dragging");document.body.classList.add("resizing-panels");
+      const rect=workspace.getBoundingClientRect();
+      const move=ev=>{
+        const otherProp=side==="left"?"--right-panel-width":"--left-panel-width";
+        const other=parseFloat(getComputedStyle(workspace).getPropertyValue(otherProp))||(side==="left"?defaults.right:defaults.left);
+        const min=side==="left"?210:260;
+        const raw=side==="left"?ev.clientX-rect.left:rect.right-ev.clientX;
+        const max=Math.max(min,rect.width-other-320);
+        const width=Math.round(Math.min(max,Math.max(min,raw)));
+        workspace.style.setProperty(prop,width+"px");
+        localStorage.setItem(storageKey,String(width));
+      };
+      const finish=()=>{handle.classList.remove("dragging");document.body.classList.remove("resizing-panels");handle.removeEventListener("pointermove",move);handle.removeEventListener("pointerup",finish);handle.removeEventListener("pointercancel",finish);renderConnections();};
+      handle.addEventListener("pointermove",move);handle.addEventListener("pointerup",finish);handle.addEventListener("pointercancel",finish);
+    });
+    handle.addEventListener("dblclick",e=>{
+      e.preventDefault();
+      workspace.style.setProperty(prop,defaults[side]+"px");
+      localStorage.setItem(storageKey,String(defaults[side]));
+      renderConnections();
+    });
+  };
+  bind($("#leftResizer"),"left");bind($("#rightResizer"),"right");
+}
+
+
+function setupValidationResizer(){
+  const app=$("#app"),handle=$("#validationResizer");
+  const defaultHeight=138;
+  const saved=Number(localStorage.getItem("episodeStudio.validationHeight"));
+  if(Number.isFinite(saved)&&saved>=72)app.style.setProperty("--validation-height",saved+"px");
+  const setHeight=height=>{
+    const appRect=app.getBoundingClientRect();
+    const max=Math.max(72,appRect.height-54-8-180);
+    const next=Math.round(Math.min(max,Math.max(72,height)));
+    app.style.setProperty("--validation-height",next+"px");
+    localStorage.setItem("episodeStudio.validationHeight",String(next));
+  };
+  handle.addEventListener("pointerdown",e=>{
+    if(e.button!==0)return;
+    e.preventDefault();
+    handle.setPointerCapture(e.pointerId);
+    handle.classList.add("dragging");
+    document.body.classList.add("resizing-validation");
+    const move=ev=>setHeight(app.getBoundingClientRect().bottom-ev.clientY);
+    const finish=()=>{
+      handle.classList.remove("dragging");
+      document.body.classList.remove("resizing-validation");
+      handle.removeEventListener("pointermove",move);
+      handle.removeEventListener("pointerup",finish);
+      handle.removeEventListener("pointercancel",finish);
+      renderConnections();
+    };
+    handle.addEventListener("pointermove",move);
+    handle.addEventListener("pointerup",finish);
+    handle.addEventListener("pointercancel",finish);
+  });
+  handle.addEventListener("dblclick",()=>{
+    app.style.setProperty("--validation-height",defaultHeight+"px");
+    localStorage.setItem("episodeStudio.validationHeight",String(defaultHeight));
+    renderConnections();
+  });
+}
+
+
+function freshEpisode(){
+  return {
+    schema:"companion-episode-v1", id:"new_episode", identity:"jace", title:"New Episode",
+    topic:"", character:{id:"character_id",displayName:"Character Name",aliases:["Character Name"]}, coreQuestion:"", triggers:["new episode"], requires:"None",
+    openingNode:"opening", offerExpression:"curious", offerPrompt:"Start this episode?",
+    acceptLabel:"Start.", declineLabel:"Not now.", fallbackBank:"",
+    nodes:{
+      opening:{type:"Conversation",expression:"curious",dialogue:"Opening dialogue.",choices:[
+        {label:"Continue",nextNode:"ending",requires:"None"}
+      ]},
+      ending:{type:"Ending",expression:"happy",dialogue:"Episode complete.",endingId:"new_episode_ending",unlocks:[]}
+    }
+  };
+}
+function defaultPositions(){
+  const p={};
+  Object.keys(episode.nodes||{}).forEach((id,i)=>p[id]={x:80+i*290,y:90});
+  return p;
+}
+function setStatus(t){$("#status").textContent=t}
+function requirementType(value){
+  if(value===undefined||value===null||value==="None")return "None";
+  if(typeof value==="string")return "Single";
+  if(Array.isArray(value))return "Array";
+  if(value&&typeof value==="object"&&Array.isArray(value.ALL))return "ALL";
+  if(value&&typeof value==="object"&&Array.isArray(value.ANY))return "ANY";
+  return "Invalid";
+}
+function defaultRequirement(type){
+  if(type==="None")return "None";
+  if(type==="Single")return "";
+  if(type==="Array")return [""];
+  if(type==="ALL")return {ALL:[""]};
+  if(type==="ANY")return {ANY:[""]};
+  return "None";
+}
+function requirementChildren(value){
+  const t=requirementType(value);
+  if(t==="Array")return value;
+  if(t==="ALL")return value.ALL;
+  if(t==="ANY")return value.ANY;
+  return null;
+}
+function setRequirementChild(value,index,next){
+  const children=requirementChildren(value);if(children)children[index]=next;
+}
+function renderRequirementBuilder(root,value,onChange,{allowRemove=false,onRemove=null}={}){
+  root.innerHTML="";
+  const row=document.createElement("div");row.className="req-row";
+  const type=requirementType(value);
+  const head=document.createElement("div");head.className="req-head";
+  const select=document.createElement("select");
+  ["None","Single","Array","ALL","ANY"].forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t==="Single"?"Single token":t;select.append(o)});
+  select.value=type==="Invalid"?"None":type;
+  const middle=document.createElement("div");middle.className="req-value";
+  if(type==="Single"){
+    const input=document.createElement("input");input.placeholder="Episode ID, ending ID, or unlock token";input.value=value;
+    // Text edits update data in place without rebuilding the recursive editor.
+    input.oninput=()=>onChange(input.value,false);
+    middle.append(input);
+  }else if(type==="None"){
+    const note=document.createElement("div");note.className="req-help";note.textContent='Exports as the literal string "None".';middle.append(note);
+  }else if(type==="Invalid"){
+    const note=document.createElement("div");note.className="issue error";note.textContent="Unsupported requirement value; choose a valid type.";middle.append(note);
+  }else{
+    const note=document.createElement("div");note.className="req-help";
+    note.textContent=type==="Array"?"Array behaves like ALL in Jacey’s framework.":`${type} group — nested groups are supported.`;
+    middle.append(note);
+  }
+  select.onchange=()=>onChange(defaultRequirement(select.value),true);
+  head.append(select,middle);
+  if(allowRemove){const rm=document.createElement("button");rm.className="danger req-remove";rm.textContent="Remove";rm.onclick=onRemove;head.append(rm)}else head.append(document.createElement("span"));
+  row.append(head);
+  const children=requirementChildren(value);
+  if(children){
+    const childWrap=document.createElement("div");childWrap.className="req-children";
+    children.forEach((child,i)=>{
+      const holder=document.createElement("div");holder.className="req-child requirement-builder";
+      renderRequirementBuilder(holder,child,(next,structural)=>{
+        setRequirementChild(value,i,next);
+        onChange(value,structural);
+      },{allowRemove:true,onRemove:()=>{children.splice(i,1);onChange(value,true)}});
+      childWrap.append(holder);
+    });
+    const actions=document.createElement("div");actions.className="req-actions";
+    const addToken=document.createElement("button");addToken.textContent="+ Token";addToken.onclick=()=>{children.push("");onChange(value,true)};
+    const addAll=document.createElement("button");addAll.textContent="+ ALL";addAll.onclick=()=>{children.push({ALL:[""]});onChange(value,true)};
+    const addAny=document.createElement("button");addAny.textContent="+ ANY";addAny.onclick=()=>{children.push({ANY:[""]});onChange(value,true)};
+    const addArray=document.createElement("button");addArray.textContent="+ Array";addArray.onclick=()=>{children.push([""]);onChange(value,true)};
+    actions.append(addToken,addAll,addAny,addArray);childWrap.append(actions);row.append(childWrap);
+  }
+  root.append(row);
+}
+function requirementIsValid(value,path="requires"){
+  const problems=[];
+  const walk=(v,p)=>{
+    const t=requirementType(v);
+    if(t==="Invalid"){problems.push(`${p}: invalid requirement structure.`);return}
+    if(t==="Single"&&!v.trim())problems.push(`${p}: requirement token is empty.`);
+    const children=requirementChildren(v);
+    if(children){
+      if(!children.length)problems.push(`${p}: ${t} group must contain at least one item.`);
+      children.forEach((c,i)=>walk(c,`${p}[${i}]`));
+    }
+  };walk(value,path);return problems;
+}
+function cleanRequirement(value){
+  const t=requirementType(value);
+  if(t==="None")return "None";
+  if(t==="Single")return value.trim();
+  const children=(requirementChildren(value)||[]).map(cleanRequirement);
+  if(t==="Array")return children;
+  if(t==="ALL")return {ALL:children};
+  if(t==="ANY")return {ANY:children};
+  return "None";
+}
+function bindEpisodeFields(){
+  const map={
+    epId:"id",epIdentity:"identity",epTitle:"title",epTopic:"topic",epCore:"coreQuestion",
+    epOpening:"openingNode",epOfferExpression:"offerExpression",epOfferPrompt:"offerPrompt",
+    epAccept:"acceptLabel",epDecline:"declineLabel",epFallback:"fallbackBank"
+  };
+  for(const [el,key] of Object.entries(map)){
+    $("#"+el).value=episode[key]??"";
+    $("#"+el).oninput=e=>{episode[key]=e.target.value; render();};
+  }
+  episode.character=(episode.character&&typeof episode.character==="object")?episode.character:{id:"",displayName:String(episode.character||episode.topic||""),aliases:[]};
+  $("#epCharacterId").value=episode.character.id||"";
+  $("#epCharacterDisplayName").value=episode.character.displayName||"";
+  $("#epCharacterAliases").value=(episode.character.aliases||[]).join("\n");
+  $("#epCharacterId").oninput=e=>{episode.character.id=e.target.value;validate()};
+  $("#epCharacterDisplayName").oninput=e=>{episode.character.displayName=e.target.value;validate()};
+  $("#epCharacterAliases").oninput=e=>{episode.character.aliases=e.target.value.split(/\n/).map(x=>x.trim()).filter(Boolean);validate()};
+  $("#epTriggers").value=(episode.triggers||[]).join("\n");
+  $("#epTriggers").oninput=e=>{episode.triggers=e.target.value.split(/\n/).map(x=>x.trim()).filter(Boolean);validate()};
+  bindAchievementFields();
+}
+function bindAchievementFields(){
+  const enabled=!!episode.achievement;
+  $("#achievementEnabled").checked=enabled;
+  $("#achievementEditor").hidden=!enabled;
+  $("#achievementEnabled").onchange=e=>{
+    if(e.target.checked){episode.achievement={id:`${episode.id||"episode"}_all_endings`,identity:episode.identity||"jace",title:"EPISODE // COMPLETE",description:"Complete every ending in this episode.",requiredEndings:[]}}
+    else delete episode.achievement;
+    bindAchievementFields();validate();
+  };
+  if(!enabled)return;
+  const a=episode.achievement;
+  const fields={achievementId:"id",achievementIdentity:"identity",achievementTitle:"title",achievementDescription:"description"};
+  for(const [el,key] of Object.entries(fields)){$("#"+el).value=a[key]??"";$("#"+el).oninput=e=>{a[key]=e.target.value;validate()}}
+  $("#achievementRequiredEndings").value=(a.requiredEndings||[]).join("\n");
+  $("#achievementRequiredEndings").oninput=e=>{a.requiredEndings=e.target.value.split(/\n/).map(x=>x.trim()).filter(Boolean);validate()};
+}
+function render(){
+  renderNodeList(); renderGraph(); renderInspector(); validate();
+}
+function renderNodeList(){
+  const root=$("#nodeList"); root.innerHTML="";
+  for(const [id,node] of Object.entries(episode.nodes||{})){
+    const div=document.createElement("div"); div.className="node-list-item"+(id===selectedId?" active":"");
+    div.innerHTML=`<strong>${escapeHtml(id)}</strong><small>${escapeHtml(node.type||"Unknown")}</small>`;
+    div.onclick=()=>{selectedId=id;centerOnNode(id);render()};
+    root.append(div);
+  }
+}
+function graphType(node){return String(node.type||"Conversation").toLowerCase()}
+function renderGraph(){
+  const layer=$("#nodesLayer"); layer.innerHTML="";
+  for(const [id,node] of Object.entries(episode.nodes||{})){
+    if(!positions[id])positions[id]={x:80,y:80};
+    const el=document.createElement("div");
+    el.dataset.nodeId=id;
+    el.className=`graph-node ${graphType(node)}${id===selectedId?" selected":""}`;
+    el.style.left=positions[id].x+"px"; el.style.top=positions[id].y+"px";
+    const body=(node.dialogue||"").slice(0,210) || "(No dialogue)";
+    const routes = node.type==="Conversation"
+      ? (node.choices||[]).map((c,i)=>({label:c.label||`Choice ${i+1}`,key:i,next:c.nextNode||"",color:"#7180ad"}))
+      : node.type==="Transition"
+        ? [{label:node.nextNode?`Continue to ${node.nextNode}`:"Set next node",key:"transition",next:node.nextNode||"",color:"#7180ad"}]
+        : [];
+    const icon=node.type==="Conversation"?"💬":node.type==="Transition"?"➜":"◆";
+    el.innerHTML=`<span class="input-port"></span>
+      <div class="head">
+        <span class="node-kind"><span>${icon}</span><span>${escapeHtml(node.type||"Unknown")}</span></span>
+        <span class="node-id">${escapeHtml(id)}</span>
+      </div>
+      <div class="body">${escapeHtml(body)}</div>
+      ${routes.length?`<div class="section-label">${node.type==="Conversation"?"Choices":"Route"}</div>`:""}
+      ${routes.map(r=>`<div class="route-row ${r.next?"":"missing-route"}" data-route="${attr(String(r.key))}" style="--route-color:${r.color}" title="Drag this row onto another node to set the next node">
+        <span class="route-text">${escapeHtml(r.label)}</span>
+        <span class="route-port" data-route="${attr(String(r.key))}" style="--route-color:${r.color}"></span>
+      </div>`).join("")}
+      ${node.type==="Ending"?`<div class="meta">Ending ID: ${escapeHtml(node.endingId||"(not set)")}</div>`:""}`;
+    el.onclick=e=>{e.stopPropagation();selectedId=id;render()};
+    el.oncontextmenu=e=>openContextMenu(e,id);
+
+    const head=el.querySelector(".head");
+    head.onpointerdown=e=>{
+      if(e.button!==0 || e.target.closest(".node-id"))return;
+      e.preventDefault(); e.stopPropagation(); selectedId=id;
+      drag={id,startX:e.clientX,startY:e.clientY,origX:positions[id].x,origY:positions[id].y,el};
+      head.setPointerCapture(e.pointerId);
+      head.onpointermove=moveNode;
+      head.onpointerup=finishMoveNode;
+      renderNodeList(); renderInspector();
+    };
+
+    el.querySelectorAll(".route-row").forEach(row=>{
+      row.onpointerdown=e=>startConnectionDrag(e,id,row.dataset.route,row.querySelector(".route-port"));
+    });
+    layer.append(el);
+  }
+  drawConnections();
+}
+function moveNode(e){
+  if(!drag)return;
+  positions[drag.id].x=drag.origX+(e.clientX-drag.startX)/scale;
+  positions[drag.id].y=drag.origY+(e.clientY-drag.startY)/scale;
+  drag.el.style.left=positions[drag.id].x+"px";
+  drag.el.style.top=positions[drag.id].y+"px";
+  drawConnections();
+}
+function finishMoveNode(e){
+  if(!drag)return;
+  try{e.currentTarget.releasePointerCapture(e.pointerId)}catch{}
+  e.currentTarget.onpointermove=null;
+  e.currentTarget.onpointerup=null;
+  drag=null;
+  validate();
+  commitHistory();
+}
+function canvasPoint(clientX,clientY){
+  const rect=$("#canvasWrap").getBoundingClientRect();
+  return {x:(clientX-rect.left-pan.x)/scale,y:(clientY-rect.top-pan.y)/scale};
+}
+function startConnectionDrag(e,sourceId,routeKey,port){
+  e.preventDefault();e.stopPropagation();
+  const start=positions[sourceId];
+  connectionDrag={sourceId,routeKey,x1:start.x+290,y1:start.y+port.parentElement.offsetTop+port.parentElement.offsetHeight/2,x2:0,y2:0};
+  port.setPointerCapture(e.pointerId);
+  port.onpointermove=moveConnectionDrag;
+  port.onpointerup=finishConnectionDrag;
+}
+function moveConnectionDrag(e){
+  if(!connectionDrag)return;
+  const pt=canvasPoint(e.clientX,e.clientY);
+  connectionDrag.x2=pt.x;connectionDrag.y2=pt.y;
+  document.querySelectorAll(".graph-node").forEach(n=>n.classList.remove("drop-target"));
+  const hit=document.elementFromPoint(e.clientX,e.clientY)?.closest(".graph-node");
+  if(hit&&hit.dataset.nodeId!==connectionDrag.sourceId)hit.classList.add("drop-target");
+  drawConnections();
+}
+function finishConnectionDrag(e){
+  if(!connectionDrag)return;
+  const hit=document.elementFromPoint(e.clientX,e.clientY)?.closest(".graph-node");
+  const targetId=hit?.dataset.nodeId;
+  if(targetId&&targetId!==connectionDrag.sourceId){
+    const source=episode.nodes[connectionDrag.sourceId];
+    if(connectionDrag.routeKey==="transition")source.nextNode=targetId;
+    else if(source.choices?.[Number(connectionDrag.routeKey)])source.choices[Number(connectionDrag.routeKey)].nextNode=targetId;
+    selectedId=connectionDrag.sourceId;
+  }
+  document.querySelectorAll(".graph-node").forEach(n=>n.classList.remove("drop-target"));
+  try{e.currentTarget.releasePointerCapture(e.pointerId)}catch{}
+  e.currentTarget.onpointermove=null;e.currentTarget.onpointerup=null;
+  connectionDrag=null;render();
+}
+function targetsFor(node){
+  if(node.type==="Conversation")return (node.choices||[]).map(c=>c.nextNode).filter(Boolean);
+  if(node.type==="Transition"&&node.nextNode)return [node.nextNode];
+  return [];
+}
+function drawConnections(){
+  const svg=$("#connections"); svg.innerHTML="";
+  for(const [id,node] of Object.entries(episode.nodes||{})){
+    const a=positions[id]; if(!a)continue;
+    const nodeEl=document.querySelector(`.graph-node[data-node-id="${CSS.escape(id)}"]`);
+    const routeEls=nodeEl?[...nodeEl.querySelectorAll(".route-row")]:[];
+    const sourceRoutes=node.type==="Conversation"
+      ? (node.choices||[]).map((c,i)=>({
+          target:c.nextNode,index:i,label:c.label||`Choice ${i+1}`,
+          color:"#7180ad",
+          sourceY:a.y+(routeEls[i]?routeEls[i].offsetTop+routeEls[i].offsetHeight/2:145+i*38)
+        }))
+      : node.type==="Transition" ? [{
+          target:node.nextNode,index:0,label:"Continue",color:"#7180ad",
+          sourceY:a.y+(routeEls[0]?routeEls[0].offsetTop+routeEls[0].offsetHeight/2:145)
+        }] : [];
+    sourceRoutes.filter(r=>r.target).forEach(r=>{
+      const b=positions[r.target]||{x:a.x+360,y:a.y};
+      const y1=r.sourceY, x1=a.x+290, x2=b.x, y2=b.y+50;
+      const bend=Math.max(90,Math.abs(x2-x1)*.48);
+      const d=`M ${x1} ${y1} C ${x1+bend} ${y1}, ${x2-bend} ${y2}, ${x2} ${y2}`;
+      const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+      p.setAttribute("d",d);
+      p.setAttribute("class","edge"+(episode.nodes[r.target]?"":" missing"));
+      p.setAttribute("stroke",r.color);
+      svg.append(p);
+    });
+  }
+  if(connectionDrag){
+    const {x1,y1,x2,y2}=connectionDrag;
+    const bend=Math.max(90,Math.abs(x2-x1)*.48);
+    const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+    p.setAttribute("d",`M ${x1} ${y1} C ${x1+bend} ${y1}, ${x2-bend} ${y2}, ${x2} ${y2}`);
+    p.setAttribute("class","edge preview");svg.append(p);
+  }
+}
+
+
+
+
+function renameNode(oldId,newId){
+  episode.nodes[newId]=episode.nodes[oldId];delete episode.nodes[oldId];
+  positions[newId]=positions[oldId];delete positions[oldId];
+  if(episode.openingNode===oldId)episode.openingNode=newId;
+  for(const n of Object.values(episode.nodes)){
+    if(n.nextNode===oldId)n.nextNode=newId;
+    (n.choices||[]).forEach(c=>{if(c.nextNode===oldId)c.nextNode=newId});
+  }
+  selectedId=newId;bindEpisodeFields();render();
+}
+function openContextMenu(e,id){
+  e.preventDefault();e.stopPropagation();selectedId=id;render();
+  const menu=$("#contextMenu");menu.style.display="block";
+  menu.style.left=Math.min(e.clientX,window.innerWidth-190)+"px";
+  menu.style.top=Math.min(e.clientY,window.innerHeight-130)+"px";
+}
+document.addEventListener("click",()=>{$("#contextMenu").style.display="none";$("#canvasContextMenu").style.display="none";$("#searchResults").classList.remove("open")});
+$("#canvasWrap").addEventListener("contextmenu",e=>{
+  if(e.target.closest(".graph-node"))return;
+  e.preventDefault();e.stopPropagation();canvasMenuPoint=canvasPoint(e.clientX,e.clientY);
+  const pasteHere=$("#pasteHereBtn");
+  pasteHere.disabled=!nodeClipboard;
+  pasteHere.title=nodeClipboard?"Paste copied node at this location":"Copy a node first";
+  const menu=$("#canvasContextMenu");menu.style.display="block";menu.style.left=Math.min(e.clientX,window.innerWidth-210)+"px";menu.style.top=Math.min(e.clientY,window.innerHeight-180)+"px";
+});
+$("#canvasContextMenu").onclick=e=>{
+  const type=e.target.dataset.create;
+  const action=e.target.dataset.action;
+  if(type)createNodeAt(type,canvasMenuPoint,{center:true});
+  if(action==="paste-here"&&!e.target.disabled)pasteNode(canvasMenuPoint,{center:true});
+  $("#canvasContextMenu").style.display="none";
+};
+$("#contextMenu").onclick=e=>{
+  const action=e.target.dataset.action;if(!action||!selectedId)return;
+  if(action==="duplicate")duplicateNode(selectedId);
+  if(action==="set-opening"){episode.openingNode=selectedId;bindEpisodeFields();render()}
+  if(action==="delete")deleteSelectedNode();
+  $("#contextMenu").style.display="none";
+};
+function uniqueNodeId(base){
+  const clean=(base||"node").replace(/\s+/g,"_");
+  if(!episode.nodes[clean])return clean;
+  let i=2,candidate=`${clean}_${i}`;
+  while(episode.nodes[candidate])candidate=`${clean}_${++i}`;
+  return candidate;
+}
+function flashNode(id){
+  requestAnimationFrame(()=>{
+    const el=document.querySelector(`.graph-node[data-node-id="${CSS.escape(id)}"]`);
+    if(!el)return;
+    el.classList.remove("search-hit");
+    void el.offsetWidth;
+    el.classList.add("search-hit");
+  });
+}
+function revealCreatedNode(id,{center=true}={}){
+  selectedId=id;selectedChoiceIndex=0;render();
+  if(center)centerOnNode(id);
+  flashNode(id);
+}
+function viewportCenterPoint(){
+  const rect=$("#canvasWrap").getBoundingClientRect();
+  return canvasPoint(rect.left+rect.width/2,rect.top+rect.height/2);
+}
+function duplicateNode(id){
+  const source=episode.nodes[id];if(!source)return;
+  const newId=uniqueNodeId(`${id}_copy`);
+  episode.nodes[newId]=clone(source);
+  const pos=positions[id]||{x:120,y:120};
+  positions[newId]={x:pos.x+70,y:pos.y+70};
+  revealCreatedNode(newId,{center:true});commitHistory();setStatus(`Duplicated ${id}`);
+}
+function copySelectedNode(){
+  if(!selectedId||!episode.nodes[selectedId])return false;
+  nodeClipboard={id:selectedId,node:clone(episode.nodes[selectedId])};
+  setStatus(`Copied ${selectedId}`);return true;
+}
+function pasteNode(point=null,{center=false}={}){
+  if(!nodeClipboard)return false;
+  const newId=uniqueNodeId(`${nodeClipboard.id}_copy`);
+  episode.nodes[newId]=clone(nodeClipboard.node);
+  const target=point||viewportCenterPoint();
+  positions[newId]={x:target.x-145,y:target.y-100};
+  revealCreatedNode(newId,{center});commitHistory();setStatus(`Pasted as ${newId}`);return true;
+}
+function createNodeAt(type,point,options={}){
+  const prefix=type==="Conversation"?"conversation":type.toLowerCase();
+  const id=uniqueNodeId(prefix);
+  if(type==="Conversation")episode.nodes[id]={type,expression:"",dialogue:"",choices:[]};
+  else if(type==="Transition")episode.nodes[id]={type,expression:"",dialogue:"",nextNode:""};
+  else episode.nodes[id]={type,expression:"",dialogue:"",endingId:id,unlocks:[]};
+  positions[id]=point||viewportCenterPoint();
+  revealCreatedNode(id,{center:options.center!==false});commitHistory();setStatus(`Created ${type}`);
+}
+function deleteSelectedNode(){
+  if(!selectedId||!confirm(`Delete node "${selectedId}"?`))return;
+  delete episode.nodes[selectedId];delete positions[selectedId];selectedId=null;render();
+}
+function renderInspector(){
+  const node=episode.nodes?.[selectedId];
+  $("#emptyInspector").hidden=!!node; $("#nodeInspector").hidden=!node;
+  if(!node)return;
+  $("#nodeId").value=selectedId;
+  $("#nodeType").value=node.type||"Conversation";
+  $("#nodeExpression").value=node.expression??"";
+  $("#nodeDialogue").value=node.dialogue??"";
+  $("#nodeNext").value=node.nextNode??"";
+  $("#nodeDelay").value=node.delay??"";
+  $("#nodeEndingId").value=node.endingId??"";
+  $("#nodeUnlocks").value=(node.unlocks||[]).join("\n");
+  syncInspectorVisibility(node);
+  if(node.type==="Conversation"){
+    const count=(node.choices||[]).length;
+    if(!count) selectedChoiceIndex=-1;
+    else if(selectedChoiceIndex<0||selectedChoiceIndex>=count) selectedChoiceIndex=0;
+  }
+  renderChoices(node);
+  renderInspectorRequirements(node);
+}
+function syncInspectorVisibility(node){
+  $("#conversationFields").hidden=node.type!=="Conversation";
+  $("#transitionFields").hidden=node.type!=="Transition";
+  $("#endingFields").hidden=node.type!=="Ending";
+}
+function updateSelected(mutator){const n=episode.nodes[selectedId];if(!n)return;mutator(n);render()}
+$("#nodeId").onchange=e=>{
+  const newId=e.target.value.trim(); if(!newId||newId===selectedId)return;
+  if(episode.nodes[newId]){alert("That node ID already exists.");e.target.value=selectedId;return}
+  renameNode(selectedId,newId);
+};
+$("#nodeType").onchange=e=>updateSelected(n=>{
+  n.type=e.target.value;
+  if(n.type==="Conversation"){delete n.nextNode;delete n.delay;delete n.endingId;delete n.unlocks;n.choices=n.choices||[]}
+  if(n.type==="Transition"){delete n.choices;delete n.endingId;delete n.unlocks;n.nextNode=n.nextNode||""}
+  if(n.type==="Ending"){delete n.choices;delete n.nextNode;delete n.delay;n.endingId=n.endingId||selectedId;n.unlocks=n.unlocks||[]}
+});
+$("#nodeExpression").oninput=e=>updateSelected(n=>n.expression=e.target.value);
+$("#nodeDialogue").oninput=e=>updateSelected(n=>n.dialogue=e.target.value);
+$("#nodeNext").oninput=e=>updateSelected(n=>n.nextNode=e.target.value);
+$("#nodeDelay").oninput=e=>updateSelected(n=>{if(e.target.value==="")delete n.delay;else n.delay=Number(e.target.value)});
+$("#nodeEndingId").oninput=e=>updateSelected(n=>n.endingId=e.target.value);
+$("#nodeUnlocks").oninput=e=>updateSelected(n=>n.unlocks=e.target.value.split(/\n/).map(x=>x.trim()).filter(Boolean));
+
+function renderChoices(node){
+  const root=$("#choices");root.innerHTML="";
+  (node.choices||[]).forEach((c,i)=>{
+    const card=document.createElement("div");card.className="choice-card"+(i===selectedChoiceIndex?" selected":"");
+    card.innerHTML=`<div class="choice-head"><span>Choice ${i+1}</span>
+      <span class="choice-order">
+        <button type="button" data-move="up" title="Move choice up" ${i===0?"disabled":""}>▲</button>
+        <button type="button" data-move="down" title="Move choice down" ${i===(node.choices||[]).length-1?"disabled":""}>▼</button>
+      </span>
+      <button class="danger" data-remove="true">Remove</button></div>
+      <label>Label</label><input data-k="label" value="${attr(c.label||"")}">
+      <label>Next Node</label><input data-k="nextNode" value="${attr(c.nextNode||"")}">
+      <label>Locked Hint (optional)</label><input data-k="lockedHint" value="${attr(c.lockedHint||"")}">
+      <label class="check"><input type="checkbox" data-k="hidden" ${c.hidden?"checked":""}> Hidden until unlocked</label>`;
+    card.onclick=e=>{
+      if(e.target.tagName==="BUTTON")return;
+      if(selectedChoiceIndex!==i){selectedChoiceIndex=i;renderChoices(node);renderInspectorRequirements(node)}
+    };
+    card.querySelector("[data-remove]").onclick=e=>{
+      e.stopPropagation();
+      node.choices.splice(i,1);
+      if(selectedChoiceIndex>i)selectedChoiceIndex--;
+      else if(selectedChoiceIndex>=node.choices.length)selectedChoiceIndex=node.choices.length-1;
+      render();
+      commitHistory();
+    };
+    card.querySelectorAll("[data-move]").forEach(btn=>btn.onclick=e=>{
+      e.stopPropagation();
+      const direction=btn.dataset.move==="up"?-1:1;
+      const next=i+direction;
+      if(next<0||next>=node.choices.length)return;
+      [node.choices[i],node.choices[next]]=[node.choices[next],node.choices[i]];
+      selectedChoiceIndex=next;
+      render();
+      commitHistory();
+      setStatus(`Moved choice ${direction<0?"up":"down"}`);
+    });
+    card.querySelectorAll("[data-k]").forEach(el=>{
+      el.onfocus=()=>{if(selectedChoiceIndex!==i){selectedChoiceIndex=i;renderInspectorRequirements(node);card.classList.add("selected")}};
+      el.oninput=()=>{
+        const k=el.dataset.k;
+        if(k==="hidden"){if(el.checked)c.hidden=true;else delete c.hidden}
+        else {if(el.value)c[k]=el.value;else delete c[k]}
+        renderGraph();
+        if(i===selectedChoiceIndex)$("#choiceRequirementContext").textContent=`Choice ${i+1}: ${c.label||"Untitled choice"}`;
+      };
+    });
+    root.append(card);
+  });
+}
+function renderInspectorRequirements(node){
+  const epRoot=$("#epRequiresBuilder");
+  if(epRoot) renderRequirementBuilder(epRoot,episode.requires??"None",(value,structural)=>{
+    episode.requires=value;
+    if(structural)renderInspectorRequirements(node);else validate();
+  });
+  const choiceRoot=$("#selectedChoiceRequiresBuilder");
+  const context=$("#choiceRequirementContext");
+  if(!choiceRoot||node.type!=="Conversation")return;
+  const choices=node.choices||[];
+  const choice=choices[selectedChoiceIndex];
+  if(!choice){
+    context.textContent="Add or select a choice above.";
+    choiceRoot.innerHTML='<div class="req-help">No choice selected.</div>';
+    return;
+  }
+  context.textContent=`Choice ${selectedChoiceIndex+1}: ${choice.label||"Untitled choice"}`;
+  renderRequirementBuilder(choiceRoot,choice.requires??"None",(value,structural)=>{
+    choice.requires=value;
+    if(structural)renderInspectorRequirements(node);else{renderGraph()}
+  });
+}
+$("#addChoice").onclick=()=>updateSelected(n=>{n.choices=n.choices||[];n.choices.push({label:"New choice",nextNode:"",requires:"None"});selectedChoiceIndex=n.choices.length-1});
+$("#deleteNode").onclick=deleteSelectedNode;
+document.querySelectorAll("[data-add]").forEach(btn=>btn.onclick=()=>{
+  const type=btn.dataset.add;
+  const center=viewportCenterPoint();
+  const offset=Object.keys(episode.nodes||{}).length%4*24;
+  createNodeAt(type,{x:center.x-145+offset,y:center.y-100+offset},{center:true});
+});
+
+// Episode validation
+function validate(){
+  const issues=[],nodes=episode.nodes||{},endingIds=new Map();
+  if(episode.schema!=="companion-episode-v1")issues.push(["error","Schema must be companion-episode-v1."]);
+  if(!episode.id)issues.push(["error","Episode ID is required."]);
+  if(!episode.title)issues.push(["error","Episode title is required."]);
+  if(episode.character!==undefined){
+    if(!episode.character||typeof episode.character!=="object"||Array.isArray(episode.character))issues.push(["error","Character metadata must be an object."]);
+    else{
+      if(!String(episode.character.id||"").trim())issues.push(["error","Character ID is required."]);
+      if(!String(episode.character.displayName||"").trim())issues.push(["error","Character display name is required."]);
+      if(!Array.isArray(episode.character.aliases))issues.push(["error","Character aliases must be an array."]);
+    }
+  }
+  if(!Array.isArray(episode.triggers)||!episode.triggers.length)issues.push(["error","At least one trigger is required."]);
+  if(!episode.openingNode)issues.push(["error","Opening node is required."]);
+  else if(!nodes[episode.openingNode])issues.push(["error",`Opening node "${episode.openingNode}" does not exist.`]);
+  requirementIsValid(episode.requires??"None","Episode requires").forEach(t=>issues.push(["error",t]));
+  for(const [id,n] of Object.entries(nodes)){
+    if(!["Conversation","Transition","Ending"].includes(n.type))issues.push(["error",`${id}: unsupported node type "${n.type}".`]);
+    if(!n.dialogue)issues.push(["warn",`${id}: dialogue is empty.`]);
+    if(n.type==="Conversation"){
+      if(!Array.isArray(n.choices))issues.push(["error",`${id}: choices must be an array.`]);
+      (n.choices||[]).forEach((c,i)=>{
+        if(!c.label)issues.push(["warn",`${id}, choice ${i+1}: label is empty.`]);
+        if(!c.nextNode)issues.push(["error",`${id}, choice ${i+1}: next node is empty.`]);
+        else if(!nodes[c.nextNode])issues.push(["error",`${id}, choice ${i+1}: next node "${c.nextNode}" is missing.`]);
+        requirementIsValid(c.requires??"None",`${id}, choice ${i+1} requires`).forEach(t=>issues.push(["error",t]));
+        if(c.hidden!==undefined&&typeof c.hidden!=="boolean")issues.push(["error",`${id}, choice ${i+1}: hidden must be true or omitted.`]);
+      });
+    }
+    if(n.type==="Transition"){
+      if(!n.nextNode)issues.push(["error",`${id}: transition next node is empty.`]);
+      else if(!nodes[n.nextNode])issues.push(["error",`${id}: transition next node "${n.nextNode}" is missing.`]);
+      if(n.delay!==undefined&&(!Number.isFinite(n.delay)||n.delay<0))issues.push(["error",`${id}: delay must be a non-negative number.`]);
+    }
+    if(n.type==="Ending"){
+      if(!n.endingId)issues.push(["error",`${id}: endingId is required.`]);
+      else if(endingIds.has(n.endingId))issues.push(["error",`${id}: duplicate endingId "${n.endingId}" also used by ${endingIds.get(n.endingId)}.`]);
+      else endingIds.set(n.endingId,id);
+      if(n.unlocks!==undefined&&!Array.isArray(n.unlocks))issues.push(["error",`${id}: unlocks must be an array.`]);
+    }
+  }
+  if(episode.achievement){
+    const a=episode.achievement;
+    if(!a.id)issues.push(["error","Achievement ID is required."]);
+    if(!a.title)issues.push(["error","Achievement title is required."]);
+    if(!Array.isArray(a.requiredEndings))issues.push(["error","Achievement requiredEndings must be an array."]);
+    else a.requiredEndings.forEach(endId=>{if(!endingIds.has(endId))issues.push(["error",`Achievement references unknown endingId "${endId}".`])});
+  }
+  if(nodes[episode.openingNode]){
+    const seen=new Set(),q=[episode.openingNode];
+    while(q.length){const id=q.shift();if(seen.has(id)||!nodes[id])continue;seen.add(id);targetsFor(nodes[id]).forEach(t=>q.push(t))}
+    Object.keys(nodes).filter(id=>!seen.has(id)).forEach(id=>issues.push(["warn",`${id}: node is unreachable from the opening node.`]));
+  }
+  const errorCount=issues.filter(([k])=>k==="error").length;
+  const warningCount=issues.filter(([k])=>k==="warn").length;
+  if(!issues.length)issues.push(["ok","Episode matches the supported companion-episode-v1 structure."]);
+  else issues.unshift(["info",`${errorCount} error${errorCount===1?"":"s"}, ${warningCount} warning${warningCount===1?"":"s"}. Click a node-related message to locate it.`]);
+  const nodeIds=Object.keys(nodes).sort((a,b)=>b.length-a.length);
+  const targetFor=text=>nodeIds.find(id=>text===id||text.startsWith(id+":")||text.startsWith(id+",")||text.includes(` by ${id}.`))||"";
+  $("#issues").innerHTML=issues.map(([k,t])=>{
+    const target=targetFor(t),clickable=target||k!=="info";
+    const icon=k==="error"?"✕":k==="warn"?"⚠":k==="info"?"ℹ":"✓";
+    return `<div class="issue ${k}${clickable?" clickable":""}"${target?` data-node-id="${escapeHtml(target)}"`:k!=="info"?` data-episode-issue="true"`:""}>${icon} ${escapeHtml(t)}</div>`;
+  }).join("");
+  $("#issues").querySelectorAll(".issue[data-node-id]").forEach(el=>el.onclick=()=>{
+    const id=el.dataset.nodeId;if(!nodes[id])return;
+    selectedId=id;selectedChoiceIndex=0;renderNodeList();renderGraph();renderInspector();centerOnNode(id);setStatus(`Located ${id}`);
+  });
+  $("#issues").querySelectorAll(".issue[data-episode-issue]").forEach(el=>el.onclick=()=>{
+    $("#sidebar").scrollTo({top:0,behavior:"smooth"});
+    const firstError=$("#sidebar input, #sidebar textarea, #sidebar select");if(firstError)firstError.focus({preventScroll:true});
+    setStatus("Opened episode settings");
+  });
+  return issues;
+}
+
+
+function centerOnNode(id){
+  const p=positions[id];if(!p)return;
+  const wrap=$("#canvasWrap").getBoundingClientRect();
+  pan.x=wrap.width/2-(p.x+145)*scale;
+  pan.y=wrap.height/2-(p.y+100)*scale;
+  $("#canvas").style.transform=`translate(${pan.x}px,${pan.y}px) scale(${scale})`;
+}
+function autoArrange(){
+  const nodes=episode.nodes||{}, ids=Object.keys(nodes);
+  if(!ids.length)return;
+  const opening=nodes[episode.openingNode]?episode.openingNode:ids[0];
+  const level={},q=[opening];level[opening]=0;
+
+  // Assign each node to its left-to-right column using shortest distance
+  // from the opening node. Unreachable nodes are placed in later columns.
+  while(q.length){
+    const id=q.shift(),nextLevel=level[id]+1;
+    targetsFor(nodes[id]).forEach(t=>{
+      if(nodes[t]&&level[t]===undefined){level[t]=nextLevel;q.push(t)}
+    });
+  }
+  let fallback=Math.max(0,...Object.values(level))+1;
+  ids.forEach(id=>{if(level[id]===undefined)level[id]=fallback++});
+
+  const groups={};
+  ids.forEach(id=>(groups[level[id]]??=[]).push(id));
+
+  // Record authored edge order. Conversation choices retain their JSON order;
+  // transitions act as a single route at index 0.
+  const incoming={};
+  ids.forEach(id=>incoming[id]=[]);
+  ids.forEach(sourceId=>{
+    const node=nodes[sourceId];
+    if(node.type==="Conversation"){
+      (node.choices||[]).forEach((choice,choiceIndex)=>{
+        if(nodes[choice.nextNode])incoming[choice.nextNode].push({sourceId,choiceIndex});
+      });
+    }else if(node.type==="Transition"&&nodes[node.nextNode]){
+      incoming[node.nextNode].push({sourceId,choiceIndex:0});
+    }
+  });
+
+  // Stable discovery order is only a final fallback. This prevents nodes from
+  // jumping around when two nodes have otherwise identical ordering keys.
+  const discoveryRank={};
+  let rank=0;
+  const seen=new Set(),walk=[opening];
+  while(walk.length){
+    const id=walk.shift();
+    if(seen.has(id)||!nodes[id])continue;
+    seen.add(id);discoveryRank[id]=rank++;
+    targetsFor(nodes[id]).forEach(t=>walk.push(t));
+  }
+  ids.forEach(id=>{if(discoveryRank[id]===undefined)discoveryRank[id]=rank++});
+
+  const orderedByLevel={},visualIndex={};
+  Object.keys(groups).map(Number).sort((a,b)=>a-b).forEach(l=>{
+    const group=groups[l];
+    if(l===0){
+      group.sort((a,b)=>(a===opening?-1:b===opening?1:discoveryRank[a]-discoveryRank[b]));
+    }else{
+      group.sort((a,b)=>{
+        const keyFor=id=>{
+          const edges=(incoming[id]||[]).filter(edge=>level[edge.sourceId]<l);
+          if(!edges.length)return [Number.MAX_SAFE_INTEGER,Number.MAX_SAFE_INTEGER,Number.MAX_SAFE_INTEGER,discoveryRank[id]];
+          const decorated=edges.map(edge=>({
+            parentOrder:visualIndex[edge.sourceId]??Number.MAX_SAFE_INTEGER,
+            parentLevel:level[edge.sourceId],
+            choiceIndex:edge.choiceIndex
+          }));
+          // Prefer the parent in the nearest preceding column, then preserve
+          // that parent's authored choice order. Average parent position helps
+          // shared/merged nodes settle between the branches feeding them.
+          const nearestLevel=Math.max(...decorated.map(e=>e.parentLevel));
+          const nearest=decorated.filter(e=>e.parentLevel===nearestLevel);
+          const avgParent=nearest.reduce((sum,e)=>sum+e.parentOrder,0)/nearest.length;
+          const minParent=Math.min(...nearest.map(e=>e.parentOrder));
+          const minChoice=Math.min(...nearest.filter(e=>e.parentOrder===minParent).map(e=>e.choiceIndex));
+          return [avgParent,minParent,minChoice,discoveryRank[id]];
+        };
+        const ak=keyFor(a),bk=keyFor(b);
+        for(let i=0;i<ak.length;i++)if(ak[i]!==bk[i])return ak[i]-bk[i];
+        return 0;
+      });
+    }
+    orderedByLevel[l]=group;
+    group.forEach((id,index)=>visualIndex[id]=index);
+  });
+
+  const gapX=430,gapY=70,marginX=120,centerY=900;
+
+  // Measure real node heights so long dialogue and many choices never overlap.
+  const heights={};
+  document.querySelectorAll(".graph-node").forEach(el=>{
+    heights[el.dataset.nodeId]=Math.max(160,el.offsetHeight);
+  });
+
+  Object.keys(orderedByLevel).map(Number).sort((a,b)=>a-b).forEach(l=>{
+    const group=orderedByLevel[l];
+    const totalHeight=group.reduce((sum,id)=>sum+(heights[id]||180),0)+Math.max(0,group.length-1)*gapY;
+    let y=centerY-totalHeight/2;
+    group.forEach(id=>{
+      positions[id]={x:marginX+l*gapX,y};
+      y+=(heights[id]||180)+gapY;
+    });
+  });
+  renderGraph();
+  requestAnimationFrame(()=>{
+    fitView();
+    commitHistory();
+    setStatus("Auto-arranged ordered horizontal columns");
+  });
+}
+function fitView(){
+  const els=[...document.querySelectorAll(".graph-node")];
+  if(!els.length)return;
+  const wrap=$("#canvasWrap").getBoundingClientRect();
+  const bounds=els.map(el=>{
+    const p=positions[el.dataset.nodeId];
+    return {x:p.x,y:p.y,w:el.offsetWidth,h:el.offsetHeight};
+  });
+  const minX=Math.min(...bounds.map(b=>b.x)),minY=Math.min(...bounds.map(b=>b.y));
+  const maxX=Math.max(...bounds.map(b=>b.x+b.w)),maxY=Math.max(...bounds.map(b=>b.y+b.h));
+  const w=maxX-minX+180,h=maxY-minY+180;
+  scale=Math.max(.08,Math.min(1.15,Math.min(wrap.width/w,wrap.height/h)));
+  pan.x=(wrap.width-w*scale)/2-(minX-90)*scale;
+  pan.y=(wrap.height-h*scale)/2-(minY-90)*scale;
+  $("#canvas").style.transform=`translate(${pan.x}px,${pan.y}px) scale(${scale})`;
+}
+$("#autoArrangeBtn").onclick=autoArrange;
+$("#fitBtn").onclick=fitView;
+function sanitizeForExport(){
+  const data=clone(episode);data.schema="companion-episode-v1";
+  data.requires=cleanRequirement(data.requires??"None");
+  for(const node of Object.values(data.nodes||{})){
+    if(node.type==="Conversation"){
+      (node.choices||[]).forEach(choice=>{
+        if(choice.requires===undefined)delete choice.requires;
+        else choice.requires=cleanRequirement(choice.requires);
+        if(!choice.lockedHint)delete choice.lockedHint;
+        if(choice.hidden!==true)delete choice.hidden;
+      });
+    }
+    if(node.type==="Transition"&&node.delay===undefined)delete node.delay;
+    if(node.type==="Ending"&&node.unlocks===undefined)delete node.unlocks;
+  }
+  if(data.achievement){
+    data.achievement.requiredEndings=Array.isArray(data.achievement.requiredEndings)?data.achievement.requiredEndings:[];
+    if(!data.achievement.identity)delete data.achievement.identity;
+  }
+  return data;
+}
+$("#exportBtn").onclick=()=>{
+  validate();
+  const blob=new Blob([JSON.stringify(sanitizeForExport(),null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=(episode.id||"episode")+".json";a.click();URL.revokeObjectURL(a.href);
+  markSaved();
+  clearRecovery();
+  setStatus("Exported JSON");
+};
+$("#importBtn").onclick=()=>{if(confirmDiscard("import another episode"))$("#fileInput").click()};
+$("#fileInput").onchange=async e=>{
+  const file=e.target.files[0];if(!file)return;
+  try{
+    const data=JSON.parse(await file.text());
+    if(!data||data.schema!=="companion-episode-v1"||!data.nodes||typeof data.nodes!=="object")throw new Error("Not a valid companion-episode-v1 document.");
+    episode=clone(data);positions=defaultPositions();selectedId=episode.openingNode&&episode.nodes[episode.openingNode]?episode.openingNode:Object.keys(episode.nodes)[0]||null;
+    bindEpisodeFields();render();autoArrange();resetHistory({markSaved:true});setStatus(`Imported ${file.name}`);
+  }catch(err){alert("Import failed: "+err.message);setStatus("Import failed")}
+  e.target.value="";
+};
+$("#newBtn").onclick=()=>{
+  if(!confirmDiscard("create a new episode"))return;
+  episode=freshEpisode();positions=defaultPositions();selectedId="opening";selectedChoiceIndex=0;
+  bindEpisodeFields();render();setTimeout(()=>{
+    autoArrange();
+    resetHistory({markSaved:true});
+    setStatus("New episode");
+  },0);
+};
+
+function buildSearchIndex(query){
+  const q=query.trim().toLowerCase();if(!q)return [];
+  const results=[];
+  for(const [id,node] of Object.entries(episode.nodes||{})){
+    const add=(kind,text,detail)=>{if(String(text||"").toLowerCase().includes(q))results.push({id,kind,text:String(text||""),detail})};
+    add("Node ID",id,node.type);
+    add("Dialogue",node.dialogue,node.type);
+    if(node.endingId)add("Ending ID",node.endingId,"Ending");
+    (node.choices||[]).forEach((c,i)=>add(`Choice ${i+1}`,c.label,`in ${id}`));
+  }
+  const a=episode.achievement;if(a){
+    if(String(a.id||"").toLowerCase().includes(q))results.push({id:null,kind:"Achievement ID",text:a.id,detail:"Episode achievement"});
+    if(String(a.title||"").toLowerCase().includes(q))results.push({id:null,kind:"Achievement",text:a.title,detail:"Episode achievement"});
+  }
+  return results.slice(0,60);
+}
+function renderSearchResults(){
+  const root=$("#searchResults");root.innerHTML="";
+  if(!searchMatches.length){root.innerHTML='<div class="search-result"><small>No matches</small></div>';root.classList.add("open");return}
+  searchMatches.forEach((r,i)=>{
+    const el=document.createElement("div");el.className="search-result"+(i===searchIndex?" active":"");
+    el.innerHTML=`<strong>${escapeHtml(r.kind)}: ${escapeHtml(r.text)}</strong><small>${escapeHtml(r.detail||"")}</small>`;
+    el.onclick=()=>jumpToSearchResult(r);root.append(el);
+  });root.classList.add("open");
+}
+function jumpToSearchResult(r){
+  $("#searchResults").classList.remove("open");
+  if(r.id){selectedId=r.id;selectedChoiceIndex=0;render();centerOnNode(r.id);requestAnimationFrame(()=>document.querySelector(`.graph-node[data-node-id="${CSS.escape(r.id)}"]`)?.classList.add("search-hit"));}
+  else{$("#sidebar").scrollTo({top:0,behavior:"smooth"});$("#achievementId")?.focus()}
+}
+$("#searchInput").oninput=e=>{searchMatches=buildSearchIndex(e.target.value);searchIndex=-1;renderSearchResults()};
+$("#searchInput").onkeydown=e=>{
+  if(e.key==="Escape"){$("#searchResults").classList.remove("open");e.target.blur()}
+  else if(e.key==="ArrowDown"){e.preventDefault();searchIndex=Math.min(searchMatches.length-1,searchIndex+1);renderSearchResults()}
+  else if(e.key==="ArrowUp"){e.preventDefault();searchIndex=Math.max(0,searchIndex-1);renderSearchResults()}
+  else if(e.key==="Enter"&&searchMatches.length){e.preventDefault();jumpToSearchResult(searchMatches[Math.max(0,searchIndex)])}
+};
+$("#duplicateBtn").onclick=()=>selectedId?duplicateNode(selectedId):setStatus("Select a node to duplicate");
+
+$("#canvasWrap").onclick=()=>{selectedId=null;render()};
+$("#canvasWrap").onwheel=e=>{
+  e.preventDefault();
+  const wrap=$("#canvasWrap").getBoundingClientRect();
+  if(e.ctrlKey){
+    // Trackpad pinch gestures arrive as ctrl+wheel in Chromium/Safari.
+    const before=canvasPoint(e.clientX,e.clientY);
+    const factor=Math.exp(-e.deltaY*0.008);
+    scale=Math.max(.3,Math.min(2.2,scale*factor));
+    pan.x=e.clientX-wrap.left-before.x*scale;
+    pan.y=e.clientY-wrap.top-before.y*scale;
+  }else{
+    // Two-finger trackpad scrolling pans the canvas.
+    pan.x-=e.deltaX;
+    pan.y-=e.deltaY;
+  }
+  $("#canvas").style.transform=`translate(${pan.x}px,${pan.y}px) scale(${scale})`;
+};
+let panning=null;
+$("#canvasWrap").onpointerdown=e=>{
+  if(e.button!==1&&!(e.button===0&&e.shiftKey))return;
+  panning={x:e.clientX,y:e.clientY,px:pan.x,py:pan.y};e.currentTarget.setPointerCapture(e.pointerId);
+};
+$("#canvasWrap").onpointermove=e=>{
+  if(!panning)return;pan.x=panning.px+e.clientX-panning.x;pan.y=panning.py+e.clientY-panning.y;
+  $("#canvas").style.transform=`translate(${pan.x}px,${pan.y}px) scale(${scale})`;
+};
+$("#canvasWrap").onpointerup=()=>panning=null;
+
+$("#undoBtn").onclick=()=>undo();
+$("#redoBtn").onclick=()=>redo();
+
+// Inspector and episode metadata edits are debounced into the same history
+// stack used by the keyboard shortcuts. Updating the button state immediately
+// prevents the toolbar from remaining disabled during active typing.
+document.addEventListener("input",e=>{
+  if(restoringHistory)return;
+  const target=e.target;
+  if(!(target instanceof HTMLElement))return;
+  if(!target.closest("#sidebar,#inspector"))return;
+  if(target.closest("#searchBox"))return;
+  scheduleHistoryCommit(350);
+},true);
+document.addEventListener("change",e=>{
+  if(restoringHistory)return;
+  const target=e.target;
+  if(!(target instanceof HTMLElement))return;
+  if(!target.closest("#sidebar,#inspector"))return;
+  if(target.closest("#searchBox"))return;
+  scheduleHistoryCommit(0);
+},true);
+
+document.addEventListener("keydown",e=>{
+  const mod=e.ctrlKey||e.metaKey;
+  if(!mod)return;
+  const key=e.key.toLowerCase();
+  if(key==="z"&&!e.shiftKey){e.preventDefault();undo()}
+  else if((key==="z"&&e.shiftKey)||key==="y"){e.preventDefault();redo()}
+  else if(key==="d"){e.preventDefault();if(selectedId)duplicateNode(selectedId)}
+  else if(key==="c"&&!e.target.matches("input,textarea,select")){e.preventDefault();copySelectedNode()}
+  else if(key==="v"&&!e.target.matches("input,textarea,select")){e.preventDefault();pasteNode(viewportCenterPoint(),{center:false})}
+  else if(key==="f"){e.preventDefault();$("#searchInput").focus();$("#searchInput").select()}
+});
+window.addEventListener("beforeunload",e=>{
+  if(updateDirtyStatus()){
+    e.preventDefault();
+    e.returnValue="";
+  }
+});
+
+function saveRecovery(){
+  if(!episode||!updateDirtyStatus())return;
+  const payload={version:2,timestamp:Date.now(),dirty:true,episode:clone(episode),positions:clone(positions),pan:clone(pan),scale,selectedId};
+  try{localStorage.setItem(RECOVERY_KEY,JSON.stringify(payload))}catch{}
+}
+function clearRecovery(){try{localStorage.removeItem(RECOVERY_KEY)}catch{}}
+function hideRecoveryBanner(){$("#recoveryBanner").hidden=true;}
+function offerRecovery(){
+  hideRecoveryBanner();
+  let data=null;try{data=JSON.parse(localStorage.getItem(RECOVERY_KEY)||"null")}catch{clearRecovery();return}
+  const valid=!!(data&&data.dirty===true&&data.episode&&data.episode.schema==="companion-episode-v1"&&data.episode.nodes&&typeof data.timestamp==="number");
+  if(!valid){clearRecovery();return}
+  const banner=$("#recoveryBanner");banner.hidden=false;
+  $("#restoreRecovery").onclick=e=>{
+    e.preventDefault();e.stopPropagation();
+    episode=data.episode;positions=data.positions||{};pan=data.pan||{x:0,y:0};scale=data.scale||1;selectedId=data.selectedId||episode.openingNode;
+    bindEpisodeFields();render();$("#canvas").style.transform=`translate(${pan.x}px,${pan.y}px) scale(${scale})`;resetHistory();hideRecoveryBanner();clearRecovery();setStatus("Recovered previous session");
+  };
+  $("#discardRecovery").onclick=e=>{e.preventDefault();e.stopPropagation();clearRecovery();hideRecoveryBanner();setStatus("Recovery discarded")};
+}
+setInterval(saveRecovery,5000);
+
+function setupCollapsibleSections(){
+  const setup=(title,targets,key)=>{
+    if(!title||!targets.length)return;
+    title.classList.add("collapsible");
+    const apply=collapsed=>{
+      title.classList.toggle("collapsed",collapsed);
+      targets.forEach(el=>el.classList.toggle("collapsed-item",collapsed));
+      localStorage.setItem(key,collapsed?"1":"0");
+    };
+    title.onclick=e=>{e.stopPropagation();apply(!title.classList.contains("collapsed"))};
+    if(localStorage.getItem(key)==="1")apply(true);
+  };
+  document.querySelectorAll("#sidebar > .section-title").forEach((title,index)=>{
+    const items=[];let el=title.nextElementSibling;
+    while(el&&!el.matches("#sidebar > .section-title")){if(el.classList.contains("sep"))break;items.push(el);el=el.nextElementSibling}
+    setup(title,items,`episodeStudio.sidebar.section.${index}`);
+  });
+  const choicesTitle=document.querySelector("#conversationFields .row .section-title");
+  setup(choicesTitle,[$("#choices")].filter(Boolean),"episodeStudio.inspector.choices");
+  const reqTitle=document.querySelector("#conversationFields .requirement-title");
+  setup(reqTitle,[$("#choiceRequirementContext"),$("#selectedChoiceRequiresBuilder")].filter(Boolean),"episodeStudio.inspector.choiceRequirements");
+}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function attr(s){return escapeHtml(s)}
+setupPanelResizers();
+setupValidationResizer();
+setupCollapsibleSections();
+episode=freshEpisode();positions=defaultPositions();selectedId="opening";bindEpisodeFields();render();setTimeout(()=>{autoArrange();resetHistory({markSaved:true});offerRecovery();},0);
+</script>
+</body>
+</html>
