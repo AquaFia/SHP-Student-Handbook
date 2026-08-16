@@ -4,7 +4,9 @@
 <head>
 <script>
 (() => {
-  const characterFolder = new URLSearchParams(location.search).get("character");
+  const characterFolder =
+    new URLSearchParams(location.search).get("character");
+
   if (!characterFolder) return;
 
   if (!/^[A-Za-z0-9_-]+$/.test(characterFolder)) {
