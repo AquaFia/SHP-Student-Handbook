@@ -9,6 +9,14 @@
       "enabled": true
     },
     {
+      "id": "aria-matsuda-2",
+      "name": "Aria Matsuda 2.0",
+      "subtitle": "Ultimate Robotics Engineer",
+      "file": ".companions/shared/aria_framework.html?character=aria 2.0",
+      "portrait": "./companions/aria 2.0/portraits/aria_fear.webp",
+      "enabled": true
+    },
+    {
       "id": "jacey-cosmo",
       "name": "Jacey Cosmo",
       "subtitle": "Ultimate Cryptologist",
