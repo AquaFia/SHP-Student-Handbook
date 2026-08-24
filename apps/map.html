@@ -145,6 +145,7 @@ function postToFloor(type,extra={}){if(!frame.contentWindow)return;frame.content
 // Restored M.S.8/M.S.9 launcher bridge. Keep floor modules layout-only; the shell owns room launching.
 const ACTIVE_ROOM_LAUNCHERS=Object.freeze({
   'Lunch Room':{roomId:'cafeteria',label:'Enter 3D Cafeteria'},
+  'Aria':{roomId:'aria-dorm',label:'Visit Dorm'},
   'Jacey':{roomId:'jacey-dorm',label:'Visit Dorm'}
 });
 function activeRoomLauncher(r){return r&&ACTIVE_ROOM_LAUNCHERS[r.name]||null;}
