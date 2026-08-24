@@ -141,17 +141,32 @@ for (const hall of data.corridors) {
 }
 
 // Exterior walls follow the exact union outline of those rectangles.
-const outline = data.outline.map(([x,y]) => mapToWorld(x,y));
-for(let i=0;i<outline.length;i++){
-  const a=outline[i], b=outline[(i+1)%outline.length];
+// The south wall of the main dorm hall is split around the stairwell opening
+// directly opposite Tyler's door, so the stairs are actually visible from the hall.
+function addWallSegment(mx1,my1,mx2,my2){
+  const a=mapToWorld(mx1,my1), b=mapToWorld(mx2,my2);
   const dx=b.x-a.x, dz=b.z-a.z;
-  const length=Math.hypot(dx,dz), cx=(a.x+b.x)/2, cz=(a.z+b.z)/2;
+  const length=Math.hypot(dx,dz);
+  if(length<.02)return;
+  const cx=(a.x+b.x)/2, cz=(a.z+b.z)/2;
   const wall=box(length,.001,.001,wallMaterialFor(length),cx,data.height/2,cz);
   wall.geometry.dispose();
   wall.geometry=new THREE.BoxGeometry(length,data.height,.18);
   wall.rotation.y=-Math.atan2(dz,dx);
   const trim=box(length,.22,.10,trimMat,cx,.12,cz);
   trim.rotation.y=wall.rotation.y;
+}
+for(let i=0;i<data.outline.length;i++){
+  const [ax,ay]=data.outline[i], [bx,by]=data.outline[(i+1)%data.outline.length];
+  const isStairWall=Math.abs(ay-data.stairs.y)<.001 && Math.abs(by-data.stairs.y)<.001;
+  if(isStairWall){
+    const lo=Math.min(ax,bx), hi=Math.max(ax,bx);
+    const sx=data.stairs.x, ex=data.stairs.x+data.stairs.w;
+    if(lo<sx)addWallSegment(lo,ay,Math.min(sx,hi),ay);
+    if(hi>ex)addWallSegment(Math.max(ex,lo),ay,hi,ay);
+  }else{
+    addWallSegment(ax,ay,bx,by);
+  }
 }
 
 // Ceiling lights distributed along each branch.
@@ -254,19 +269,33 @@ for(const room of data.rooms){
   doors.push({room,position:new THREE.Vector3(inside.x,1.5,inside.z)});
 }
 
-// Stairs begin flush with the lower wall and descend away from the hallway.
-// Each successive tread is lower, so the visible run goes downward rather than up.
-const stairCount=7;
+// Dorm-wing stairwell: centered directly across from Tyler's dorm door.
+// The wall is open here and the treads descend below hallway floor level.
+const stairCount=8;
 const stairDepth=(data.stairs.h*S)/stairCount;
-const stairStart=mapToWorld(data.stairs.x+data.stairs.w/2,data.stairs.y);
+const stairCenterX=data.stairs.x+data.stairs.w/2;
+const stairStart=mapToWorld(stairCenterX,data.stairs.y);
 for(let i=0;i<stairCount;i++){
-  const treadHeight=Math.max(.08,.68-i*.09);
   const mapY=data.stairs.y+(i+.5)*(data.stairs.h/stairCount);
-  const p=mapToWorld(data.stairs.x+data.stairs.w/2,mapY);
-  box(data.stairs.w*S,treadHeight,stairDepth,stairMat,p.x,treadHeight/2-.02,p.z);
+  const p=mapToWorld(stairCenterX,mapY);
+  const topY=-i*.12;
+  const treadHeight=.16;
+  box(data.stairs.w*S,treadHeight,stairDepth+.025,stairMat,p.x,topY-treadHeight/2,p.z);
 }
+// Cheap stairwell enclosure: two side walls and a dark lower landing/back wall.
+const stairMid=mapToWorld(stairCenterX,data.stairs.y+data.stairs.h/2);
+const stairLeft=mapToWorld(data.stairs.x,data.stairs.y+data.stairs.h/2);
+const stairRight=mapToWorld(data.stairs.x+data.stairs.w,data.stairs.y+data.stairs.h/2);
+const stairRun=data.stairs.h*S;
+const stairWallH=data.height+1.4;
+for(const side of [stairLeft,stairRight]){
+  box(.16,stairWallH,stairRun,wallMaterialFor(stairRun),side.x,.7,stairMid.z);
+}
+const stairBack=mapToWorld(stairCenterX,data.stairs.y+data.stairs.h);
+box(data.stairs.w*S,stairWallH,.16,wallMaterialFor(data.stairs.w*S),stairBack.x,.7,stairBack.z);
+const lowerLanding=box(data.stairs.w*S,.12,1.3*S,stairMat,stairBack.x,-.92,stairBack.z-.65*S);
 const stairSign=new THREE.Mesh(new THREE.PlaneGeometry(2.2,.55),new THREE.MeshBasicMaterial({map:labelTexture('STAIRS DOWN')}));
-stairSign.position.set(stairStart.x,2.25,stairStart.z-.08);
+stairSign.position.set(stairStart.x,2.25,stairStart.z-.10);
 stairSign.rotation.y=Math.PI;
 scene.add(stairSign);
 
@@ -318,8 +347,19 @@ document.getElementById('leave').onclick=leaveRoom;
 window.addEventListener('message',event=>{if(event.data?.type==='shp:explorer-leave-room')leaveRoom()});
 function openRoom(room){
   roomOpen=true;controls.unlock();menu.classList.add('hidden');sceneOverlay.classList.add('open');
-  if(room.sceneHtml){const frame=document.createElement('iframe');frame.className='room-frame';frame.src=room.sceneHtml;frame.title=`${room.name}'s dorm room`;frame.setAttribute('allow','fullscreen');sceneBody.replaceChildren(frame);}
-  else sceneBody.innerHTML=`<div class="placeholder-room"><div><h2>${room.name}'s Dorm</h2><p>No interactive room layout exists for this student in the source map yet.</p></div></div>`;
+  const destination=room.entry||room.sceneHtml||null;
+  if(destination){
+    const frame=document.createElement('iframe');
+    frame.className='room-frame';
+    const separator=destination.includes('?')?'&':'?';
+    frame.src=`${destination}${separator}mode=explorer`;
+    frame.title=`${room.name}'s dorm room`;
+    frame.dataset.roomId=room.roomId||room.id||'';
+    frame.setAttribute('allow','fullscreen');
+    sceneBody.replaceChildren(frame);
+  }else{
+    sceneBody.innerHTML=`<div class="placeholder-room"><div><h2>${room.name}'s Dorm</h2><p>No interactive room layout exists for this student in the room registry yet.</p></div></div>`;
+  }
 }
 
 function drawMinimap(){

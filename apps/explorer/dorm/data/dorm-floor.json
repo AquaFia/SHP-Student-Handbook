@@ -71,9 +71,9 @@
     ]
   ],
   "stairs": {
-    "x": 94.5,
+    "x": 91.5,
     "y": 80,
-    "w": 5.5,
+    "w": 7.5,
     "h": 10
   },
   "rooms": [
@@ -83,7 +83,9 @@
       "x": 0,
       "y": 0,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "ruby-dorm",
+      "entry": "../../rooms/ruby-dorm/index.html"
     },
     {
       "id": "fate",
@@ -91,7 +93,9 @@
       "x": 11.5,
       "y": 0,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "fate-dorm",
+      "entry": "../../rooms/fate-dorm/index.html"
     },
     {
       "id": "adair",
@@ -99,7 +103,9 @@
       "x": 23,
       "y": 0,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "adair-dorm",
+      "entry": "../../rooms/adair-dorm/index.html"
     },
     {
       "id": "alice",
@@ -107,7 +113,9 @@
       "x": 34.5,
       "y": 0,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "alice-dorm",
+      "entry": "../../rooms/alice-dorm/index.html"
     },
     {
       "id": "milo",
@@ -115,7 +123,9 @@
       "x": 0,
       "y": 31,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "milo-dorm",
+      "entry": "../../rooms/milo-dorm/index.html"
     },
     {
       "id": "meggie",
@@ -123,7 +133,9 @@
       "x": 11.5,
       "y": 31,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "meggie-dorm",
+      "entry": "../../rooms/meggie-dorm/index.html"
     },
     {
       "id": "ludo",
@@ -131,7 +143,9 @@
       "x": 23,
       "y": 31,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "ludo-dorm",
+      "entry": "../../rooms/ludo-dorm/index.html"
     },
     {
       "id": "juno",
@@ -140,7 +154,9 @@
       "y": 31,
       "w": 10.5,
       "h": 18,
-      "doorSide": "top"
+      "doorSide": "top",
+      "roomId": "juno-dorm",
+      "entry": "../../rooms/juno-dorm/index.html"
     },
     {
       "id": "hikari",
@@ -148,7 +164,9 @@
       "x": 55,
       "y": 20,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "hikari-dorm",
+      "entry": "../../rooms/hikari-dorm/index.html"
     },
     {
       "id": "damian",
@@ -156,7 +174,9 @@
       "x": 0,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "damian-dorm",
+      "entry": "../../rooms/damian-dorm/index.html"
     },
     {
       "id": "aria",
@@ -164,7 +184,9 @@
       "x": 11.5,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "aria-dorm",
+      "entry": "../../rooms/aria-dorm/index.html"
     },
     {
       "id": "luxi",
@@ -172,7 +194,9 @@
       "x": 23,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "luxi-dorm",
+      "entry": "../../rooms/luxi-dorm/index.html"
     },
     {
       "id": "daika",
@@ -181,7 +205,9 @@
       "y": 50,
       "w": 10.5,
       "h": 18,
-      "doorSide": "bottom"
+      "doorSide": "bottom",
+      "roomId": "daika-dorm",
+      "entry": "../../rooms/daika-dorm/index.html"
     },
     {
       "id": "tokiko",
@@ -189,7 +215,9 @@
       "x": 56,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "tokiko-dorm",
+      "entry": "../../rooms/tokiko-dorm/index.html"
     },
     {
       "id": "kouji",
@@ -197,16 +225,19 @@
       "x": 67.5,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "kouji-dorm",
+      "entry": "../../rooms/kouji-dorm/index.html"
     },
     {
       "id": "jacey",
+      "roomId": "jacey-dorm",
       "name": "Jacey",
       "x": 79,
       "y": 50,
       "w": 10.5,
       "h": 18,
-      "sceneHtml": "rooms/original-map.html?mode=explorer"
+      "entry": "../../rooms/jacey-dorm/index.html"
     },
     {
       "id": "tyler",
@@ -214,7 +245,9 @@
       "x": 90.5,
       "y": 50,
       "w": 9.5,
-      "h": 18
+      "h": 18,
+      "roomId": "tyler-dorm",
+      "entry": "../../rooms/tyler-dorm/index.html"
     }
   ],
   "defaultSpawn": "mainEntrance",
@@ -225,7 +258,7 @@
       "yaw": 1.5708
     },
     "stairs": {
-      "mapX": 91,
+      "mapX": 95.25,
       "mapY": 75,
       "yaw": 0
     }

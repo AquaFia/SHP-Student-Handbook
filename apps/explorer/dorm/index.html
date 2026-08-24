@@ -22,7 +22,7 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
 <div id="menu" class="menu"><div class="card"><h1>Dorm Wing Explorer</h1><p>A first-person prototype shaped from the original Dorms floor layout. Walk to a door and press <strong>E</strong> to enter its 2D room scene.</p><div class="controls"><div><strong>W A S D</strong><br>Move</div><div><strong>Mouse</strong><br>Look around</div><div><strong>E</strong><br>Enter room</div><div><strong>Esc</strong><br>Release mouse</div></div><p class="mobile">This prototype is designed for a keyboard and mouse.</p><button id="start" class="primary">Enter Dorm Hallway</button></div></div>
 <div class="hud"><div class="topbar"><div class="chip">Safe Havens Peak · Dorm Wing</div><div style="display:flex;gap:8px;pointer-events:auto"><button id="handbook" class="button">Student Handbook</button><button id="backToMap" class="button">Fast Map</button><button id="reset" class="button">Reset Position</button></div></div><div class="crosshair"></div><div id="prompt" class="prompt"></div><canvas id="minimap" class="minimap" width="240" height="180" aria-label="Dorm floor minimap"></canvas><div class="notice">Esc releases mouse · H Handbook · M Fast Map · R Reset · F2 Editor</div></div>
 <div id="editor" class="editor" aria-hidden="true"><div class="editor-main"><canvas id="editorCanvas" width="1000" height="900"></canvas></div><aside class="editor-panel"><h2>Dorm Layout Editor</h2><p>Drag the green spawn or blue navigation nodes. Click an empty hallway area to add a node. All points are constrained to walkable corridors.</p><div class="editor-row"><button id="editorClose" class="button">Close (F2)</button><button id="editorReset" class="button">Reset</button></div><div class="editor-row"><button id="editorDelete" class="button">Delete Node</button><button id="editorExport" class="button">Export JSON</button></div><div id="editorStatus" class="editor-status">No point selected.</div><p>The export downloads a replacement <code>dorm-floor.json</code>. The browser cannot overwrite your local file automatically.</p></aside></div>
-<div id="scene" class="scene"><div class="scene-card"><div class="room-actions"><button id="leave" class="button">← Return to Hallway</button><button id="roomHandbook" class="button">Student Handbook</button></div><div id="sceneBody" style="height:100%"></div></div></div>
+<div id="scene" class="scene"><div class="scene-card"><div id="sceneBody" style="height:100%"></div></div></div>
 <script>
 (() => {
   const inHandbook=new URLSearchParams(location.search).get('mode')==='handbook' && window.parent!==window;
@@ -32,12 +32,12 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
     releaseMouse,
     openHandbook(){
       releaseMouse();
-      if(inHandbook) window.parent.postMessage({type:'shp:open-handbook-from-roaming'},'*');
+      if(inHandbook) window.parent.postMessage({type:'SHP_OPEN_HANDBOOK',preserveRoaming:true,source:'dorm-hall'},'*');
       else window.location.href='../../../index.html';
     },
     openFastMap(){
       releaseMouse();
-      if(inHandbook) window.parent.postMessage({type:'shp:exit-roaming-to-map'},'*');
+      if(inHandbook) window.parent.postMessage({type:'SHP_OPEN_MAP',floor:'Dorms',source:'dorm-hall'},'*');
       else window.location.href='../../map.html?floor=Dorms';
     }
   };
@@ -126,9 +126,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
     ]
   ],
   "stairs": {
-    "x": 94.5,
+    "x": 91.5,
     "y": 80,
-    "w": 5.5,
+    "w": 7.5,
     "h": 10
   },
   "rooms": [
@@ -138,7 +138,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 0,
       "y": 0,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "ruby-dorm",
+      "entry": "../../rooms/ruby-dorm/index.html"
     },
     {
       "id": "fate",
@@ -146,7 +148,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 11.5,
       "y": 0,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "fate-dorm",
+      "entry": "../../rooms/fate-dorm/index.html"
     },
     {
       "id": "adair",
@@ -154,7 +158,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 23,
       "y": 0,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "adair-dorm",
+      "entry": "../../rooms/adair-dorm/index.html"
     },
     {
       "id": "alice",
@@ -162,7 +168,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 34.5,
       "y": 0,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "alice-dorm",
+      "entry": "../../rooms/alice-dorm/index.html"
     },
     {
       "id": "milo",
@@ -170,7 +178,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 0,
       "y": 31,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "milo-dorm",
+      "entry": "../../rooms/milo-dorm/index.html"
     },
     {
       "id": "meggie",
@@ -178,7 +188,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 11.5,
       "y": 31,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "meggie-dorm",
+      "entry": "../../rooms/meggie-dorm/index.html"
     },
     {
       "id": "ludo",
@@ -186,7 +198,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 23,
       "y": 31,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "ludo-dorm",
+      "entry": "../../rooms/ludo-dorm/index.html"
     },
     {
       "id": "juno",
@@ -195,7 +209,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "y": 31,
       "w": 10.5,
       "h": 18,
-      "doorSide": "top"
+      "doorSide": "top",
+      "roomId": "juno-dorm",
+      "entry": "../../rooms/juno-dorm/index.html"
     },
     {
       "id": "hikari",
@@ -203,7 +219,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 55,
       "y": 20,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "hikari-dorm",
+      "entry": "../../rooms/hikari-dorm/index.html"
     },
     {
       "id": "damian",
@@ -211,7 +229,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 0,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "damian-dorm",
+      "entry": "../../rooms/damian-dorm/index.html"
     },
     {
       "id": "aria",
@@ -219,7 +239,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 11.5,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "aria-dorm",
+      "entry": "../../rooms/aria-dorm/index.html"
     },
     {
       "id": "luxi",
@@ -227,7 +249,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 23,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "luxi-dorm",
+      "entry": "../../rooms/luxi-dorm/index.html"
     },
     {
       "id": "daika",
@@ -236,7 +260,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "y": 50,
       "w": 10.5,
       "h": 18,
-      "doorSide": "bottom"
+      "doorSide": "bottom",
+      "roomId": "daika-dorm",
+      "entry": "../../rooms/daika-dorm/index.html"
     },
     {
       "id": "tokiko",
@@ -244,7 +270,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 56,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "tokiko-dorm",
+      "entry": "../../rooms/tokiko-dorm/index.html"
     },
     {
       "id": "kouji",
@@ -252,16 +280,19 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 67.5,
       "y": 50,
       "w": 10.5,
-      "h": 18
+      "h": 18,
+      "roomId": "kouji-dorm",
+      "entry": "../../rooms/kouji-dorm/index.html"
     },
     {
       "id": "jacey",
+      "roomId": "jacey-dorm",
       "name": "Jacey",
       "x": 79,
       "y": 50,
       "w": 10.5,
       "h": 18,
-      "sceneHtml": "rooms/original-map.html?mode=explorer"
+      "entry": "../../rooms/jacey-dorm/index.html"
     },
     {
       "id": "tyler",
@@ -269,7 +300,9 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "x": 90.5,
       "y": 50,
       "w": 9.5,
-      "h": 18
+      "h": 18,
+      "roomId": "tyler-dorm",
+      "entry": "../../rooms/tyler-dorm/index.html"
     }
   ],
   "defaultSpawn": "mainEntrance",
@@ -280,7 +313,7 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
       "yaw": 1.5708
     },
     "stairs": {
-      "mapX": 91,
+      "mapX": 95.25,
       "mapY": 75,
       "yaw": 0
     }
@@ -328,7 +361,6 @@ canvas{display:block;width:100%;height:100%}.hud{position:fixed;inset:0;pointer-
     }
   ]
 }
-
 </script>
 <script type="module">
 import * as THREE from 'three';
@@ -365,6 +397,10 @@ const miniCtx = minimap.getContext('2d');
 const keys = new Set();
 let activeDoor = null;
 let roomOpen = false;
+// Pointer Lock cannot be reacquired from a postMessage-driven room return because
+// browsers require a fresh user gesture. Allow WASD to resume until the player
+// clicks the hallway and Pointer Lock is captured again.
+let roomReturnKeyboardResume = false;
 let hasEnteredHall = false;
 const STATE_KEY='shpDormExplorerStateV4';
 
@@ -382,7 +418,8 @@ function restorePosition() {
   } catch {}
   resetPosition();
 }
-restorePosition();
+const requestedEntrySpawn=new URLSearchParams(location.search).get('shpSpawn');
+if(requestedEntrySpawn && data.spawns?.[requestedEntrySpawn])setSpawnFromData();else restorePosition();
 
 scene.add(new THREE.HemisphereLight(0xb9e4ff, 0x24303b, 1.8));
 const hallKeyLight = new THREE.DirectionalLight(0xfff2cf, 1.15);
@@ -485,17 +522,32 @@ for (const hall of data.corridors) {
 }
 
 // Exterior walls follow the exact union outline of those rectangles.
-const outline = data.outline.map(([x,y]) => mapToWorld(x,y));
-for(let i=0;i<outline.length;i++){
-  const a=outline[i], b=outline[(i+1)%outline.length];
+// The south wall of the main dorm hall is split around the stairwell opening
+// directly opposite Tyler's door, so the stairs are actually visible from the hall.
+function addWallSegment(mx1,my1,mx2,my2){
+  const a=mapToWorld(mx1,my1), b=mapToWorld(mx2,my2);
   const dx=b.x-a.x, dz=b.z-a.z;
-  const length=Math.hypot(dx,dz), cx=(a.x+b.x)/2, cz=(a.z+b.z)/2;
+  const length=Math.hypot(dx,dz);
+  if(length<.02)return;
+  const cx=(a.x+b.x)/2, cz=(a.z+b.z)/2;
   const wall=box(length,.001,.001,wallMaterialFor(length),cx,data.height/2,cz);
   wall.geometry.dispose();
   wall.geometry=new THREE.BoxGeometry(length,data.height,.18);
   wall.rotation.y=-Math.atan2(dz,dx);
   const trim=box(length,.22,.10,trimMat,cx,.12,cz);
   trim.rotation.y=wall.rotation.y;
+}
+for(let i=0;i<data.outline.length;i++){
+  const [ax,ay]=data.outline[i], [bx,by]=data.outline[(i+1)%data.outline.length];
+  const isStairWall=Math.abs(ay-data.stairs.y)<.001 && Math.abs(by-data.stairs.y)<.001;
+  if(isStairWall){
+    const lo=Math.min(ax,bx), hi=Math.max(ax,bx);
+    const sx=data.stairs.x, ex=data.stairs.x+data.stairs.w;
+    if(lo<sx)addWallSegment(lo,ay,Math.min(sx,hi),ay);
+    if(hi>ex)addWallSegment(Math.max(ex,lo),ay,hi,ay);
+  }else{
+    addWallSegment(ax,ay,bx,by);
+  }
 }
 
 // Ceiling lights distributed along each branch.
@@ -598,21 +650,38 @@ for(const room of data.rooms){
   doors.push({room,position:new THREE.Vector3(inside.x,1.5,inside.z)});
 }
 
-// Stairs begin flush with the lower wall and descend away from the hallway.
-// Each successive tread is lower, so the visible run goes downward rather than up.
-const stairCount=7;
+// Dorm-wing stairwell: centered directly across from Tyler's dorm door.
+// The wall is open here and the treads descend below hallway floor level.
+const stairCount=8;
 const stairDepth=(data.stairs.h*S)/stairCount;
-const stairStart=mapToWorld(data.stairs.x+data.stairs.w/2,data.stairs.y);
+const stairCenterX=data.stairs.x+data.stairs.w/2;
+const stairStart=mapToWorld(stairCenterX,data.stairs.y);
 for(let i=0;i<stairCount;i++){
-  const treadHeight=Math.max(.08,.68-i*.09);
   const mapY=data.stairs.y+(i+.5)*(data.stairs.h/stairCount);
-  const p=mapToWorld(data.stairs.x+data.stairs.w/2,mapY);
-  box(data.stairs.w*S,treadHeight,stairDepth,stairMat,p.x,treadHeight/2-.02,p.z);
+  const p=mapToWorld(stairCenterX,mapY);
+  const topY=-i*.12;
+  const treadHeight=.16;
+  box(data.stairs.w*S,treadHeight,stairDepth+.025,stairMat,p.x,topY-treadHeight/2,p.z);
 }
+// Cheap stairwell enclosure: two side walls and a dark lower landing/back wall.
+const stairMid=mapToWorld(stairCenterX,data.stairs.y+data.stairs.h/2);
+const stairLeft=mapToWorld(data.stairs.x,data.stairs.y+data.stairs.h/2);
+const stairRight=mapToWorld(data.stairs.x+data.stairs.w,data.stairs.y+data.stairs.h/2);
+const stairRun=data.stairs.h*S;
+const stairWallH=data.height+1.4;
+for(const side of [stairLeft,stairRight]){
+  box(.16,stairWallH,stairRun,wallMaterialFor(stairRun),side.x,.7,stairMid.z);
+}
+const stairBack=mapToWorld(stairCenterX,data.stairs.y+data.stairs.h);
+box(data.stairs.w*S,stairWallH,.16,wallMaterialFor(data.stairs.w*S),stairBack.x,.7,stairBack.z);
+const lowerLanding=box(data.stairs.w*S,.12,1.3*S,stairMat,stairBack.x,-.92,stairBack.z-.65*S);
 const stairSign=new THREE.Mesh(new THREE.PlaneGeometry(2.2,.55),new THREE.MeshBasicMaterial({map:labelTexture('STAIRS DOWN')}));
-stairSign.position.set(stairStart.x,2.25,stairStart.z-.08);
+stairSign.position.set(stairStart.x,2.25,stairStart.z-.10);
 stairSign.rotation.y=Math.PI;
 scene.add(stairSign);
+const stairTransitionPoint=mapToWorld(stairCenterX,data.stairs.y-1.25);
+let stairTransitionReady=false;
+function openCafeteriaFromDormStairs(){openRoom({id:'cafeteria',roomId:'cafeteria',name:'Cafeteria',entry:'../../rooms/cafeteria/index.html',spawnId:'dorm-stairs'});}
 
 const move={speed:5.4,radius:.42};
 function mapPointInCorridor(x,y){
@@ -629,9 +698,12 @@ function insideCorridor(pos){
   ];
   return samples.every(([dx,dy])=>mapPointInCorridor(m.x+dx,m.y+dy));
 }
-window.addEventListener('keydown',e=>{keys.add(e.code);if(e.code==='KeyE'&&activeDoor&&!roomOpen)openRoom(activeDoor.room)});
+window.addEventListener('keydown',e=>{keys.add(e.code);if(e.code==='KeyE'&&!roomOpen){if(activeDoor)openRoom(activeDoor.room);else if(stairTransitionReady)openCafeteriaFromDormStairs();}});
 window.addEventListener('keyup',e=>keys.delete(e.code));
-controls.addEventListener('lock',()=>menu.classList.add('hidden'));
+controls.addEventListener('lock',()=>{
+  roomReturnKeyboardResume=false;
+  menu.classList.add('hidden');
+});
 controls.addEventListener('unlock',()=>{
   // The entry card is a one-time start screen. After the player has entered,
   // Esc should expose the clickable HUD instead of covering it again.
@@ -670,14 +742,25 @@ function leaveRoom({relock=true}={}){
   roomOpen=false;
   sceneOverlay.classList.remove('open');
   sceneBody.innerHTML='';
-  if(relock){ try{controls.lock();}catch(_){} }
+  // A room-return message is not a valid Pointer Lock user gesture. Resume
+  // keyboard movement immediately and let the next hallway click restore
+  // mouse-look normally. Handbook exits intentionally remain paused/unlocked.
+  roomReturnKeyboardResume=!!relock;
 }
-document.getElementById('leave').onclick=()=>leaveRoom({relock:true});
-document.getElementById('roomHandbook').onclick=()=>{
-  leaveRoom({relock:false});
-  window.SHPDormExplorerBridge.openHandbook();
-};
-window.addEventListener('message',event=>{if(event.data?.type==='shp:explorer-leave-room')leaveRoom({relock:true})});
+window.addEventListener('message',event=>{
+  const msg=event.data;
+  if(!msg||typeof msg!=='object')return;
+  if((msg.type==='SHP_RETURN_PREVIOUS' || msg.type==='shp:room-return') && msg.context?.returnTarget==='hallway'){
+    leaveRoom({relock:true});
+  }
+  if(msg.type==='SHP_OPEN_HANDBOOK' || msg.type==='shp:room-open-handbook'){
+    leaveRoom({relock:false});
+    window.SHPDormExplorerBridge.openHandbook();
+  }
+  if(msg.type==='SHP_OPEN_LOCATION' && msg.locationId==='dorm-hall'){leaveRoom({relock:true});const sp=data.spawns?.[msg.spawnId||'stairs']||data.spawns?.stairs;if(sp){const p=mapToWorld(sp.mapX,sp.mapY);camera.position.set(p.x,1.7,p.z);camera.rotation.set(0,sp.yaw||0,0);}}
+  // Generic pre-M.S.8 compatibility alias retained for non-migrated room modules.
+  if(msg.type==='shp:explorer-leave-room')leaveRoom({relock:true});
+});
 
 // Keyboard fallbacks are useful while Pointer Lock is active because the cursor
 // cannot target HUD buttons until Esc releases it.
@@ -689,8 +772,26 @@ window.addEventListener('keydown',event=>{
 });
 function openRoom(room){
   roomOpen=true;controls.unlock();menu.classList.add('hidden');sceneOverlay.classList.add('open');
-  if(room.sceneHtml){const frame=document.createElement('iframe');frame.className='room-frame';frame.src=room.sceneHtml;frame.title=`${room.name}'s dorm room`;frame.setAttribute('allow','fullscreen');sceneBody.replaceChildren(frame);}
-  else sceneBody.innerHTML=`<div class="placeholder-room"><div><h2>${room.name}'s Dorm</h2><p>No interactive room layout exists for this student in the source map yet.</p></div></div>`;
+  const destination=room.entry||room.sceneHtml||null;
+  if(destination){
+    const frame=document.createElement('iframe');
+    frame.className='room-frame';
+    const separator=destination.includes('?')?'&':'?';
+    const q=new URLSearchParams({
+      shpSource:'explorer',
+      shpReturn:'hallway',
+      shpFloor:'Dorms',
+      shpLocation:'dorm-hall'
+    });
+    if(room.spawnId)q.set('shpSpawn',room.spawnId);
+    frame.src=`${destination}${separator}${q.toString()}`;
+    frame.title=`${room.name}'s dorm room`;
+    frame.dataset.roomId=room.roomId||room.id||'';
+    frame.setAttribute('allow','fullscreen');
+    sceneBody.replaceChildren(frame);
+  }else{
+    sceneBody.innerHTML=`<div class="placeholder-room"><div><h2>${room.name}'s Dorm</h2><p>No interactive room layout exists for this student in the room registry yet.</p></div></div>`;
+  }
 }
 
 function drawMinimap(){
@@ -716,8 +817,9 @@ let draggingPoint = null;
 const originalEditorData = JSON.parse(JSON.stringify({spawns:data.spawns,navNodes:data.navNodes}));
 
 function activeSpawn(){
-  const key=data.defaultSpawn || Object.keys(data.spawns||{})[0];
-  return {key, value:data.spawns[key]};
+  const requested=new URLSearchParams(location.search).get('shpSpawn');
+  const key=(requested&&data.spawns?.[requested])?requested:(data.defaultSpawn||Object.keys(data.spawns||{})[0]);
+  return {key,value:data.spawns[key]};
 }
 function validMapPoint(x,y,pad=1){
   return data.corridors.some(h=>x>=h.x+pad&&x<=h.x+h.w-pad&&y>=h.y+pad&&y<=h.y+h.h-pad);
@@ -825,7 +927,7 @@ function animate(){
   const dt=Math.min(clock.getDelta(),.05);
   minimapAccumulator+=dt;
   doorAccumulator+=dt;
-  if(controls.isLocked&&!roomOpen){
+  if((controls.isLocked||roomReturnKeyboardResume)&&!roomOpen){
     previousPlayerPosition.copy(camera.position);
     const amount=move.speed*dt;
     if(keys.has('KeyW'))controls.moveForward(amount);
@@ -845,10 +947,11 @@ function animate(){
         const distSq=camera.position.distanceToSquared(d.position);
         if(distSq<bestSq){bestSq=distSq;activeDoor=d;}
       }
-      if(activeDoor){
-        prompt.textContent=`[ E ] Enter ${activeDoor.room.name}'s Dorm`;
-        prompt.classList.add('show');
-      }else prompt.classList.remove('show');
+      const stairDx=camera.position.x-stairTransitionPoint.x,stairDz=camera.position.z-stairTransitionPoint.z;
+      stairTransitionReady=Math.hypot(stairDx,stairDz)<1.65;
+      if(activeDoor){prompt.textContent=`[ E ] Enter ${activeDoor.room.name}'s Dorm`;prompt.classList.add('show');}
+      else if(stairTransitionReady){prompt.textContent='[ E ] Go Down to Cafeteria';prompt.classList.add('show');}
+      else prompt.classList.remove('show');
     }
   }else prompt.classList.remove('show');
 
