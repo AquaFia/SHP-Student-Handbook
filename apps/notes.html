@@ -633,10 +633,11 @@ document.querySelector('.handbook-back')?.addEventListener('click',()=>{
   const button = document.getElementById('openAriaInvestigation');
   if (!button) return;
 
-  // notes.html lives in /apps/, while the companion framework lives in /companions/.
-  // mode=investigation requests Aria's special Investigation Mode on startup.
+  // notes.html and the companions folder both live under /apps/.
+  // Aria's current GitHub entry file is companions/aria/aria_companion.html.
+  // mode=investigation requests Investigation Mode on startup.
   const ariaInvestigationFile =
-  './companions/shared/aria_framework.html?character=aria_2_0&mode=investigation';
+  './companions/aria/aria_companion.html?mode=investigation';
 
 document.getElementById('openAriaInvestigation').addEventListener('click', () => {
   window.location.href = ariaInvestigationFile;
