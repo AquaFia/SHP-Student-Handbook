@@ -615,7 +615,7 @@ body{font-size:17px;}
     <p>Personal notes, clues, evidence, theories, and active investigation records are handled through Aria's Investigation Mode.</p>
     <button class="aria-investigation-button" id="openAriaInvestigation" type="button">
       <span class="aria-investigation-button__icon">⌕</span>
-      <span><strong>Open Aria Investigation Mode</strong><small>Aria Matsuda 2.0 · Ultimate Robotics Engineer</small></span>
+      <span><strong>Open Aria Investigation Mode</strong><small>Aria Matsuda · Ultimate Robotics Engineer</small></span>
     </button>
   </div>
 </section>
@@ -636,7 +636,7 @@ document.querySelector('.handbook-back')?.addEventListener('click',()=>{
   // notes.html lives in /apps/, while the companion framework lives in /companions/.
   // mode=investigation requests Aria's special Investigation Mode on startup.
   const ariaInvestigationUrl =
-    '../companions/shared/aria_framework.html?character=aria_2_0&mode=investigation';
+    './companions/shared/aria_framework.html?character=aria_2_0';
 
   button.addEventListener('click', () => {
     // When the handbook is running inside its shell iframe, replace the app
