@@ -352,40 +352,36 @@ function openHandbook(){
   },reduced?490:3970);
 }
 
-function enterRoom(){
-  if(busy || !frame.contentWindow)return;
-  busy=true;
-  transition.className='room-enter';
+function normalizeRoomEntryContext(value={}){
+  const ctx=value && typeof value==='object' ? value : {};
+  return {
+    source: ctx.source || 'map',
+    returnTarget: ctx.returnTarget || (ctx.source==='explorer' ? 'hallway' : 'map'),
+    floor: ctx.floor || null,
+    locationId: ctx.locationId || null,
+    spawnId: ctx.spawnId || null
+  };
+}
+function roomEntryUrl(roomId,context={}){
+  const ctx=normalizeRoomEntryContext(context);
+  const q=new URLSearchParams();
+  q.set('shpSource',ctx.source||'map');q.set('shpReturn',ctx.returnTarget||'map');
+  if(ctx.floor)q.set('shpFloor',ctx.floor);if(ctx.locationId)q.set('shpLocation',ctx.locationId);if(ctx.spawnId)q.set('shpSpawn',ctx.spawnId);
+  return `apps/rooms/${encodeURIComponent(roomId)}/index.html?${q.toString()}`;
+}
+function enterRoom(roomId,context={source:'map'}){
+  if(busy || !roomId)return;
+  const ctx=normalizeRoomEntryContext(context);
+  busy=true;transition.className='room-enter';
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  setTimeout(()=>{
-    frame.contentWindow.postMessage({type:'shp:show-jacey-room'},'*');
-  },reduced?120:520);
-  setTimeout(()=>{
-    transition.className='ready';
-    busy=false;
-  },reduced?490:3070);
+  setTimeout(()=>{frame.src=roomEntryUrl(roomId,ctx);frame.title=roomId;viewer.classList.add('open');},reduced?120:520);
+  setTimeout(()=>{transition.className='ready';busy=false;},reduced?490:3070);
 }
 
-function exitRoom(){
-  if(busy || !frame.contentWindow)return;
-  busy=true;
-  transition.className='room-exit';
-  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  setTimeout(()=>{
-    frame.contentWindow.postMessage({type:'shp:show-dorm-map'},'*');
-  },reduced?470:5380);
-  setTimeout(()=>{
-    transition.className='ready';
-    busy=false;
-  },reduced?590:5670);
-}
-
-function enterDormExplorer(){
-  roamingSession=true;
-  returnToRoam.classList.remove('visible');
-  frame.src='apps/explorer/dorm/index.html?mode=handbook';
-  frame.title='3D Dorm Hallway';
-  viewer.classList.add('open');
+function enterDormExplorer(options={}){
+  roamingSession=true;returnToRoam.classList.remove('visible');
+  const q=new URLSearchParams({mode:'handbook'});if(options.spawnId)q.set('shpSpawn',options.spawnId);if(options.source)q.set('shpSource',options.source);
+  frame.src=`apps/explorer/dorm/index.html?${q.toString()}`;frame.title='3D Dorm Hallway';viewer.classList.add('open');
 }
 
 function showHandbookOverRoaming(){
@@ -406,6 +402,19 @@ window.addEventListener('message',event=>{
   if(!msg || typeof msg!=='object')return;
   if(event.source!==frame.contentWindow)return;
 
+  if(msg.type==='SHP_OPEN_HANDBOOK'){
+    if(msg.preserveRoaming && roamingSession){
+      showHandbookOverRoaming();
+    }else{
+      roamingSession=false;
+      returnToRoam.classList.remove('visible');
+      viewer.classList.remove('open');
+      frame.src='about:blank';
+    }
+    return;
+  }
+
+  // M.S.7 and earlier compatibility alias.
   if(msg.type==='shp:return-handbook'){
     roamingSession=false;
     returnToRoam.classList.remove('visible');
@@ -418,23 +427,37 @@ window.addEventListener('message',event=>{
     enterDormExplorer();
     return;
   }
+  if(msg.type==='SHP_OPEN_LOCATION' && msg.locationId==='dorm-hall'){enterDormExplorer({spawnId:msg.spawnId||'stairs',source:msg.source||'room'});return;}
 
   if(msg.type==='shp:open-handbook-from-roaming'){
     showHandbookOverRoaming();
     return;
   }
 
-  if(msg.type==='shp:exit-roaming-to-map'){
+  if(msg.type==='SHP_RETURN_PREVIOUS' || msg.type==='shp:room-return'){
+    const ctx=normalizeRoomEntryContext(msg.context||{});
+    if(ctx.returnTarget==='hallway'){
+      enterDormExplorer({spawnId:ctx.spawnId||null,source:'room'});
+    }else{
+      roamingSession=false;returnToRoam.classList.remove('visible');
+      const targetFloor=ctx.floor||'1F';
+      frame.src=`apps/map.html?mode=handbook&floor=${encodeURIComponent(targetFloor)}`;
+      frame.title='School Map';viewer.classList.add('open');
+    }
+    return;
+  }
+
+  if(msg.type==='SHP_OPEN_MAP' || msg.type==='shp:exit-roaming-to-map'){
     roamingSession=false;
     returnToRoam.classList.remove('visible');
-    frame.src='apps/map.html?mode=handbook&floor=Dorms';
+    const targetFloor=msg.floor || msg.context?.floor || '1F';
+    frame.src=`apps/map.html?mode=handbook&floor=${encodeURIComponent(targetFloor)}`;
     frame.title='School Map';
     viewer.classList.add('open');
     return;
   }
 
-  if(msg.type==='shp:request-enter-jacey') enterRoom();
-  if(msg.type==='shp:request-exit-jacey') exitRoom();
+  if((msg.type==='SHP_OPEN_ROOM' || msg.type==='shp:open-room') && msg.roomId) enterRoom(msg.roomId,msg.context||{source:msg.source||'map'});
 });
 
 
