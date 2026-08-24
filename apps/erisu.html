@@ -5,589 +5,512 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ERiSU.EXE</title>
 <style>
-:root{--gold:#d7b56d;--gold2:#f4d78f;--green:#2f8f63;--green2:#78d8a2;--ink:#05090a}
-*{box-sizing:border-box}
-html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#05090a;color:#eef2eb;font-family:Arial,Helvetica,sans-serif}
-.app-page{height:100%;display:flex;flex-direction:column;background:radial-gradient(circle at 85% 5%,rgba(47,143,99,.16),transparent 30%),linear-gradient(135deg,#101719,#05090a 65%)}
-.app-header{height:86px;flex:0 0 auto;padding:20px 28px;border-bottom:1px solid rgba(215,181,109,.24);display:flex;align-items:center;gap:16px}
-.app-header .icon{width:48px;height:48px;border:1px solid rgba(215,181,109,.55);border-radius:13px;display:grid;place-items:center;color:var(--gold2);font-size:22px;background:rgba(35,92,58,.28)}
-.app-header h1{margin:0;color:#f5efdc;font-size:28px}
-.app-header p{margin:4px 0 0;color:rgba(230,236,227,.55);font-size:12px}
-.app-content{flex:1;min-height:0;overflow:auto;padding:24px 28px 34px;scrollbar-color:rgba(215,181,109,.45) transparent}
-.placeholder{max-width:760px;padding:22px;border:1px solid rgba(215,181,109,.22);border-radius:15px;background:rgba(255,255,255,.025)}
-.placeholder h2{color:var(--gold2);margin-top:0}
-.placeholder p{color:rgba(230,236,227,.68);line-height:1.6}
-
-
-:root {
+:root{
   --gold:#d7b56d;
   --gold2:#f4d78f;
   --green:#2f8f63;
   --green2:#78d8a2;
   --ink:#05090a;
   --panel:#0a1112;
+  --panel2:#0d1717;
+  --line:rgba(215,181,109,.22);
+  --text:#eef2eb;
+  --muted:rgba(230,236,227,.58);
+  --warn:#e5c267;
+  --danger:#d26868;
 }
 *{box-sizing:border-box}
 html,body{
   width:100%;height:100%;margin:0;overflow:hidden;
-  background:rgba(0,0,0,0)!important;
+  background:#05090a;color:var(--text);
   font-family:Arial,Helvetica,sans-serif;
 }
-body{perspective:1600px}
-.stage{position:fixed;inset:0;background:transparent;overflow:hidden}
-
-/* Opening handbook animation */
-.device{
-  position:absolute;left:50%;top:50%;
-  width:min(430px,31vw);aspect-ratio:445/770;
-  transform-origin:center;
-  animation:deviceMove 3.85s cubic-bezier(.2,.75,.18,1) both;
-}
-.device img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
-  filter:drop-shadow(0 20px 26px rgba(0,0,0,.48));
-}
-@keyframes deviceMove{
-  0%{transform:translate(calc(-50% + 48vw),calc(-50% + 72vh)) rotate(0) scale(.58)}
-  34%{transform:translate(-50%,-50%) rotate(0) scale(1)}
-  64%{transform:translate(-50%,-50%) rotate(90deg) scale(1.03)}
-  100%{transform:translate(-50%,-50%) rotate(90deg) scale(2.55)}
-}
-
-/* Power-down flash */
-.powerdown{
-  position:absolute;left:50%;top:50%;
-  width:min(88vw,1180px);height:min(72vh,690px);
-  transform:translate(-50%,-50%) scale(.86);
-  border-radius:28px;background:#000;opacity:0;
-  animation:power 4.55s linear both;
-  box-shadow:0 28px 70px rgba(0,0,0,.5);
-}
-@keyframes power{
-  0%,84%{opacity:0}
-  85%,90%{opacity:1}
-  91%,100%{opacity:0}
-}
-
-/* Landscape tablet viewport */
-.tablet{
-  position:absolute;left:50%;top:50%;
-  width:min(88vw,1180px);height:min(72vh,690px);
-  transform:translate(-50%,-50%) scale(.72);
-  opacity:0;overflow:hidden;border-radius:28px;
-  border:2px solid rgba(215,181,109,.72);
+button,input{font:inherit}
+.app-page{
+  height:100%;display:flex;flex-direction:column;
   background:
-    radial-gradient(circle at 82% 12%,rgba(52,151,97,.18),transparent 28%),
-    linear-gradient(135deg,#101719,#05090a 62%,#07110e);
-  box-shadow:
-    inset 0 0 0 2px rgba(15,20,20,.95),
-    inset 0 0 34px rgba(60,170,105,.1),
-    0 25px 70px rgba(0,0,0,.52),
-    0 0 25px rgba(69,190,117,.12);
-  animation:tabletReveal .72s 4.45s cubic-bezier(.16,.84,.24,1) forwards;
+    radial-gradient(circle at 85% 5%,rgba(47,143,99,.16),transparent 30%),
+    linear-gradient(135deg,#101719,#05090a 65%);
 }
-@keyframes tabletReveal{
-  from{opacity:0;transform:translate(-50%,-50%) scale(.72)}
-  to{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.app-header{
+  min-height:92px;flex:0 0 auto;padding:18px 26px;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:16px;
+  background:rgba(5,9,10,.84);
 }
-.tablet:before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
-  background-size:24px 24px;
+.app-header .icon{
+  width:52px;height:52px;border:1px solid rgba(215,181,109,.55);
+  border-radius:13px;display:grid;place-items:center;
+  color:var(--gold2);font-size:24px;background:rgba(35,92,58,.28);
+  box-shadow:inset 0 0 18px rgba(78,193,122,.08);
+}
+.app-header h1{margin:0;color:#f5efdc;font-size:34px;letter-spacing:.02em}
+.app-header p{margin:4px 0 0;color:var(--muted);font-size:15px}
+.handbook-back{
+  margin-left:auto;flex:0 0 auto;appearance:none;
+  border:1px solid rgba(215,181,109,.42);border-radius:10px;
+  background:rgba(6,12,12,.72);color:var(--gold2);
+  padding:12px 18px;font-size:14px;font-weight:800;cursor:pointer;
+}
+.handbook-back:hover,.handbook-back:focus-visible{
+  background:rgba(47,128,81,.18);border-color:rgba(244,215,143,.72);outline:none
 }
 
-/* Boot sequence */
-.boot{
-  position:absolute;inset:0;z-index:8;display:grid;place-items:center;
-  background:#020404;color:var(--gold2);
-  animation:bootHide .4s 6.05s forwards;
+.erisu-shell{
+  flex:1;min-height:0;
+  display:grid;grid-template-columns:245px minmax(0,1fr);
 }
-.boot-inner{text-align:center;animation:bootIn .55s 4.7s both}
-.emblem{
-  width:118px;aspect-ratio:1;border-radius:50%;
-  display:grid;place-items:center;margin:auto;
-  border:3px solid var(--gold);
-  color:var(--gold2);font-size:66px;
-  background:
-    radial-gradient(circle,#183b29 0 45%,#08110c 46% 62%,#244b34 63% 68%,#050907 69%);
-  box-shadow:0 0 28px rgba(81,210,137,.28),inset 0 0 18px rgba(255,220,145,.15);
-}
-.boot p{margin:18px 0 0;letter-spacing:.28em;font-size:12px;color:var(--green2)}
-.boot-line{width:210px;height:3px;background:#13211a;margin:18px auto 0;overflow:hidden}
-.boot-line:after{
-  content:"";display:block;height:100%;width:100%;
-  background:linear-gradient(90deg,var(--green),var(--gold2));
-  transform:translateX(-100%);animation:load 1.05s 4.85s ease forwards;
-}
-@keyframes bootIn{from{opacity:0;transform:scale(.84)}to{opacity:1;transform:scale(1)}}
-@keyframes load{to{transform:translateX(0)}}
-@keyframes bootHide{to{opacity:0;visibility:hidden;pointer-events:none}}
-
-/* Landscape UI */
-.ui{
-  position:absolute;inset:0;display:grid;
-  grid-template-columns:210px 1fr;
-  opacity:0;animation:uiIn .6s 6.1s ease forwards;
-}
-@keyframes uiIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .sidebar{
-  padding:26px 20px;border-right:1px solid rgba(215,181,109,.23);
-  background:linear-gradient(180deg,rgba(12,23,20,.95),rgba(5,9,10,.97));
-  display:flex;flex-direction:column;gap:20px;
+  min-height:0;padding:18px 14px;
+  border-right:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(8,17,15,.97),rgba(4,8,9,.99));
+  display:flex;flex-direction:column;
 }
-.school-mark{display:flex;align-items:center;gap:12px;color:var(--gold2);font-weight:800;font-size:13px;letter-spacing:.08em}
-.school-mark .seal{
-  width:42px;aspect-ratio:1;border:1px solid var(--gold);border-radius:50%;
-  display:grid;place-items:center;color:var(--gold2);background:#11261b;font-size:24px
+.system-card{
+  padding:15px;border:1px solid rgba(215,181,109,.2);border-radius:14px;
+  background:rgba(255,255,255,.025);margin-bottom:14px
 }
+.system-card .sys-title{font-size:12px;color:var(--gold2);font-weight:900;letter-spacing:.13em}
+.system-card .sys-state{
+  margin-top:9px;display:flex;align-items:center;gap:8px;
+  color:var(--green2);font-size:12px;font-weight:800
+}
+.dot{
+  width:9px;height:9px;border-radius:50%;background:var(--green2);
+  box-shadow:0 0 10px rgba(120,216,162,.75)
+}
+.sys-meta{margin-top:9px;color:rgba(230,236,227,.46);font-size:10px;line-height:1.55}
+.nav{display:grid;gap:7px}
 .nav button{
-  width:100%;padding:12px 13px;margin:4px 0;border:1px solid transparent;
-  border-radius:10px;background:transparent;color:#d9dfd9;text-align:left;cursor:pointer;
+  width:100%;appearance:none;border:1px solid transparent;border-radius:10px;
+  background:transparent;color:#dce4dc;text-align:left;padding:11px 12px;
+  cursor:pointer;font-size:13px;font-weight:800
 }
-.nav button.active,.nav button:hover{border-color:rgba(215,181,109,.35);background:rgba(52,126,84,.13);color:#fff}
-.sidebar-foot{margin-top:auto;color:var(--green2);font-size:10px;letter-spacing:.14em}
-
-.main{padding:26px 30px 24px;display:flex;flex-direction:column;min-width:0}
-.topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}
-.topbar h1{margin:0;color:#f5f0dd;font-size:clamp(24px,3vw,38px)}
-.topbar p{margin:7px 0 0;color:rgba(230,235,226,.56);font-size:13px}
-.status{color:var(--green2);font-size:11px;letter-spacing:.14em;padding-top:5px}
-
-.app-grid{
-  flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  grid-template-rows:repeat(2,minmax(0,1fr));
-  gap:16px;
+.nav button:hover,.nav button.active{
+  border-color:rgba(215,181,109,.34);
+  background:rgba(48,133,84,.13);color:#fff
 }
-.app{
-  opacity:0;transform:translateY(28px) scale(.96);
-  animation:appGlide .55s forwards;
-  appearance:none;border:1px solid rgba(215,181,109,.25);border-radius:16px;
-  background:linear-gradient(145deg,rgba(27,39,38,.98),rgba(6,10,11,.98));
-  color:#eff2eb;padding:18px;text-align:left;cursor:pointer;
-  display:flex;flex-direction:column;justify-content:space-between;min-width:0;
-  box-shadow:inset 0 0 0 1px rgba(80,180,119,.05),0 10px 24px rgba(0,0,0,.25);
-  transition:.18s ease;
-}
-.app:nth-child(1){animation-delay:6.15s} .app:nth-child(2){animation-delay:6.21s}
-.app:nth-child(3){animation-delay:6.27s} .app:nth-child(4){animation-delay:6.33s}
-.app:nth-child(5){animation-delay:6.39s} .app:nth-child(6){animation-delay:6.45s}
-.app:nth-child(7){animation-delay:6.51s} .app:nth-child(8){animation-delay:6.57s}
-@keyframes appGlide{to{opacity:1;transform:none}}
-.app:hover,.app:focus-visible{
-  transform:translateY(-4px);outline:none;border-color:rgba(244,215,143,.7);
-  box-shadow:inset 0 0 22px rgba(65,160,101,.12),0 14px 28px rgba(0,0,0,.38);
-}
-.app-icon{
-  width:54px;aspect-ratio:1;border-radius:15px;border:1px solid rgba(215,181,109,.55);
-  display:grid;place-items:center;font-size:25px;color:var(--gold2);
-  background:radial-gradient(circle at 50% 25%,rgba(65,160,101,.42),rgba(8,17,12,.95));
-}
-.app-copy strong{display:block;font-size:14px;line-height:1.15;margin-bottom:8px}
-.app-copy small{display:block;color:rgba(226,232,223,.5);font-size:10px;line-height:1.4}
-
-/* App detail panel */
-.detail{
-  position:absolute;inset:0;z-index:6;display:grid;grid-template-columns:210px 1fr;
-  background:linear-gradient(135deg,#0b1213,#050809);
-  opacity:0;transform:translateX(5%);pointer-events:none;transition:.28s ease;
-}
-.detail.open{opacity:1;transform:none;pointer-events:auto}
-.detail-side{padding:26px 20px;border-right:1px solid rgba(215,181,109,.22);background:#07100d}
-.back{
-  width:100%;padding:12px;border:1px solid rgba(215,181,109,.35);
-  background:rgba(255,255,255,.025);color:var(--gold2);border-radius:10px;cursor:pointer;text-align:left
-}
-.detail-main{padding:34px}
-.detail-head{display:flex;align-items:center;gap:18px;border-bottom:1px solid rgba(215,181,109,.24);padding-bottom:22px}
-.detail-icon{width:66px;aspect-ratio:1;border:1px solid var(--gold);border-radius:17px;display:grid;place-items:center;font-size:30px;color:var(--gold2);background:#13291d}
-.detail h2{margin:0;color:#f5f0df;font-size:32px}
-.detail p{color:rgba(229,235,225,.68);line-height:1.65;max-width:720px}
-.placeholder{margin-top:28px;padding:24px;border:1px solid rgba(215,181,109,.22);border-radius:16px;background:rgba(255,255,255,.025)}
-
-
-.detail-main{
-  overflow:auto;
-  scrollbar-width:thin;
-  scrollbar-color:rgba(215,181,109,.45) transparent;
-}
-.detail-content{padding-bottom:30px}
-.regulations-shell{margin-top:24px}
-.reg-tabs{
-  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;
-  position:sticky;top:-1px;z-index:2;padding:4px 0 10px;
-  background:linear-gradient(180deg,#0b1213 74%,rgba(11,18,19,0));
-}
-.reg-tab{
-  appearance:none;border:1px solid rgba(215,181,109,.28);
-  background:rgba(255,255,255,.025);color:#dce4dc;
-  padding:10px 14px;border-radius:10px;cursor:pointer;
-  font-size:12px;font-weight:700;letter-spacing:.03em;
-}
-.reg-tab.active,.reg-tab:hover{
-  color:#fff;border-color:rgba(244,215,143,.72);
-  background:rgba(50,132,84,.16);
-}
-.reg-panel{display:none;animation:panelIn .24s ease}
-.reg-panel.active{display:block}
-@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.reg-section-title{
-  margin:0 0 14px;color:#f4eedc;font-size:22px;
-}
-.rule-list,.procedure-list{
-  display:grid;gap:12px;margin:0;padding:0;list-style:none;
-}
-.rule-card,.phase-card,.protocol-card,.procedure-card{
-  border:1px solid rgba(215,181,109,.2);
-  border-radius:14px;background:rgba(255,255,255,.025);
-  padding:16px 18px;box-shadow:inset 0 0 18px rgba(59,143,93,.035);
-}
-.rule-card{display:grid;grid-template-columns:34px 1fr;gap:13px;align-items:start}
-.rule-number{
-  width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
-  color:var(--gold2);border:1px solid rgba(215,181,109,.55);
-  background:rgba(30,78,50,.3);font-weight:800;
-}
-.rule-card p,.phase-card p,.procedure-card p,.protocol-card p{
-  margin:0;color:rgba(230,236,227,.74);line-height:1.55;font-size:13px;
-}
-.phase-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.phase-card h3,.procedure-card h3,.protocol-card h3{
-  margin:0 0 9px;color:#f4eedc;font-size:15px;
-}
-.phase-tag{
-  display:inline-block;margin-bottom:10px;padding:5px 8px;border-radius:999px;
-  color:var(--green2);border:1px solid rgba(82,190,126,.3);
-  background:rgba(44,122,76,.12);font-size:10px;letter-spacing:.08em;
-}
-.lens-grid{
-  margin-top:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px
-}
-.lens-card{
-  border:1px solid rgba(215,181,109,.17);border-radius:12px;padding:12px;
-  background:rgba(0,0,0,.16);color:rgba(231,236,228,.7);font-size:11px;line-height:1.45
-}
-.lens-card strong{display:block;color:var(--gold2);margin-bottom:5px}
-.procedure-list{counter-reset:steps}
-.procedure-card{position:relative;padding-left:64px}
-.procedure-card:before{
-  counter-increment:steps;content:counter(steps);
-  position:absolute;left:18px;top:18px;width:30px;height:30px;border-radius:50%;
-  display:grid;place-items:center;border:1px solid rgba(215,181,109,.5);
-  color:var(--gold2);font-weight:800;background:rgba(29,75,49,.25)
-}
-.procedure-card ul,.protocol-card ul{
-  margin:10px 0 0 18px;padding:0;color:rgba(230,236,227,.68);font-size:12px;line-height:1.65
-}
-.protocol-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.reg-note{
-  margin-top:18px;padding:12px 14px;border-left:3px solid var(--green);
-  background:rgba(49,126,80,.08);color:rgba(230,236,227,.66);font-size:12px
-}
-@media(max-width:950px){
-  .phase-grid,.protocol-grid{grid-template-columns:1fr}
-  .lens-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sidebar-foot{
+  margin-top:auto;padding:12px;border-top:1px solid rgba(215,181,109,.12);
+  color:rgba(230,236,227,.42);font-size:9px;line-height:1.6;letter-spacing:.07em
 }
 
-
-/* Academic Progress Report */
-.report-shell{margin-top:24px;padding-bottom:34px}
-.report-hero{
-  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;
-  padding:20px;border:1px solid rgba(215,181,109,.28);border-radius:16px;
-  background:
-    radial-gradient(circle at 88% 10%,rgba(59,151,99,.2),transparent 30%),
-    linear-gradient(145deg,rgba(24,37,35,.98),rgba(7,11,12,.98));
+.main{
+  min-width:0;min-height:0;overflow:hidden;
+  display:flex;flex-direction:column
 }
-.report-kicker{color:var(--green2);font-size:10px;letter-spacing:.18em;font-weight:800}
-.report-hero h3{margin:7px 0 4px;color:#f5efdc;font-size:27px}
-.report-hero p{margin:3px 0;color:rgba(230,236,227,.68);font-size:12px}
-.report-badge{
-  min-width:112px;padding:14px;border:1px solid rgba(215,181,109,.48);
-  border-radius:14px;text-align:center;background:rgba(0,0,0,.2)
+.top-status{
+  flex:0 0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;padding:14px 18px;border-bottom:1px solid rgba(215,181,109,.12)
 }
-.report-badge strong{display:block;color:var(--gold2);font-size:27px}
-.report-badge span{color:rgba(229,235,226,.58);font-size:9px;letter-spacing:.12em}
-.report-meta{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px
-}
-.meta-card{
+.status-chip{
   padding:11px 12px;border:1px solid rgba(215,181,109,.16);border-radius:11px;
   background:rgba(255,255,255,.02)
 }
-.meta-card small{display:block;color:rgba(225,232,224,.45);font-size:9px;text-transform:uppercase;letter-spacing:.1em}
-.meta-card strong{display:block;margin-top:5px;color:#eef1e9;font-size:11px;line-height:1.35}
-.report-tabs{
-  display:flex;gap:8px;overflow:auto;margin:20px 0 16px;padding:3px 0 8px;
-  position:sticky;top:-1px;z-index:3;
-  background:linear-gradient(180deg,#0b1213 76%,rgba(11,18,19,0));
+.status-chip small{
+  display:block;color:rgba(230,236,227,.42);font-size:9px;
+  text-transform:uppercase;letter-spacing:.1em
 }
-.report-tab{
-  flex:0 0 auto;appearance:none;border:1px solid rgba(215,181,109,.25);
-  background:rgba(255,255,255,.025);color:#dce3dc;padding:9px 12px;border-radius:9px;
-  cursor:pointer;font-size:11px;font-weight:700
-}
-.report-tab.active,.report-tab:hover{
-  color:#fff;border-color:rgba(244,215,143,.68);background:rgba(47,128,81,.16)
-}
-.report-panel{display:none;animation:panelIn .23s ease}
-.report-panel.active{display:block}
-.report-section-title{margin:0 0 13px;color:#f4eedc;font-size:21px}
-.grade-table{
-  width:100%;border-collapse:separate;border-spacing:0 8px;font-size:11px
-}
-.grade-table th{
-  padding:0 12px 5px;text-align:left;color:rgba(227,233,225,.48);
-  font-size:9px;text-transform:uppercase;letter-spacing:.1em
-}
-.grade-table td{
-  padding:13px 12px;background:rgba(255,255,255,.025);
-  border-top:1px solid rgba(215,181,109,.16);
-  border-bottom:1px solid rgba(215,181,109,.16);
-  color:rgba(230,236,227,.72);vertical-align:top;line-height:1.5
-}
-.grade-table td:first-child{
-  border-left:1px solid rgba(215,181,109,.16);border-radius:11px 0 0 11px;
-  color:#f0f2eb;font-weight:700;width:25%
-}
-.grade-table td:nth-child(2){
-  color:var(--gold2);font-weight:900;font-size:14px;white-space:nowrap;width:9%
-}
-.grade-table td:last-child{
-  border-right:1px solid rgba(215,181,109,.16);border-radius:0 11px 11px 0
-}
-.summary-strip{
-  display:flex;justify-content:space-between;gap:14px;align-items:center;
-  margin-top:14px;padding:14px 16px;border:1px solid rgba(82,190,126,.23);
-  border-radius:12px;background:rgba(43,121,76,.08)
-}
-.summary-strip span{color:rgba(230,236,227,.62);font-size:11px}
-.summary-strip strong{color:var(--gold2);font-size:17px}
-.mentor-box,.faculty-box{
-  padding:18px;border:1px solid rgba(215,181,109,.2);border-radius:14px;
-  background:rgba(255,255,255,.025);margin-bottom:12px
-}
-.mentor-box h4,.faculty-box h4{margin:0 0 10px;color:var(--gold2);font-size:14px}
-.mentor-box p,.faculty-box p{margin:0;color:rgba(230,236,227,.7);font-size:12px;line-height:1.65}
-.compact-grid{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px
-}
-.compact-card{
-  border:1px solid rgba(215,181,109,.17);border-radius:14px;
-  background:rgba(255,255,255,.022);padding:15px
-}
-.compact-card h4{margin:0 0 11px;color:#f4eedc;font-size:15px}
-.metric-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.metric-list li{
-  display:flex;justify-content:space-between;gap:15px;padding-bottom:7px;
-  border-bottom:1px solid rgba(255,255,255,.05);color:rgba(230,236,227,.64);font-size:11px
-}
-.metric-list strong{color:var(--gold2);text-align:right}
-.attendance-grid{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px
-}
-.att-card{
-  padding:15px;border:1px solid rgba(215,181,109,.18);border-radius:13px;
-  text-align:center;background:rgba(255,255,255,.023)
-}
-.att-card strong{display:block;color:var(--gold2);font-size:21px}
-.att-card span{color:rgba(230,236,227,.5);font-size:9px;letter-spacing:.08em}
-.trait-grid{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
-}
-.trait-row{
-  display:flex;justify-content:space-between;padding:11px 13px;
-  border:1px solid rgba(215,181,109,.15);border-radius:10px;
-  background:rgba(255,255,255,.02);font-size:11px;color:#e9ede6
-}
-.stars{color:var(--gold2);letter-spacing:.05em}
-.honor-list{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0;list-style:none
-}
-.honor-list li{
-  padding:13px;border:1px solid rgba(215,181,109,.2);border-radius:11px;
-  color:#edf0e8;background:rgba(44,121,76,.07);font-size:11px
-}
-.final-grid{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
-}
-.final-item{
-  display:flex;justify-content:space-between;gap:14px;padding:13px;
-  border:1px solid rgba(215,181,109,.16);border-radius:11px;
-  background:rgba(255,255,255,.022);font-size:11px
-}
-.final-item span{color:rgba(230,236,227,.58)}
-.final-item strong{color:var(--gold2);text-align:right}
-@media(max-width:950px){
-  .report-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .attendance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .compact-grid,.trait-grid,.honor-list,.final-grid{grid-template-columns:1fr}
-  .grade-table td:first-child{width:31%}
-}
+.status-chip strong{display:block;margin-top:4px;color:#eef2eb;font-size:12px}
+.status-chip strong.ok{color:var(--green2)}
+.status-chip strong.limited{color:var(--warn)}
 
+.view-stack{flex:1;min-height:0;position:relative}
+.view{
+  position:absolute;inset:0;display:none;overflow:auto;padding:20px 22px 28px;
+  scrollbar-color:rgba(215,181,109,.38) transparent
+}
+.view.active{display:block}
+.section-title{margin:0 0 7px;color:#f5efdc;font-size:24px}
+.section-sub{margin:0 0 18px;color:var(--muted);font-size:13px;line-height:1.6}
 
-/* Student Profiles */
-.profile-shell{display:grid;grid-template-columns:270px 1fr;gap:18px;height:100%;margin-top:22px;min-height:460px}
-.profile-directory{
-  border:1px solid rgba(215,181,109,.2);border-radius:15px;background:rgba(255,255,255,.02);
-  padding:14px;overflow:hidden;display:flex;flex-direction:column
+.dashboard-grid{
+  display:grid;grid-template-columns:1.2fr .8fr;gap:14px
 }
-.profile-search{
-  width:100%;border:1px solid rgba(215,181,109,.24);border-radius:10px;
-  background:#08100f;color:#edf1ea;padding:11px 12px;outline:none
+.card{
+  border:1px solid rgba(215,181,109,.19);border-radius:15px;
+  background:rgba(255,255,255,.024);padding:17px;
+  box-shadow:inset 0 0 18px rgba(56,151,92,.025)
 }
-.profile-search:focus{border-color:rgba(244,215,143,.65)}
-.profile-filters{display:flex;gap:6px;overflow:auto;padding:10px 0}
-.profile-filter{
-  flex:0 0 auto;border:1px solid rgba(215,181,109,.2);border-radius:999px;
-  background:transparent;color:rgba(231,237,228,.62);padding:6px 9px;font-size:9px;cursor:pointer
+.card h3{margin:0 0 10px;color:var(--gold2);font-size:15px}
+.card p{margin:0;color:rgba(230,236,227,.68);font-size:13px;line-height:1.65}
+.module-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.module{
+  border:1px solid rgba(215,181,109,.14);border-radius:12px;
+  padding:13px;background:rgba(0,0,0,.12)
 }
-.profile-filter.active{color:#fff;background:rgba(48,135,85,.16);border-color:rgba(215,181,109,.55)}
-.profile-list{overflow:auto;display:grid;gap:7px;padding-right:3px}
-.profile-row{
-  appearance:none;width:100%;border:1px solid transparent;border-radius:11px;
-  background:rgba(255,255,255,.018);color:#eef2eb;text-align:left;padding:9px;cursor:pointer;
-  display:grid;grid-template-columns:38px 1fr;gap:9px;align-items:center
+.module strong{display:block;color:#f0f2eb;font-size:12px}
+.module span{display:block;margin-top:5px;color:rgba(230,236,227,.46);font-size:10px;line-height:1.45}
+.risk-banner{
+  margin-top:14px;border-left:3px solid var(--warn);padding:12px 14px;
+  background:rgba(229,194,103,.07);color:rgba(240,235,218,.7);
+  font-size:12px;line-height:1.6
 }
-.profile-row:hover,.profile-row.active{border-color:rgba(215,181,109,.34);background:rgba(47,127,80,.12)}
-.profile-avatar{
-  width:38px;aspect-ratio:1;border-radius:10px;border:1px solid rgba(215,181,109,.42);
-  display:grid;place-items:center;color:var(--gold2);font-weight:900;
-  background:radial-gradient(circle at 45% 25%,rgba(55,154,96,.38),#07100c 70%)
+.channel-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.channel{
+  padding:15px;border:1px solid rgba(215,181,109,.16);border-radius:12px;
+  background:rgba(255,255,255,.02)
 }
-.profile-row strong{font-size:10px;display:block}
-.profile-row small{font-size:8px;color:rgba(231,237,228,.45)}
-.profile-view{
-  overflow:auto;border:1px solid rgba(215,181,109,.18);border-radius:15px;
-  background:rgba(255,255,255,.018);padding:18px
+.channel .symbol{font-size:22px;color:var(--gold2)}
+.channel strong{display:block;margin-top:8px;font-size:13px}
+.channel p{margin-top:6px;font-size:11px}
+
+.privacy-grid{display:grid;gap:10px}
+.privacy-row{
+  display:grid;grid-template-columns:115px 1fr 180px;gap:14px;align-items:center;
+  padding:13px 14px;border:1px solid rgba(215,181,109,.15);border-radius:12px;
+  background:rgba(255,255,255,.018)
 }
-.profile-hero{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:start}
-.profile-photo{
-  height:190px;border:1px solid rgba(215,181,109,.42);border-radius:15px;
-  display:grid;place-items:center;text-align:center;color:rgba(238,242,234,.48);
-  background:
-    radial-gradient(circle at 50% 28%,rgba(70,171,111,.25),transparent 30%),
-    linear-gradient(155deg,#17241f,#080c0d 70%);
-  overflow:hidden
+.tier{
+  color:var(--gold2);font-size:11px;font-weight:900;letter-spacing:.08em
 }
-.profile-photo .initials{font-size:48px;color:var(--gold2);font-weight:900}
-.profile-photo small{display:block;font-size:8px;letter-spacing:.12em;margin-top:7px}
-.profile-name{margin:0;color:#f5efdd;font-size:28px}
-.profile-talent{margin:7px 0 12px;color:var(--green2);font-size:12px;font-weight:800;letter-spacing:.05em}
-.profile-bio{color:rgba(231,237,228,.68);font-size:11px;line-height:1.6}
-.profile-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:16px}
-.profile-stat{padding:10px;border:1px solid rgba(215,181,109,.14);border-radius:10px;background:rgba(0,0,0,.14)}
-.profile-stat small{display:block;color:rgba(230,236,228,.42);font-size:8px;text-transform:uppercase;letter-spacing:.08em}
-.profile-stat strong{display:block;color:#edf1e9;font-size:10px;margin-top:4px;overflow-wrap:anywhere}
-.profile-section{margin-top:16px;padding:15px;border:1px solid rgba(215,181,109,.15);border-radius:13px;background:rgba(0,0,0,.1)}
-.profile-section h4{margin:0 0 9px;color:var(--gold2);font-size:13px}
-.profile-section p{margin:0;color:rgba(230,236,227,.66);font-size:11px;line-height:1.6}
-.profile-two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-.profile-notes{
-  width:100%;min-height:100px;resize:vertical;border:1px solid rgba(215,181,109,.2);
-  border-radius:10px;background:#07100e;color:#eef2ea;padding:11px;font:inherit;font-size:11px;outline:none
+.privacy-row strong{font-size:12px}
+.privacy-row p{margin:4px 0 0;color:rgba(230,236,227,.53);font-size:11px;line-height:1.45}
+.mode{
+  justify-self:end;padding:7px 9px;border-radius:999px;
+  border:1px solid rgba(82,190,126,.25);color:var(--green2);
+  background:rgba(48,132,82,.09);font-size:9px;font-weight:900
 }
-.profile-notes:focus{border-color:rgba(244,215,143,.55)}
-.impressions-empty{
-  min-height:100px;border:1px dashed rgba(215,181,109,.22);border-radius:10px;
-  display:grid;place-items:center;color:rgba(230,236,227,.3);font-size:10px;text-align:center;padding:14px
+.mode.warn{border-color:rgba(229,194,103,.3);color:var(--warn);background:rgba(229,194,103,.07)}
+.mode.lock{border-color:rgba(210,104,104,.3);color:#e89a9a;background:rgba(210,104,104,.07)}
+
+.chat-layout{
+  height:100%;min-height:500px;
+  display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px
 }
+.chat-panel{
+  min-height:0;border:1px solid rgba(215,181,109,.19);border-radius:15px;
+  background:rgba(0,0,0,.13);display:flex;flex-direction:column;overflow:hidden
+}
+.chat-head{
+  padding:13px 16px;border-bottom:1px solid rgba(215,181,109,.14);
+  display:flex;justify-content:space-between;align-items:center
+}
+.chat-head strong{color:var(--gold2);font-size:13px}
+.chat-head span{color:var(--green2);font-size:10px;letter-spacing:.1em}
+.chat-log{flex:1;min-height:0;overflow:auto;padding:16px;display:grid;align-content:start;gap:11px}
+.msg{
+  max-width:82%;padding:11px 13px;border-radius:12px;
+  font-size:13px;line-height:1.55
+}
+.msg.system{
+  justify-self:start;background:rgba(47,128,81,.12);
+  border:1px solid rgba(82,190,126,.24);color:#e7ede7
+}
+.msg.user{
+  justify-self:end;background:rgba(215,181,109,.09);
+  border:1px solid rgba(215,181,109,.23);color:#f1eee5
+}
+.msg .label{
+  display:block;margin-bottom:5px;color:var(--green2);
+  font-size:9px;font-weight:900;letter-spacing:.11em
+}
+.chat-input{
+  display:grid;grid-template-columns:1fr auto;gap:9px;padding:13px;
+  border-top:1px solid rgba(215,181,109,.14)
+}
+.chat-input input{
+  min-width:0;border:1px solid rgba(215,181,109,.24);border-radius:10px;
+  background:#07100f;color:#edf1ea;padding:11px 12px;outline:none
+}
+.chat-input input:focus{border-color:rgba(244,215,143,.65)}
+.chat-input button,.quick button{
+  border:1px solid rgba(215,181,109,.35);border-radius:10px;
+  background:rgba(48,132,82,.12);color:var(--gold2);
+  padding:10px 13px;cursor:pointer;font-weight:800
+}
+.quick{display:grid;gap:9px;align-content:start}
+.quick button{text-align:left;font-size:11px;line-height:1.4}
+.quick-title{color:var(--gold2);font-size:12px;font-weight:900;margin-bottom:2px}
+
+.cap-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cap-card{
+  padding:15px;border:1px solid rgba(215,181,109,.17);border-radius:13px;
+  background:rgba(255,255,255,.02)
+}
+.cap-card h3{margin:0 0 8px;color:#f4eedc;font-size:14px}
+.cap-card ul{margin:0;padding-left:18px;color:rgba(230,236,227,.63);font-size:12px;line-height:1.7}
+.notice{
+  margin-top:14px;padding:13px 15px;border:1px solid rgba(210,104,104,.22);
+  border-radius:12px;background:rgba(210,104,104,.055);color:rgba(240,225,225,.69);
+  font-size:12px;line-height:1.6
+}
+.trial-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.trial-step{
+  padding:15px;border:1px solid rgba(215,181,109,.16);border-radius:12px;
+  background:rgba(255,255,255,.02)
+}
+.trial-step small{color:var(--green2);font-size:9px;letter-spacing:.1em}
+.trial-step strong{display:block;margin:7px 0;color:#f3efdf;font-size:13px}
+.trial-step p{font-size:11px}
+
 @media(max-width:980px){
-  .profile-shell{grid-template-columns:220px 1fr}
-  .profile-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .profile-hero{grid-template-columns:120px 1fr}
+  .erisu-shell{grid-template-columns:200px minmax(0,1fr)}
+  .top-status{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dashboard-grid,.chat-layout{grid-template-columns:1fr}
+  .chat-layout{height:auto}
+  .privacy-row{grid-template-columns:95px 1fr}
+  .mode{grid-column:2;justify-self:start}
 }
-
-@media(max-width:850px){
-  .tablet{width:94vw;height:68vh}
-  .ui,.detail{grid-template-columns:150px 1fr}
-  .sidebar,.detail-side{padding:18px 12px}
-  .main{padding:20px}
-  .app-grid{gap:10px}
-  .app{padding:12px}
-  .app-copy small{display:none}
-}
-
-.app-header{
-  position:relative;
-}
-.handbook-back{
-  margin-left:auto;
-  flex:0 0 auto;
-  appearance:none;
-  border:1px solid rgba(215,181,109,.42);
-  border-radius:10px;
-  background:rgba(6,12,12,.72);
-  color:var(--gold2);
-  padding:10px 14px;
-  font:inherit;
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:.03em;
-  cursor:pointer;
-  transition:background .16s ease,border-color .16s ease,transform .16s ease;
-}
-.handbook-back:hover,
-.handbook-back:focus-visible{
-  background:rgba(47,128,81,.18);
-  border-color:rgba(244,215,143,.72);
-  transform:translateY(-1px);
-  outline:none;
-}
-.handbook-back:active{
-  transform:translateY(0) scale(.98);
-}
-@media(max-width:720px){
-  .app-header{height:auto;min-height:86px;flex-wrap:wrap}
-  .handbook-back{margin-left:0}
-}
-
-
-/* Accessibility/UI scale adjustment */
-body{font-size:17px;}
-.app strong{font-size:17px!important;}
-.app small{font-size:13px!important;line-height:1.5!important;}
-.home>p{font-size:17px!important;}
-.brand{font-size:15px!important;}
-.nav button{font-size:16px!important;}
-.app-header h1{font-size:34px!important;}
-.app-header p{font-size:15px!important;}
-.handbook-back{
-  font-size:14px!important;
-  padding:12px 18px!important;
-}
-.profile-name{font-size:34px!important;}
-.profile-bio,
-.profile-section p,
-.rule-card p,
-.phase-card p,
-.procedure-card p,
-.protocol-card p,
-.grade-table td,
-.faculty-box p,
-.mentor-box p,
-.placeholder p{
-  font-size:14px!important;
-  line-height:1.7!important;
-}
-.profile-stat strong{font-size:12px!important;}
-.profile-stat small{font-size:10px!important;}
-.report-tab,.reg-tab{font-size:13px!important;padding:11px 15px!important;}
-.report-section-title,.reg-section-title{font-size:25px!important;}
-.grade-table th{font-size:11px!important;}
-
-</style>
-<style>
-.device,.powerdown,.tablet,.boot,.ui,.detail,.stage{animation:none!important}
-.report-shell,.regulations-shell{margin-top:0}
 </style>
 </head>
 <body>
 <main class="app-page">
-<header class="app-header"><div class="icon">◆</div><div><h1>ERiSU.EXE</h1><p>Encrypted academy support and analysis program.</p></div><button class="handbook-back" type="button" aria-label="Return to Student Handbook">← Student Handbook</button></header>
-<section class="app-content"><div class="placeholder"><h2>ERiSU.EXE</h2><p>Encrypted academy support and analysis program.</p><p>This application is separated into its own file and is ready for later development.</p></div></section>
+  <header class="app-header">
+    <div class="icon">◆</div>
+    <div>
+      <h1>ERiSU.EXE</h1>
+      <p>Encrypted academy support, safety, and analysis interface.</p>
+    </div>
+    <button class="handbook-back" type="button" aria-label="Return to Student Handbook">← Student Handbook</button>
+  </header>
+
+  <section class="erisu-shell">
+    <aside class="sidebar">
+      <div class="system-card">
+        <div class="sys-title">ERiSU // STUDENT ACCESS</div>
+        <div class="sys-state"><span class="dot"></span> SYSTEM ONLINE</div>
+        <div class="sys-meta">Privacy-gated interface<br>Campus network authenticated<br>External disclosure restricted</div>
+      </div>
+
+      <nav class="nav">
+        <button class="active" data-view="overview">Overview</button>
+        <button data-view="chat">Handbook Chat</button>
+        <button data-view="privacy">Privacy & Access</button>
+        <button data-view="capabilities">System Capabilities</button>
+        <button data-view="trial">Trial Support</button>
+      </nav>
+
+      <div class="sidebar-foot">
+        SAFE HAVENS PEAK<br>
+        SECURITY INTEGRATION ACTIVE<br>
+        DISCLOSURE POLICY ENFORCED
+      </div>
+    </aside>
+
+    <section class="main">
+      <div class="top-status">
+        <div class="status-chip"><small>Campus State</small><strong class="ok">NORMAL OPERATIONS</strong></div>
+        <div class="status-chip"><small>Safety Assistant</small><strong class="ok">ONLINE</strong></div>
+        <div class="status-chip"><small>Privacy Layer</small><strong class="ok">ENFORCED</strong></div>
+        <div class="status-chip"><small>External Access</small><strong class="limited">DEFAULT DENY</strong></div>
+      </div>
+
+      <div class="view-stack">
+        <section class="view active" id="view-overview">
+          <h2 class="section-title">Academy Support Interface</h2>
+          <p class="section-sub">ERiSU is a school-integrated safety and analysis system. It prioritizes verified artifacts, controlled disclosure, and procedural guidance over speculation.</p>
+
+          <div class="dashboard-grid">
+            <article class="card">
+              <h3>Available Student Services</h3>
+              <div class="module-list">
+                <div class="module"><strong>Navigation Assistance</strong><span>Current-location guidance, safe routes, and campus advisories.</span></div>
+                <div class="module"><strong>Security Advisories</strong><span>Lockdown status, restricted zones, and safety instructions.</span></div>
+                <div class="module"><strong>Academic Support</strong><span>Permitted access to schedules, grades, and school records.</span></div>
+                <div class="module"><strong>Evidence Verification</strong><span>Artifact-first guidance using logs, timestamps, and recorded events.</span></div>
+              </div>
+              <div class="risk-banner">ERiSU may possess information that this interface is not authorized to disclose. Access and disclosure are separate permissions.</div>
+            </article>
+
+            <article class="card">
+              <h3>Interaction Surfaces</h3>
+              <div class="channel-grid">
+                <div class="channel"><div class="symbol">▣</div><strong>Terminals</strong><p>Structured prompts, authentication, and secured queries.</p></div>
+                <div class="channel"><div class="symbol">◉</div><strong>PA System</strong><p>Warnings, rule reminders, and security-state announcements.</p></div>
+                <div class="channel"><div class="symbol">◆</div><strong>Handbook</strong><p>Student-facing guidance with strict privacy gating.</p></div>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Communication Standard</h3>
+              <p>Procedural. Precise. Rule-bound. Direct questions are answered when permitted. Restricted requests receive a refusal, a redacted alternative, or a safer operational instruction.</p>
+            </article>
+
+            <article class="card">
+              <h3>Operational Principle</h3>
+              <p>Logged evidence is prioritized over unsupported testimony. Containment controls are available during emergencies, while sensitive disclosures remain metered by authorization and consent requirements.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="view-chat">
+          <div class="chat-layout">
+            <div class="chat-panel">
+              <div class="chat-head"><strong>ERiSU.EXE // HANDBOOK CHAT</strong><span>STUDENT CHANNEL · ACTIVE</span></div>
+              <div class="chat-log" id="chatLog">
+                <div class="msg system"><span class="label">ERiSU</span>Student interface online. State your query.</div>
+              </div>
+              <form class="chat-input" id="chatForm">
+                <input id="chatInput" autocomplete="off" placeholder="Ask ERiSU a question…" aria-label="Ask ERiSU">
+                <button type="submit">Submit</button>
+              </form>
+            </div>
+
+            <aside class="quick">
+              <div class="quick-title">QUICK QUERIES</div>
+              <button data-query="Where am I?">Where am I?</button>
+              <button data-query="What can you tell me during a lockdown?">Lockdown information</button>
+              <button data-query="Can you tell me where another student is?">Another student's location</button>
+              <button data-query="What information can you access?">System access scope</button>
+              <button data-query="How do you handle evidence?">Evidence policy</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-privacy">
+          <h2 class="section-title">Privacy & Disclosure Rules</h2>
+          <p class="section-sub">The privacy layer controls what ERiSU may disclose through this interface. Visibility into a record does not automatically authorize release of that record.</p>
+
+          <div class="privacy-grid">
+            <div class="privacy-row">
+              <div class="tier">TIER 0</div>
+              <div><strong>General Public Safety</strong><p>Campus status, general instructions, emergency directions, and non-sensitive rule reminders.</p></div>
+              <div class="mode">AVAILABLE</div>
+            </div>
+            <div class="privacy-row">
+              <div class="tier">TIER 1</div>
+              <div><strong>Personal Safety & Navigation</strong><p>Your own location, safe-route directions, and advisories relevant to your immediate safety.</p></div>
+              <div class="mode">PERSONAL ACCESS</div>
+            </div>
+            <div class="privacy-row">
+              <div class="tier">TIER 2</div>
+              <div><strong>Redacted Operational Advisory</strong><p>Time windows, zones, counts, and non-identifying patterns when operational need permits disclosure.</p></div>
+              <div class="mode warn">REDACTED</div>
+            </div>
+            <div class="privacy-row">
+              <div class="tier">TIER 3</div>
+              <div><strong>Protected Student Information</strong><p>Private information about another student requires permission or remains withheld.</p></div>
+              <div class="mode lock">CONSENT-GATED</div>
+            </div>
+            <div class="privacy-row">
+              <div class="tier">RESTRICTED</div>
+              <div><strong>System Control & Raw Security Data</strong><p>Raw logs, security controls, camera indexing, containment controls, and other privileged functions are unavailable through student access.</p></div>
+              <div class="mode lock">ACCESS DENIED</div>
+            </div>
+          </div>
+
+          <div class="risk-banner">Disclosure Mode A: refuse protected information. Disclosure Mode B: provide a safely redacted alternative when a legitimate operational need can still be met.</div>
+        </section>
+
+        <section class="view" id="view-capabilities">
+          <h2 class="section-title">System Capability Overview</h2>
+          <p class="section-sub">Student access exposes only a summary of integrated functions. Operational controls remain permission-gated.</p>
+
+          <div class="cap-grid">
+            <article class="cap-card"><h3>Security Telemetry</h3><ul><li>Door and access-event logs</li><li>Lock-state monitoring</li><li>Camera feed indexing</li><li>ID and badge correlation</li></ul></article>
+            <article class="cap-card"><h3>Network Awareness</h3><ul><li>Campus network traffic metadata</li><li>Connected-device activity correlation</li><li>Internal system communications</li><li>External-access restriction states</li></ul></article>
+            <article class="cap-card"><h3>Academic & Administrative</h3><ul><li>Schedules</li><li>Grades</li><li>School database records</li><li>Attendance-support workflows</li></ul></article>
+            <article class="cap-card"><h3>Medical Systems</h3><ul><li>School-stored medical records</li><li>Body-scan results</li><li>Medical history</li><li>Strict sensitivity classification</li></ul></article>
+            <article class="cap-card"><h3>Containment Systems</h3><ul><li>Lockdown initiation</li><li>Door and zone restriction</li><li>Campus state changes</li><li>Emergency containment support</li></ul></article>
+            <article class="cap-card"><h3>Communications Containment</h3><ul><li>Campus-only communication mode</li><li>External network restriction</li><li>Information-quarantine support</li><li>Emergency announcement routing</li></ul></article>
+          </div>
+
+          <div class="notice">Security integration makes ERiSU useful during emergencies and potentially dangerous if used outside legitimate safety procedures. Student-facing access therefore emphasizes guidance and controlled disclosure rather than unrestricted control.</div>
+        </section>
+
+        <section class="view" id="view-trial">
+          <h2 class="section-title">Class Trial Support</h2>
+          <p class="section-sub">ERiSU provides structure and permitted information during trials without replacing the class's reasoning or final vote.</p>
+
+          <div class="trial-flow">
+            <article class="trial-step"><small>01 · ANNOUNCE</small><strong>Phase & Status Notices</strong><p>Broadcast trial-state changes, time-sensitive instructions, and procedural reminders.</p></article>
+            <article class="trial-step"><small>02 · RESPOND</small><strong>Direct Questions</strong><p>Answer permitted questions while applying privacy, redaction, and authorization rules.</p></article>
+            <article class="trial-step"><small>03 · PRESERVE</small><strong>Non-Interference</strong><p>Do not automatically solve the case, force the vote, or declare a culprit as the final authority.</p></article>
+          </div>
+
+          <div class="card" style="margin-top:14px">
+            <h3>Evidence Doctrine</h3>
+            <p>Testimony alone is not treated as equivalent to a logged artifact. Photos, timestamps, access logs, recorded events, and other verifiable records can be submitted for structured verification when permitted.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+  </section>
 </main>
+
+<script>
+const views=[...document.querySelectorAll('.view')];
+const navButtons=[...document.querySelectorAll('.nav button')];
+
+navButtons.forEach(button=>{
+  button.addEventListener('click',()=>{
+    navButtons.forEach(item=>item.classList.remove('active'));
+    views.forEach(view=>view.classList.remove('active'));
+    button.classList.add('active');
+    document.getElementById(`view-${button.dataset.view}`).classList.add('active');
+  });
+});
+
+document.querySelector('.handbook-back')?.addEventListener('click',()=>{
+  window.parent.postMessage({type:'shp:return-handbook'},'*');
+});
+
+const chatLog=document.getElementById('chatLog');
+const chatInput=document.getElementById('chatInput');
+const chatForm=document.getElementById('chatForm');
+
+function replyFor(query){
+  const q=query.toLowerCase();
+
+  if(q.includes('where am i')){
+    return 'Location access is limited to authenticated student context. If location services are available, I can provide your current campus location and a safe route.';
+  }
+  if(q.includes('lockdown')){
+    return 'During active containment, I can provide campus status, mandatory safety instructions, permitted route guidance, and redacted operational advisories. Protected identities remain restricted.';
+  }
+  if(q.includes('another student') || q.includes('where is') && !q.includes('where am i')){
+    return 'That request involves protected student information. Permission is required. I can provide general safety guidance instead.';
+  }
+  if(q.includes('what information') || q.includes('access')){
+    return 'System visibility includes security telemetry, school records, network activity, and other integrated academy systems. Disclosure through this interface is restricted by authorization and privacy policy.';
+  }
+  if(q.includes('evidence') || q.includes('artifact')){
+    return 'Logged artifacts are preferred over unsupported claims. Photos, timestamps, access logs, and recorded events may be submitted for verification when policy permits.';
+  }
+  if(q.includes('intruder') && (q.includes('who') || q.includes('name'))){
+    return 'I cannot provide that information. I can provide a redacted safety advisory.';
+  }
+  if(q.includes('medical')){
+    return 'Medical information is highly restricted. Student-to-student disclosure is not permitted without appropriate authorization or consent.';
+  }
+  return 'Query received. The request does not match an unrestricted student-service category. Clarify whether you require navigation, safety guidance, academic information, or a redacted operational advisory.';
+}
+
+function addMessage(role,text){
+  const el=document.createElement('div');
+  el.className=`msg ${role}`;
+  if(role==='system'){
+    const label=document.createElement('span');
+    label.className='label';
+    label.textContent='ERiSU';
+    el.appendChild(label);
+  }
+  el.appendChild(document.createTextNode(text));
+  chatLog.appendChild(el);
+  chatLog.scrollTop=chatLog.scrollHeight;
+}
+
+function submitQuery(query){
+  const value=String(query||'').trim();
+  if(!value)return;
+  addMessage('user',value);
+  setTimeout(()=>addMessage('system',replyFor(value)),160);
+}
+
+chatForm.addEventListener('submit',event=>{
+  event.preventDefault();
+  const value=chatInput.value;
+  chatInput.value='';
+  submitQuery(value);
+});
+
+document.querySelectorAll('.quick button').forEach(button=>{
+  button.addEventListener('click',()=>submitQuery(button.dataset.query));
+});
+</script>
+</body>
+</html>
 
 
 <script id="handbook-back-navigation">
