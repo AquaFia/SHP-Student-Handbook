@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHP Static Room Template</title>
+<style>
+:root{
+  --room-accent:#e63b53;
+  --room-cyan:#9be7ff;
+  --room-text:#fff;
+  --room-bg:#05070b;
+  --room-panel:#07111fee;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--room-bg);font-family:Arial,Helvetica,sans-serif;color:var(--room-text)}
+.room-shell{position:relative;width:100%;height:100%;display:grid;place-items:center;background:var(--room-bg)}
+.room-stage{position:relative;width:100%;height:100%;max-width:100%;max-height:100%;display:grid;place-items:center;overflow:hidden;background:#070b15}
+.room-media{position:relative;max-width:100%;max-height:100%;display:grid;place-items:center}
+.room-image{display:block;max-width:100vw;max-height:100vh;width:auto;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.room-placeholder{width:min(900px,92vw);min-height:440px;display:grid;place-items:center;text-align:center;padding:32px;border:1px dashed #ffffff44;background:linear-gradient(180deg,#111827,#070b15);color:#c9d3df}
+.room-placeholder strong{display:block;color:#fff;font-size:24px;margin-bottom:10px}.room-placeholder code{color:var(--room-cyan)}
+.room-overlay{position:absolute;inset:0;pointer-events:none}
+.room-topbar{position:absolute;z-index:40;left:14px;right:14px;top:14px;display:flex;gap:10px;justify-content:space-between;pointer-events:none}
+.room-topbar .group{display:flex;gap:10px;flex-wrap:wrap;pointer-events:auto}
+.room-topbar button{background:#08111ddd;border:1px solid #ffffff40;color:#fff;padding:10px 13px;border-radius:8px;font-weight:900;cursor:pointer;box-shadow:0 4px 18px #0008}
+.room-topbar button:hover,.room-topbar button:focus-visible{border-color:var(--room-accent);box-shadow:0 0 18px #e63b5377;outline:none}
+.hotspot{position:absolute;z-index:10;border:2px solid transparent;background:transparent;cursor:pointer;border-radius:5px;transition:.15s ease;pointer-events:auto}
+.hotspot:hover,.hotspot:focus-visible{outline:none;border-color:#fff;background:#e63b532d;box-shadow:0 0 24px #e63b53bb,inset 0 0 20px #fff2}
+.hotspot:after{content:attr(data-label);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;color:#fff;background:#07111fe6;border:1px solid #ffffff44;padding:6px 9px;border-radius:6px;font-size:12px;font-weight:900;white-space:nowrap;text-shadow:0 2px 3px #000;transition:.15s ease}
+.hotspot:hover:after,.hotspot:focus-visible:after{opacity:1}
+.dialogue{position:absolute;z-index:50;left:4%;right:4%;bottom:3%;display:none;background:linear-gradient(180deg,#141b2ff2,#070b15f8);border:2px solid #fff;border-left:9px solid var(--room-accent);padding:17px 54px 18px 20px;box-shadow:0 8px 40px #000d,0 0 22px #e63b5355}
+.dialogue.open{display:block;animation:slide .18s ease-out}.dialogue h3{margin:0 0 8px;text-transform:uppercase;letter-spacing:.12em;font-size:15px;color:var(--room-cyan)}.dialogue p{margin:0;font-size:18px;line-height:1.45;white-space:pre-wrap}
+.dialogue-close{position:absolute;right:12px;top:12px;border:1px solid #ffffff44;background:#ffffff0f;color:#fff;width:32px;height:32px;padding:0;border-radius:50%;font-size:18px;cursor:pointer}
+@keyframes slide{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
+@media(max-width:850px){.dialogue p{font-size:15px}.room-topbar{left:8px;right:8px;top:8px}.room-topbar button{padding:8px 10px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="room-shell">
+  <div class="room-stage" id="roomStage">
+    <div class="room-media" id="roomMedia">
+      <img class="room-image" id="roomImage" alt="" hidden>
+      <div class="room-placeholder" id="roomPlaceholder">
+        <div><strong>Juno’s Dorm</strong><div>This room scene has not been assigned yet.</div></div>
+      </div>
+      <div class="room-overlay" id="roomOverlay"></div>
+    </div>
+
+    <div class="room-topbar">
+      <div class="group"><button type="button" id="backButton">← Back</button></div>
+      <div class="group"><button type="button" id="handbookButton">Student Handbook</button></div>
+    </div>
+
+    <div class="dialogue" id="dialogue" role="dialog" aria-live="polite" aria-label="Room inspection text">
+      <button class="dialogue-close" id="dialogueClose" type="button" aria-label="Close inspection text">×</button>
+      <h3 id="dialogueTitle"></h3>
+      <p id="dialogueText"></p>
+    </div>
+  </div>
+</div>
+<script>
+/*
+M.S.5 STATIC ROOM TEMPLATE
+
+Copy apps/rooms/_template/ to apps/rooms/<canonical-room-id>/ and edit ONLY
+ROOM_CONFIG for an ordinary image-based room. Hotspot rectangles use percentages
+relative to the displayed room image, so they remain aligned as it scales.
+
+Do not put room-specific launch logic in map.html or a 3D hallway.
+*/
+const ROOM_CONFIG = {
+  id: "juno-dorm",
+  title: "Juno’s Dorm",
+  image: "", // Example: "assets/room.webp"
+  alt: "Juno’s dorm room",
+  accent: "#e63b53",
+  cyan: "#9be7ff",
+
+  // Each hotspot is a percentage rectangle over the source image.
+  hotspots: [
+    /*
+    {
+      id: "desk",
+      label: "Desk",
+      title: "Desk",
+      text: "Inspection dialogue goes here.",
+      rect: { left: 45, top: 44, width: 37, height: 29 }
+    }
+    */
+  ],
+
+  navigation: {
+    mapBackLabel: "← Back to Dorm Map",
+    explorerBackLabel: "← Return to Hallway",
+
+    // M.S.5 keeps these configurable while the final M.S.7/M.S.8 message
+    // contract is still pending. Parent shells can listen for these.
+    mapBackMessage: "SHP_RETURN_PREVIOUS",
+    explorerBackMessage: "SHP_RETURN_PREVIOUS",
+    handbookMessage: "SHP_OPEN_HANDBOOK"
+  }
+};
+
+const params = new URLSearchParams(location.search);
+const legacyMode = params.get("mode") || params.get("from");
+const entryContext = {
+  source: params.get("shpSource") || (legacyMode === "explorer" ? "explorer" : legacyMode === "map" ? "map" : "standalone"),
+  returnTarget: params.get("shpReturn") || ((legacyMode === "explorer" || legacyMode === "hallway" || legacyMode === "dorm-hall") ? "hallway" : "map"),
+  floor: params.get("shpFloor") || null,
+  locationId: params.get("shpLocation") || null,
+  spawnId: params.get("shpSpawn") || null
+};
+const mode = entryContext.source;
+const isExplorer = entryContext.returnTarget === "hallway";
+
+if (ROOM_CONFIG.title) document.title = ROOM_CONFIG.title;
+if (ROOM_CONFIG.accent) document.documentElement.style.setProperty("--room-accent", ROOM_CONFIG.accent);
+if (ROOM_CONFIG.cyan) document.documentElement.style.setProperty("--room-cyan", ROOM_CONFIG.cyan);
+
+const image = document.getElementById("roomImage");
+const media = document.getElementById("roomMedia");
+const placeholder = document.getElementById("roomPlaceholder");
+const overlay = document.getElementById("roomOverlay");
+const dialogue = document.getElementById("dialogue");
+const dialogueTitle = document.getElementById("dialogueTitle");
+const dialogueText = document.getElementById("dialogueText");
+const backButton = document.getElementById("backButton");
+
+function sendToParent(type, detail={}) {
+  if (!type) return false;
+  if (window.parent !== window) {
+    window.parent.postMessage({ type, roomId: ROOM_CONFIG.id, context: entryContext, ...detail }, "*");
+    return true;
+  }
+  return false;
+}
+
+function renderHotspots() {
+  overlay.replaceChildren();
+  for (const item of ROOM_CONFIG.hotspots || []) {
+    if (!item || !item.rect) continue;
+    const r = item.rect;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "hotspot";
+    button.dataset.label = item.label || item.title || "Inspect";
+    button.setAttribute("aria-label", `Inspect ${item.label || item.title || "room object"}`);
+    button.style.left = `${Number(r.left) || 0}%`;
+    button.style.top = `${Number(r.top) || 0}%`;
+    button.style.width = `${Math.max(0, Number(r.width) || 0)}%`;
+    button.style.height = `${Math.max(0, Number(r.height) || 0)}%`;
+    button.addEventListener("click", () => {
+      dialogueTitle.textContent = item.title || item.label || "Inspect";
+      dialogueText.textContent = item.text || "";
+      dialogue.classList.add("open");
+    });
+    overlay.appendChild(button);
+  }
+}
+
+function activateRoomImage() {
+  if (!ROOM_CONFIG.image) return;
+  image.alt = ROOM_CONFIG.alt || ROOM_CONFIG.title || "Room interior";
+  image.addEventListener("load", () => {
+    placeholder.hidden = true;
+    image.hidden = false;
+    // Match the overlay exactly to the rendered image rather than the viewport.
+    const ratio = image.naturalWidth && image.naturalHeight ? image.naturalWidth / image.naturalHeight : 1.5;
+    media.style.aspectRatio = String(ratio);
+    renderHotspots();
+  }, { once: true });
+  image.addEventListener("error", () => {
+    image.hidden = true;
+    placeholder.hidden = false;
+    placeholder.innerHTML = `<div><strong>${ROOM_CONFIG.title || "Room"}</strong><div>Room image could not be loaded: <code>${ROOM_CONFIG.image}</code></div></div>`;
+  }, { once: true });
+  image.src = ROOM_CONFIG.image;
+}
+
+backButton.textContent = isExplorer ? ROOM_CONFIG.navigation.explorerBackLabel : ROOM_CONFIG.navigation.mapBackLabel;
+backButton.addEventListener("click", () => {
+  const sent = sendToParent("SHP_RETURN_PREVIOUS", { context: entryContext });
+  if (!sent && history.length > 1) history.back();
+});
+
+document.getElementById("handbookButton").addEventListener("click", () => {
+  sendToParent('SHP_OPEN_HANDBOOK',{roomId:ROOM_CONFIG.id,context:entryContext});
+});
+document.getElementById("dialogueClose").addEventListener("click", () => dialogue.classList.remove("open"));
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && dialogue.classList.contains("open")) dialogue.classList.remove("open");
+});
+
+activateRoomImage();
+</script>
+</body>
+</html>
