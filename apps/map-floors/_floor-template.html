@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SHP Floor Template</title>
+<style>html,body{margin:0;min-height:100%;background:#07101b;color:#fff;font-family:Arial,sans-serif}.stage{position:relative;min-height:560px}.hotspot{position:absolute;cursor:pointer}</style></head><body>
+<div class="stage" id="floorStage">
+  <!-- Keep your own floor artwork/layout here. You do NOT need to copy this markup. -->
+</div>
+<script src="shared-floor-contract.js"></script>
+<script>
+const FLOOR_ID='2F'; // change for the floor file
+const rooms=[
+  // Keep the room records produced by your floor build. Minimum required field: name.
+  // Recommended: roomId, name, status, desc, x, y, w, h.
+];
+const FloorContract=window.SHPMapFloorContract;
+let selected=null;
+function selectRoom(room,notify=true){
+  selected=room.roomId||room.name;
+  // Apply your floor's own selected-hotspot visuals here.
+  if(notify)FloorContract.selected(FLOOR_ID,room);
+}
+FloorContract.ready(FLOOR_ID,{rooms,description:'Select a room on the map.',status:'Open',meta:{label:FLOOR_ID}});
+window.addEventListener('message',event=>{
+  const msg=event.data;if(!msg||typeof msg!=='object')return;
+  if(FloorContract.isCommand(msg,FloorContract.TO_FLOOR.SELECT,FLOOR_ID)){
+    const room=rooms.find(r=>(msg.roomId&&r.roomId===msg.roomId)||r.name===msg.roomName);
+    if(room)selectRoom(room,false);
+  }
+  if(FloorContract.isCommand(msg,FloorContract.TO_FLOOR.CLEAR_SELECTION,FLOOR_ID)){
+    selected=null;
+    // Clear your floor's selected-hotspot visuals here.
+  }
+});
+</script></body></html>
