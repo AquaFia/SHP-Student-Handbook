@@ -635,14 +635,13 @@ document.querySelector('.handbook-back')?.addEventListener('click',()=>{
 
   // notes.html lives in /apps/, while the companion framework lives in /companions/.
   // mode=investigation requests Aria's special Investigation Mode on startup.
-  const ariaInvestigationUrl =
-    './companions/shared/aria_framework.html?character=aria_2_0';
+  const ariaInvestigationFile =
+  './companions/shared/aria_framework.html?character=aria_2_0&mode=investigation';
 
-  button.addEventListener('click', () => {
-    // When the handbook is running inside its shell iframe, replace the app
-    // currently shown in that same viewport instead of opening a new tab.
-    window.location.href = ariaInvestigationUrl;
-  });
+document.getElementById('openAriaInvestigation').addEventListener('click', () => {
+  window.location.href = ariaInvestigationFile;
+});
+
 })();
 </script>
 
