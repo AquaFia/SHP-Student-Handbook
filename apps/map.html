@@ -52,6 +52,8 @@ header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-be
 .jacey-dialogue-close{position:absolute;right:12px;top:12px;border:1px solid #ffffff44;background:#ffffff0f;color:#fff;width:32px;height:32px;padding:0;border-radius:50%;font-size:18px}
 .visit-dorm-btn{display:inline-block;margin:12px 8px 6px 0;padding:10px 12px;border-radius:8px;background:#275a7a;color:#fff;border:1px solid #9be7ff;text-decoration:none;font-weight:900;box-shadow:0 0 18px #4cc9ff45}
 .visit-dorm-btn:hover{filter:brightness(1.14);box-shadow:0 0 22px #4cc9ff88}
+.explore-dorm-btn{display:inline-block;margin:12px 8px 6px 0;padding:10px 12px;border-radius:8px;background:#53347b;color:#fff;border:1px solid #c7a6ff;font-weight:900;box-shadow:0 0 18px #8f5fe84a;cursor:pointer}
+.explore-dorm-btn:hover,.explore-dorm-btn:focus-visible{filter:brightness(1.12);box-shadow:0 0 22px #a979ff88;outline:none}
 @keyframes jaceySlide{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
 @media(max-width:1000px){.jacey-dorm-view{min-width:760px}.jacey-dialogue p{font-size:15px}}
 
@@ -181,7 +183,23 @@ const floors={
 let current='1F', selected=null;
 const spots=document.getElementById('spots'), roomList=document.getElementById('roomList'), search=document.getElementById('search'), dormGrid=document.getElementById('dormGrid');
 function cls(s){return s==='restricted'?'restricted':s==='locked'?'locked':s==='occupied'?'occupied':'open'}
-function selectRoom(r){selected=r.name; document.querySelectorAll('.hotspot,.dorm-room').forEach(e=>e.classList.toggle('selected',e.dataset.name===r.name)); document.getElementById('roomTitle').textContent=r.name; const tag=document.getElementById('roomStatus'); tag.textContent=r.status||'open'; tag.className='tag '+cls(r.status); document.getElementById('roomDesc').textContent=r.desc||'No description yet.'; const box=document.getElementById('profileBox'); box.innerHTML=r.url?`<a class="profile-link" href="${r.url}" target="_blank" rel="noopener noreferrer">Open Notion Profile</a>${r.name==='Jacey'?'<button type="button" class="visit-dorm-btn" id="visitJaceyDorm">Visit Dorm</button>':''}`:''; if(r.name==='Jacey'){
+function addDormExploreButton(box){
+  if(!box)return;
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='explore-dorm-btn';
+  button.textContent='Explore Dorm Hallway in 3D';
+  button.addEventListener('click',()=>{
+    const inHandbook=new URLSearchParams(location.search).get('mode')==='handbook' && window.parent!==window;
+    if(inHandbook){
+      window.parent.postMessage({type:'shp:enter-dorm-explorer'},'*');
+    }else{
+      window.location.href='./explorer/dorm/index.html';
+    }
+  });
+  box.appendChild(button);
+}
+function selectRoom(r){selected=r.name; document.querySelectorAll('.hotspot,.dorm-room').forEach(e=>e.classList.toggle('selected',e.dataset.name===r.name)); document.getElementById('roomTitle').textContent=r.name; const tag=document.getElementById('roomStatus'); tag.textContent=r.status||'open'; tag.className='tag '+cls(r.status); document.getElementById('roomDesc').textContent=r.desc||'No description yet.'; const box=document.getElementById('profileBox'); box.innerHTML=r.url?`<a class="profile-link" href="${r.url}" target="_blank" rel="noopener noreferrer">Open Notion Profile</a>${r.name==='Jacey'?'<button type="button" class="visit-dorm-btn" id="visitJaceyDorm">Visit Dorm</button>':''}`:''; if(current==='Dorms')addDormExploreButton(box); if(r.name==='Jacey'){
   document.getElementById('visitJaceyDorm').onclick=()=>{
     if(new URLSearchParams(location.search).get('mode')==='handbook' && window.parent!==window){
       window.parent.postMessage({type:'shp:request-enter-jacey'},'*');
@@ -191,7 +209,7 @@ function selectRoom(r){selected=r.name; document.querySelectorAll('.hotspot,.dor
   };
 }}
 function renderList(){const q=search.value.toLowerCase(); roomList.innerHTML=''; floors[current].filter(r=>r.name.toLowerCase().includes(q)).forEach(r=>{let b=document.createElement('button'); b.className='room-btn'; b.textContent=r.name; b.onclick=()=>selectRoom(r); roomList.appendChild(b)})}
-function resetPanel(f,msg){document.getElementById('roomTitle').textContent=f; const tag=document.getElementById('roomStatus'); tag.textContent=f==='Dorms'?'Directory':f==='1F'?'Open':'Pending'; tag.className='tag '+(f==='Dorms'?'occupied':f==='1F'?'open':'locked'); document.getElementById('roomDesc').textContent=msg; document.getElementById('profileBox').innerHTML='';}
+function resetPanel(f,msg){document.getElementById('roomTitle').textContent=f; const tag=document.getElementById('roomStatus'); tag.textContent=f==='Dorms'?'Directory':f==='1F'?'Open':'Pending'; tag.className='tag '+(f==='Dorms'?'occupied':f==='1F'?'open':'locked'); document.getElementById('roomDesc').textContent=msg; const box=document.getElementById('profileBox'); box.innerHTML=''; if(f==='Dorms')addDormExploreButton(box);}
 function renderDorms(){dormGrid.querySelectorAll('.dorm-room').forEach(e=>e.remove()); floors.Dorms.forEach(r=>{let d=document.createElement('button'); d.className='dorm-room'; d.dataset.name=r.name; Object.assign(d.style,{left:r.x+'%',top:r.y+'%',width:r.w+'%',height:r.h+'%'}); d.innerHTML=`<span>${r.name}</span>`; d.onclick=()=>selectRoom(r); dormGrid.appendChild(d);})}
 function renderFloor(f){current=f; selected=null; document.getElementById('jaceyDormView').classList.remove('active'); document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.floor===f)); document.getElementById('map1').classList.toggle('hidden',f!=='1F'); document.getElementById('dormStage').classList.toggle('hidden',f!=='Dorms'); document.getElementById('placeholder').classList.toggle('active',f!=='1F' && f!=='Dorms'); spots.innerHTML=''; if(f==='1F'){floors[f].forEach(r=>{let d=document.createElement('div'); d.className='hotspot'; d.dataset.name=r.name; Object.assign(d.style,{left:r.x+'%',top:r.y+'%',width:r.w+'%',height:r.h+'%'}); d.onclick=()=>selectRoom(r); spots.appendChild(d)}); resetPanel(f,'Select a room on the map, or search below.'); } else if(f==='Dorms'){renderDorms(); resetPanel(f,'Select a student dorm, or search below. Each room can open its Notion student profile.'); } else {document.getElementById('phTitle').textContent=f; document.getElementById('phText').textContent='This floor will be added after its individual hotspot pass.'; resetPanel(f,document.getElementById('phText').textContent); } search.value=''; renderList();}
 
@@ -252,6 +270,6 @@ mapHandbookBack.addEventListener('click',()=>{
   window.parent.postMessage({type:'shp:return-handbook'},'*');
 });
 
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>renderFloor(b.dataset.floor)); search.oninput=renderList; renderFloor('1F');
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>renderFloor(b.dataset.floor)); search.oninput=renderList; const requestedFloor=new URLSearchParams(location.search).get('floor'); renderFloor(['1F','Dorms','2F','3F'].includes(requestedFloor)?requestedFloor:'1F');
 </script>
 </body></html>
