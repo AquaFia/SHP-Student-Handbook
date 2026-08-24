@@ -30,6 +30,10 @@
 .viewer{position:fixed;inset:0;background:#05090a;display:none;z-index:5}.viewer.open{display:block}
 .viewer iframe{width:100%;height:100%;border:0;background:#05090a}
 
+.roam-return{position:fixed;right:22px;bottom:22px;z-index:6;display:none;padding:13px 17px;border:1px solid rgba(215,181,109,.55);border-radius:11px;background:linear-gradient(145deg,#1b2726,#08100e);color:#f4d78f;font-weight:900;letter-spacing:.04em;cursor:pointer;box-shadow:0 12px 34px rgba(0,0,0,.45)}
+.roam-return.visible{display:block}
+.roam-return:hover,.roam-return:focus-visible{border-color:#f4d78f;transform:translateY(-1px);outline:none}
+
 @media(max-width:850px){.shell{grid-template-columns:150px 1fr}.home{padding:20px}.grid{gap:10px}.app{padding:12px}}
 
 
@@ -285,8 +289,9 @@ body{font-size:17px;}
 <aside class="sidebar"><div class="brand"><span class="seal">✦</span><span>STUDENT<br>HANDBOOK</span></div><nav class="nav"><button class="active">Home</button></nav><div class="status">ACADEMY NETWORK · ONLINE</div></aside>
 <main class="home"><h1>Student Handbook</h1><p>Academy services and personal student records</p><div class="grid" id="grid"></div></main>
 </div>
-<div class="viewer" id="viewer"><iframe id="appFrame" title="Handbook application"></iframe></div>
+<div class="viewer" id="viewer"><iframe id="appFrame" title="Handbook application" allow="fullscreen"></iframe></div>
 </div>
+<button id="returnToRoam" class="roam-return" type="button">↩ Return to 3D Dorm Hallway</button>
 <div id="transition" class="startup" role="button" tabindex="0" aria-label="Open Student Handbook">
   <div id="screenGlow" aria-hidden="true"></div>
   <div id="screenFill" aria-hidden="true"></div>
@@ -310,7 +315,9 @@ const transition=document.getElementById('transition');
 const grid=document.getElementById('grid');
 const viewer=document.getElementById('viewer');
 const frame=document.getElementById('appFrame');
+const returnToRoam=document.getElementById('returnToRoam');
 let busy=false;
+let roamingSession=false;
 
 grid.innerHTML=handbookApps.map((app,index)=>`
   <button class="app" data-index="${index}">
@@ -323,6 +330,8 @@ grid.querySelectorAll('.app').forEach(button=>{
   button.addEventListener('click',()=>{
     const appIndex=Number(button.dataset.index);
     const app=handbookApps[appIndex];
+    roamingSession=false;
+    returnToRoam.classList.remove('visible');
     frame.src=app[2];
     frame.title=app[0];
     viewer.classList.add('open');
@@ -371,14 +380,56 @@ function exitRoom(){
   },reduced?590:5670);
 }
 
+function enterDormExplorer(){
+  roamingSession=true;
+  returnToRoam.classList.remove('visible');
+  frame.src='apps/explorer/dorm/index.html?mode=handbook';
+  frame.title='3D Dorm Hallway';
+  viewer.classList.add('open');
+}
+
+function showHandbookOverRoaming(){
+  if(!roamingSession)return;
+  viewer.classList.remove('open');
+  returnToRoam.classList.add('visible');
+}
+
+returnToRoam.addEventListener('click',()=>{
+  if(!roamingSession)return;
+  returnToRoam.classList.remove('visible');
+  viewer.classList.add('open');
+  frame.contentWindow?.postMessage({type:'shp:resume-roaming'},'*');
+});
+
 window.addEventListener('message',event=>{
   const msg=event.data;
   if(!msg || typeof msg!=='object')return;
   if(event.source!==frame.contentWindow)return;
 
   if(msg.type==='shp:return-handbook'){
+    roamingSession=false;
+    returnToRoam.classList.remove('visible');
     viewer.classList.remove('open');
     frame.src='about:blank';
+    return;
+  }
+
+  if(msg.type==='shp:enter-dorm-explorer'){
+    enterDormExplorer();
+    return;
+  }
+
+  if(msg.type==='shp:open-handbook-from-roaming'){
+    showHandbookOverRoaming();
+    return;
+  }
+
+  if(msg.type==='shp:exit-roaming-to-map'){
+    roamingSession=false;
+    returnToRoam.classList.remove('visible');
+    frame.src='apps/map.html?mode=handbook&floor=Dorms';
+    frame.title='School Map';
+    viewer.classList.add('open');
     return;
   }
 
