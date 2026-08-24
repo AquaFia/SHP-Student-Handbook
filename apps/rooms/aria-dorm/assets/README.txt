@@ -1,3 +1,4 @@
-M.S.10 placeholder asset folder for Aria’s Dorm (aria-dorm).
+Aria Matsuda dorm room assets.
 
-Place this room's eventual static-image assets here, or replace index.html with a 3D room implementation while keeping the canonical folder/entry path unchanged.
+aria-dorm.png is the static room scene used by ../index.html. Keep the
+canonical aria-dorm folder and index.html entry path unchanged for map integration.
