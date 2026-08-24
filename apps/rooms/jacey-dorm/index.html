@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Jacey's Dorm</title>
+<style>
+:root{--line:#e63b53;--cyan:#9be7ff;--text:#fff;--panel:#07111fee}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05070b;font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+.room-shell{position:relative;width:100%;height:100%;display:grid;place-items:center;background:#05070b}
+.room-stage{position:relative;width:min(100%,calc(100vh * 1.5));max-width:100%;aspect-ratio:3/2;background:#070b15;overflow:hidden}
+.room-image{display:block;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.room-topbar{position:absolute;z-index:20;left:14px;right:14px;top:14px;display:flex;gap:10px;justify-content:space-between;pointer-events:none}
+.room-topbar .group{display:flex;gap:10px;flex-wrap:wrap;pointer-events:auto}
+.room-topbar button{background:#08111ddd;border:1px solid #ffffff40;color:#fff;padding:10px 13px;border-radius:8px;font-weight:900;cursor:pointer;box-shadow:0 4px 18px #0008}
+.room-topbar button:hover,.room-topbar button:focus-visible{border-color:var(--line);box-shadow:0 0 18px #e63b5377;outline:none}
+.hotspot{position:absolute;z-index:5;border:2px solid transparent;background:transparent;cursor:pointer;border-radius:5px;transition:.15s ease}
+.hotspot:hover,.hotspot:focus-visible{outline:none;border-color:#fff;background:#e63b532d;box-shadow:0 0 24px #e63b53bb,inset 0 0 20px #fff2}
+.hotspot:after{content:attr(data-label);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;color:#fff;background:#07111fe6;border:1px solid #ffffff44;padding:6px 9px;border-radius:6px;font-size:12px;font-weight:900;white-space:nowrap;text-shadow:0 2px 3px #000;transition:.15s ease}
+.hotspot:hover:after,.hotspot:focus-visible:after{opacity:1}
+.dialogue{position:absolute;z-index:30;left:4%;right:4%;bottom:3%;display:none;background:linear-gradient(180deg,#141b2ff2,#070b15f8);border:2px solid #fff;border-left:9px solid var(--line);padding:17px 54px 18px 20px;box-shadow:0 8px 40px #000d,0 0 22px #e63b5355}
+.dialogue.open{display:block;animation:slide .18s ease-out}
+.dialogue h3{margin:0 0 8px;text-transform:uppercase;letter-spacing:.12em;font-size:15px;color:var(--cyan)}
+.dialogue p{margin:0;font-size:18px;line-height:1.45}
+.dialogue-close{position:absolute;right:12px;top:12px;border:1px solid #ffffff44;background:#ffffff0f;color:#fff;width:32px;height:32px;padding:0;border-radius:50%;font-size:18px;cursor:pointer}
+@keyframes slide{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
+@media(max-width:850px){.dialogue p{font-size:15px}.room-topbar{left:8px;right:8px;top:8px}.room-topbar button{padding:8px 10px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="room-shell">
+  <div class="room-stage" id="roomStage">
+    <img class="room-image" src="../../explorer/dorm/assets/jacey-dorm.png" alt="Jacey Cosmo's dorm room" />
+
+    <div class="room-topbar" id="roomTopbar">
+      <div class="group"><button type="button" id="backButton">← Back to Dorm Map</button></div>
+      <div class="group"><button type="button" id="handbookButton">Student Handbook</button></div>
+    </div>
+
+    <button class="hotspot" data-label="Closet" data-title="Closet" data-text="If you find any good clothes laying around to be claimed by an amnesiac, lmk ^_^" style="left:0.2%;top:0%;width:10.7%;height:81%;" aria-label="Inspect closet"></button>
+    <button class="hotspot" data-label="Window" data-title="Window" data-text="The stars are so pretty tonight! Sometimes, I see Kouji climb by on his way to and from Tyler's room." style="left:20%;top:2.5%;width:25%;height:43%;" aria-label="Inspect window"></button>
+    <button class="hotspot" data-label="Evidence Board" data-title="Evidence Board" data-text="7 years later and still no progress ;-;" style="left:46%;top:18%;width:33%;height:24%;" aria-label="Inspect evidence board"></button>
+    <button class="hotspot" data-label="Tablet / Laptop" data-title="Tablet / Laptop" data-text="This is where I do cryptology work the government definitely doesn't want me to tell you about :D" style="left:47%;top:39%;width:31%;height:18%;" aria-label="Inspect tablet and laptop"></button>
+    <button class="hotspot" data-label="Desk" data-title="Desk" data-text="Oh, there's my homework I couldn't find 3 weeks ago... I wonder if I can still turn it in." style="left:45%;top:44%;width:37%;height:29%;" aria-label="Inspect desk"></button>
+
+    <div class="dialogue" id="dialogue" role="dialog" aria-live="polite" aria-label="Room inspection text">
+      <button class="dialogue-close" id="dialogueClose" type="button" aria-label="Close inspection text">×</button>
+      <h3 id="dialogueTitle"></h3>
+      <p id="dialogueText"></p>
+    </div>
+  </div>
+</div>
+<script>
+const params=new URLSearchParams(location.search);
+function readEntryContext(){
+  const legacyMode=params.get('mode');
+  const source=params.get('shpSource') || (legacyMode==='explorer'?'explorer':legacyMode==='map'?'map':'standalone');
+  const returnTarget=params.get('shpReturn') || (source==='explorer'?'hallway':'map');
+  return {
+    source,
+    returnTarget,
+    floor:params.get('shpFloor')||null,
+    locationId:params.get('shpLocation')||null,
+    spawnId:params.get('shpSpawn')||null
+  };
+}
+const entryContext=readEntryContext();
+const topbar=document.getElementById('roomTopbar');
+const back=document.getElementById('backButton');
+const handbook=document.getElementById('handbookButton');
+
+back.textContent = entryContext.returnTarget==='hallway' ? '← Return to Hallway' : '← Back to Dorm Map';
+back.addEventListener('click',()=>{
+  if(window.parent!==window){
+    window.parent.postMessage({type:'SHP_RETURN_PREVIOUS',roomId:'jacey-dorm',context:entryContext},'*');
+  }else if(history.length>1){
+    history.back();
+  }
+});
+handbook.addEventListener('click',()=>{
+  if(window.parent!==window){
+    window.parent.postMessage({type:'SHP_OPEN_HANDBOOK',roomId:'jacey-dorm',context:entryContext},'*');
+  }
+});
+
+document.getElementById('dialogueClose').addEventListener('click',()=>document.getElementById('dialogue').classList.remove('open'));
+document.querySelectorAll('.hotspot').forEach(h=>h.addEventListener('click',()=>{
+  document.getElementById('dialogueTitle').textContent=h.dataset.title;
+  document.getElementById('dialogueText').textContent=h.dataset.text;
+  document.getElementById('dialogue').classList.add('open');
+}));
+</script>
+</body>
+</html>

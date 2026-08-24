@@ -1,0 +1,518 @@
+{
+  "milestone": "C.6.2b.5f",
+  "purpose": "UV / texture-scale cleanup with independent surface-family repeat settings.",
+  "authoritativeReferences": [
+    "reference/cafeteria_reference.png",
+    "reference/cafeteria_texture_atlas.png"
+  ],
+  "guideline": "Keep visual artwork in named texture files. Avoid embedding atlas crops as base64 in the HTML.",
+  "textures": {
+    "floorT": {
+      "path": "textures/architecture/floor_tile.png",
+      "crop": [
+        8,
+        545,
+        274,
+        803
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "repeat": [
+        5.2,
+        6.0
+      ],
+      "mode": "repeat",
+      "role": "Primary cafeteria floor tile."
+    },
+    "floorSmallT": {
+      "path": "textures/architecture/hallway_floor_tile.png",
+      "crop": [
+        8,
+        807,
+        268,
+        932
+      ],
+      "size": [
+        512,
+        256
+      ],
+      "repeat": [
+        3.4,
+        7.4
+      ],
+      "mode": "repeat",
+      "role": "Hallway and stair floor tile."
+    },
+    "woodT": {
+      "path": "textures/furniture/wood.png",
+      "crop": [
+        8,
+        936,
+        450,
+        1020
+      ],
+      "size": [
+        512,
+        128
+      ],
+      "repeat": [
+        3.0,
+        2.0
+      ],
+      "mode": "repeat",
+      "role": "Tables, trim, and wood surfaces."
+    },
+    "wallT": {
+      "path": "textures/architecture/wall_upper_atlas.png",
+      "crop": [
+        495,
+        2,
+        720,
+        322
+      ],
+      "size": [
+        384,
+        512
+      ],
+      "repeat": [
+        5.4,
+        1.12
+      ],
+      "mode": "repeat",
+      "role": "Primary cream/tan cafeteria wall material from the supplied atlas."
+    },
+    "windowT": {
+      "path": "textures/environment/virtual_window.png",
+      "crop": [
+        8,
+        4,
+        278,
+        282
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "repeat": [
+        1,
+        1
+      ],
+      "mode": "decal",
+      "role": "Virtual sunlight window landscape."
+    },
+    "chairT": {
+      "path": "textures/furniture/chair_back.png",
+      "crop": [
+        356,
+        500,
+        453,
+        636
+      ],
+      "size": [
+        256,
+        384
+      ],
+      "repeat": [
+        1,
+        1
+      ],
+      "mode": "decal",
+      "role": "Chair-back upholstery / school-star motif."
+    },
+    "menuAtlasT": {
+      "path": "textures/service/menu_board.png",
+      "crop": [
+        349,
+        329,
+        697,
+        493
+      ],
+      "size": [
+        768,
+        362
+      ],
+      "repeat": [
+        1,
+        1
+      ],
+      "mode": "decal",
+      "role": "Cafeteria menu board."
+    },
+    "drinkAtlasT": {
+      "path": "textures/service/drink_vending_reference_crop.png",
+      "crop": [
+        1162,
+        120,
+        1532,
+        340
+      ],
+      "size": [
+        768,
+        456
+      ],
+      "repeat": [
+        1,
+        1
+      ],
+      "mode": "decal",
+      "role": "Drink station / vending reference crop."
+    },
+    "counterAtlasT": {
+      "path": "textures/service/service_counter.png",
+      "crop": [
+        719,
+        342,
+        1530,
+        554
+      ],
+      "size": [
+        1024,
+        268
+      ],
+      "repeat": [
+        1,
+        1
+      ],
+      "mode": "decal",
+      "role": "Service-counter reference crop."
+    },
+    "stairsAtlasT": {
+      "path": "textures/architecture/stair_reference_crop.png",
+      "crop": [
+        635,
+        594,
+        838,
+        931
+      ],
+      "size": [
+        384,
+        640
+      ],
+      "repeat": [
+        1,
+        1
+      ],
+      "mode": "decal",
+      "role": "Staircase reference crop."
+    },
+    "kitchenAtlasT": {
+      "path": "textures/service/kitchen_reference_crop.png",
+      "crop": [
+        839,
+        594,
+        1530,
+        930
+      ],
+      "size": [
+        1024,
+        498
+      ],
+      "repeat": [
+        1,
+        1
+      ],
+      "mode": "decal",
+      "role": "Kitchen reference crop."
+    },
+    "navyT": {
+      "path": "textures/architecture/navy_trim.png",
+      "crop": [
+        286,
+        0,
+        342,
+        322
+      ],
+      "size": [
+        128,
+        512
+      ],
+      "repeat": [
+        1,
+        2.0
+      ],
+      "mode": "repeat",
+      "role": "Dark navy architectural trim."
+    },
+    "rugT": {
+      "path": "textures/environment/entrance_rug.png",
+      "crop": [
+        282,
+        686,
+        621,
+        806
+      ],
+      "size": [
+        768,
+        272
+      ],
+      "repeat": [
+        1,
+        1
+      ],
+      "mode": "decal",
+      "role": "Main student entrance rug."
+    },
+    "counterT": {
+      "path": "textures/service/service_counter_repeat.png",
+      "crop": [
+        719,
+        342,
+        1530,
+        554
+      ],
+      "size": [
+        1024,
+        268
+      ],
+      "repeat": [
+        1.2,
+        1.0
+      ],
+      "mode": "repeat",
+      "role": "Repeatable service-counter body material."
+    },
+    "lowerNavyWallT": {
+      "path": "textures/architecture/wall_lower_navy.png",
+      "repeat": [
+        5.2,
+        1.0
+      ],
+      "mode": "repeat",
+      "role": "Baked navy lower-wall material, externalized for editing."
+    },
+    "serviceWallT": {
+      "path": "textures/service/service_wall_tile.png",
+      "repeat": [
+        4.0,
+        2.3
+      ],
+      "mode": "repeat",
+      "role": "Baked kitchen/service tile material, externalized for editing."
+    },
+    "ceilT": {
+      "path": "textures/architecture/ceiling_grid.png",
+      "repeat": [
+        5.0,
+        8.0
+      ],
+      "mode": "repeat",
+      "role": "Baked ceiling grid material, externalized for editing."
+    },
+    "wallUpperClean": {
+      "path": "textures/architecture/wall_upper_clean.png",
+      "mode": "repeat",
+      "role": "Clean cream/tan wall panel texture with no baked-in lower trim or fixtures."
+    },
+    "serviceBacksplash": {
+      "path": "textures/service/service_backsplash.png",
+      "mode": "decal",
+      "role": "Dedicated tiled/lit backsplash behind the food service counter."
+    },
+    "wallPanelReference": {
+      "path": "textures/architecture/wall_panel_reference.png",
+      "mode": "repeat",
+      "role": "Actual warm beige vertical wall panel artwork from the supplied cafeteria atlas."
+    },
+    "serviceWallFull": {
+      "path": "textures/service/service_wall_full.png",
+      "mode": "repeat",
+      "role": "Single detailed food-service wall map: beige panels, structural rail, tiled backsplash."
+    }
+  },
+  "uvCleanup": {
+    "cafeteriaFloor": [
+      6.25,
+      7.0
+    ],
+    "hallFloor": [
+      2.35,
+      8.2
+    ],
+    "stairs": [
+      1.75,
+      1.05
+    ],
+    "upperLanding": [
+      2.15,
+      1.35
+    ],
+    "tableWood": [
+      2.8,
+      1.15
+    ],
+    "architecturalTrimWood": [
+      4.4,
+      0.72
+    ],
+    "counterWood": [
+      3.6,
+      0.9
+    ],
+    "cafeteriaWall": [
+      4.2,
+      1.0
+    ],
+    "hallWall": [
+      2.2,
+      1.35
+    ],
+    "lowerNavy": [
+      5.8,
+      1.0
+    ],
+    "serviceWall": [
+      5.0,
+      2.75
+    ],
+    "cafeteriaCeiling": [
+      7.0,
+      8.0
+    ],
+    "hallCeiling": [
+      2.45,
+      10.0
+    ],
+    "crossHallCeiling": [
+      4.0,
+      3.0
+    ]
+  },
+  "notes": [
+    "Repeating source maps are cloned per surface family so one repeat change cannot distort unrelated surfaces.",
+    "Hallway walls use an independent wall repeat because their proportions differ from the cafeteria.",
+    "Stairs and upper landing no longer share the long hallway-floor repeat.",
+    "Cross-hall ceiling uses a separate repeat from the long north hallway ceiling."
+  ],
+  "visibilityRecovery": {
+    "textureLoading": "Direct load per UV variant; no pre-load Texture.clone().",
+    "fallbackLighting": "Ambient 0.48 + Hemisphere 1.65 + directional fill.",
+    "toneMappingExposure": 1.22,
+    "statusIndicator": "Shows texture loading failure instead of silently rendering black."
+  },
+  "runtimeDelivery": {
+    "editableSources": "External PNG files under ./textures/",
+    "runtimeTextures": "Embedded data URLs inside cafeteria_roamable.html",
+    "reason": "Allows direct file:// opening without browser CORS failures.",
+    "entryGate": "Enter Cafeteria remains disabled until DefaultLoadingManager.onLoad."
+  },
+  "wallMaterialReconstruction": {
+    "cafeteriaWallTint": "#cdbb9f",
+    "hallwayWallTint": "#c6b092",
+    "lowerWallTint": "#b8c5d5 over navy texture",
+    "woodTrimTint": "#73513a",
+    "serviceWallTint": "#e1ddd3",
+    "exposure": 1.12,
+    "geometryChanges": "none"
+  },
+  "architectureFix": {
+    "issue": "Unintended wall hole between kitchen service-door bay and north hallway entrance.",
+    "fix": "Added a north-wall infill section spanning the unused gap.",
+    "hallwayWidthChanged": false,
+    "kitchenDoorMoved": false
+  },
+  "layoutCorrection": {
+    "crossHallZ": -22.2,
+    "stairStartZ": -32.1,
+    "kitchenRearWall": "removed from view",
+    "visibleBackdropBehindKitchen": "hallway wall material"
+  },
+  "wallTextureRepair": {
+    "mainWall": "architecture/wall_upper_clean.png",
+    "mainWallRepeat": [
+      3.1,
+      1.0
+    ],
+    "hallWallRepeat": [
+      1.85,
+      1.1
+    ],
+    "serviceBacksplash": "service/service_backsplash.png",
+    "serviceBacksplashSourceCrop": [
+      720,
+      370,
+      1150,
+      510
+    ],
+    "overlapFixes": [
+      "Removed architectural features from base wall texture by using a clean panel-only map.",
+      "Separated service backsplash, north wall, and menu board in depth.",
+      "Raised service header above menu-board zone."
+    ]
+  },
+  "referenceWallFidelity": {
+    "generalWall": "textures/architecture/wall_panel_reference.png",
+    "generalWallSourceCrop": [
+      500,
+      36,
+      690,
+      252
+    ],
+    "serviceWall": "textures/service/service_wall_full.png",
+    "serviceWallConstruction": "Single material combining atlas beige panels + atlas service backsplash.",
+    "separateServiceOverlay": false,
+    "northServiceWainscotOverlay": false,
+    "goal": "Preserve reference detail without coplanar texture layers or z-fighting."
+  },
+  "wallTrimRepair": {
+    "trimMaterial": "architecture/navy_trim.png via trimM",
+    "lowerWallCoverage": "floor to cap rail",
+    "obsoleteSideTrimRemoved": true,
+    "westWindowTrim": "refitted to actual screen housing extents",
+    "hallwayTrim": "continuous lower navy wall + cap rail",
+    "entranceTrim": "navy structural trim",
+    "goal": "No beige wall seams between trim pieces and no mismatched wood trim on blue structural rails."
+  },
+  "startupFix": {
+    "error": "ReferenceError: archDarkM is not defined",
+    "cause": "C.6.2b.5 renamed architectural material aliases but an older geometry call still referenced the previous alias.",
+    "fix": "Restored compatibility aliases and replaced direct old references where appropriate."
+  },
+  "serviceHallSeamFix": {
+    "leftHallEdge": -1.18,
+    "rightHallEdge": 3.68,
+    "serviceTransitionMaterial": "serviceWallFullM",
+    "removedGenericInfill": true,
+    "rightWallIntrusionFixed": true,
+    "boundaryTrim": "navy_trim.png"
+  },
+  "layoutAdjustment": {
+    "storageDoorX": 5.1,
+    "supplyDoorX": 7.65,
+    "stairWidth": 4.56,
+    "hallInteriorWidthApprox": 4.6,
+    "upperLandingWidth": 4.56,
+    "utilityDoorFrames": "fitted navy trim"
+  },
+  "securityGate": {
+    "positionZ": -31.12,
+    "interaction": "E",
+    "action": "Student Handbook scan opens/closes two sliding gate panels",
+    "collision": "dynamic",
+    "stairCount": 24,
+    "stairWidth": 4.56,
+    "upperDestination": "five-layer depth fade with stairs continuing behind it",
+    "height": 4.8,
+    "ceilingHeight": 4.8,
+    "distanceToFirstStairApprox": 0.98
+  },
+  "crossHallTrim": {
+    "lowerWallMaterial": "lowerWallM",
+    "capMaterial": "trimM / architecture/navy_trim.png",
+    "crownMaterial": "trimM / architecture/navy_trim.png",
+    "walls": [
+      "north",
+      "south"
+    ],
+    "bothBranches": true
+  },
+  "hallEntranceBorder": {
+    "texture": "textures/architecture/navy_trim.png",
+    "style": "three-sided portal surround",
+    "leftEdge": -1.18,
+    "rightEdge": 3.68,
+    "redundantOldHeaderRemoved": true,
+    "redundantBoundaryTrimRemoved": true
+  }
+}

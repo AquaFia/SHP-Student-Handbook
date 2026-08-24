@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHP 3D Room Template</title>
+<style>
+:root{
+  --room-accent:#e63b53;
+  --room-cyan:#9be7ff;
+  --room-text:#fff;
+  --room-bg:#05070b;
+  --room-panel:#07111fee;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--room-bg);font-family:Arial,Helvetica,sans-serif;color:var(--room-text)}
+.room-shell{position:relative;width:100%;height:100%;background:#05070b;overflow:hidden}
+.world-host{position:absolute;inset:0;overflow:hidden;background:radial-gradient(circle at 50% 35%,#142235,#05070b 68%)}
+.world-host canvas{display:block;width:100%;height:100%}
+.room-topbar{position:absolute;z-index:40;left:14px;right:14px;top:14px;display:flex;gap:10px;justify-content:space-between;pointer-events:none}
+.room-topbar .group{display:flex;gap:10px;flex-wrap:wrap;pointer-events:auto}
+.room-topbar button{background:#08111ddd;border:1px solid #ffffff40;color:#fff;padding:10px 13px;border-radius:8px;font-weight:900;cursor:pointer;box-shadow:0 4px 18px #0008}
+.room-topbar button:hover,.room-topbar button:focus-visible{border-color:var(--room-accent);box-shadow:0 0 18px #e63b5377;outline:none}
+.room-status{position:absolute;z-index:20;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,88vw);padding:20px;border:1px solid #ffffff35;border-radius:12px;background:#07111fe8;text-align:center;box-shadow:0 12px 40px #000b}
+.room-status.hidden{display:none}.room-status strong{display:block;font-size:22px;margin-bottom:8px}.room-status p{margin:0;color:#c9d3df;line-height:1.5}.room-status code{color:var(--room-cyan)}
+.room-hint{position:absolute;z-index:18;left:50%;bottom:18px;transform:translateX(-50%);padding:8px 12px;border:1px solid #ffffff28;border-radius:8px;background:#07111fca;color:#d7e3ef;font-size:12px;font-weight:800;letter-spacing:.04em;pointer-events:none}
+@media(max-width:850px){.room-topbar{left:8px;right:8px;top:8px}.room-topbar button{padding:8px 10px;font-size:12px}.room-hint{bottom:8px;max-width:92vw;text-align:center}}
+</style>
+</head>
+<body>
+<div class="room-shell" id="roomShell">
+  <div class="world-host" id="worldHost" aria-label="3D room viewport"></div>
+
+  <div class="room-topbar">
+    <div class="group"><button type="button" id="backButton">← Back</button></div>
+    <div class="group">
+      <button type="button" id="resetButton">Reset Position</button>
+      <button type="button" id="handbookButton">Student Handbook</button>
+    </div>
+  </div>
+
+  <div class="room-status" id="roomStatus" role="status" aria-live="polite">
+    <strong id="statusTitle">3D Room Template</strong>
+    <p id="statusText">Waiting for the room runtime.</p>
+  </div>
+  <div class="room-hint" id="roomHint">This template provides the room shell; replace the placeholder runtime in world.js.</div>
+</div>
+
+<script>
+/*
+M.S.6 — 3D ROOM CONTRACT
+
+Copy apps/rooms/_3d-template/ to apps/rooms/<canonical-room-id>/ and edit
+ROOM_3D_CONFIG. The room's index.html remains the one canonical entry point.
+The actual Three.js/WebGL implementation belongs in world.js (and optional
+room-owned data/assets), not in map.html or a hallway.
+*/
+const ROOM_3D_CONFIG = {
+  id: "replace-with-canonical-room-id",
+  title: "3D Room Name",
+  accent: "#e63b53",
+  cyan: "#9be7ff",
+  spawnId: "default",
+
+  navigation: {
+    mapBackLabel: "← Back to Map",
+    explorerBackLabel: "← Return to Hallway",
+
+    // Temporary configurable names until M.S.7/M.S.8 establish the final
+    // universal context/navigation messaging contract.
+    mapBackMessage: "SHP_RETURN_PREVIOUS",
+    explorerBackMessage: "SHP_RETURN_PREVIOUS",
+    handbookMessage: "SHP_OPEN_HANDBOOK"
+  }
+};
+
+window.SHP_ROOM_3D_CONFIG = ROOM_3D_CONFIG;
+
+const params = new URLSearchParams(location.search);
+const legacyMode = params.get("mode") || params.get("from");
+const entryContext = {
+  source: params.get("shpSource") || (legacyMode === "explorer" ? "explorer" : legacyMode === "map" ? "map" : "standalone"),
+  returnTarget: params.get("shpReturn") || ((legacyMode === "explorer" || legacyMode === "hallway" || legacyMode === "dorm-hall") ? "hallway" : "map"),
+  floor: params.get("shpFloor") || null,
+  locationId: params.get("shpLocation") || null,
+  spawnId: params.get("shpSpawn") || params.get("spawn") || ROOM_3D_CONFIG.spawnId || "default"
+};
+const mode = entryContext.source;
+const entrySpawn = entryContext.spawnId;
+const isExplorer = entryContext.returnTarget === "hallway";
+
+if (ROOM_3D_CONFIG.title) document.title = ROOM_3D_CONFIG.title;
+if (ROOM_3D_CONFIG.accent) document.documentElement.style.setProperty("--room-accent", ROOM_3D_CONFIG.accent);
+if (ROOM_3D_CONFIG.cyan) document.documentElement.style.setProperty("--room-cyan", ROOM_3D_CONFIG.cyan);
+
+const worldHost = document.getElementById("worldHost");
+const roomStatus = document.getElementById("roomStatus");
+const statusTitle = document.getElementById("statusTitle");
+const statusText = document.getElementById("statusText");
+const backButton = document.getElementById("backButton");
+const resetButton = document.getElementById("resetButton");
+
+function sendToParent(type, detail={}) {
+  if (!type) return false;
+  if (window.parent !== window) {
+    window.parent.postMessage({
+      type,
+      roomId: ROOM_3D_CONFIG.id,
+      context: entryContext,
+      spawnId: entrySpawn,
+      ...detail
+    }, "*");
+    return true;
+  }
+  return false;
+}
+
+function setRoomStatus(title, text, visible=true) {
+  statusTitle.textContent = title || "3D Room";
+  statusText.textContent = text || "";
+  roomStatus.classList.toggle("hidden", !visible);
+}
+window.SHPSet3DRoomStatus = setRoomStatus;
+
+backButton.textContent = isExplorer ? ROOM_3D_CONFIG.navigation.explorerBackLabel : ROOM_3D_CONFIG.navigation.mapBackLabel;
+backButton.addEventListener("click", () => {
+  const runtime = window.SHP3DRoomRuntime;
+  if (runtime && typeof runtime.pause === "function") runtime.pause("navigate-back");
+  const sent = sendToParent('SHP_RETURN_PREVIOUS',{roomId:ROOM_3D_CONFIG.id,context:entryContext});
+  if (!sent && history.length > 1) history.back();
+});
+
+document.getElementById("handbookButton").addEventListener("click", () => {
+  const runtime = window.SHP3DRoomRuntime;
+  if (runtime && typeof runtime.pause === "function") runtime.pause("open-handbook");
+  sendToParent('SHP_OPEN_HANDBOOK',{roomId:ROOM_3D_CONFIG.id,context:entryContext});
+});
+
+resetButton.addEventListener("click", () => {
+  const runtime = window.SHP3DRoomRuntime;
+  if (runtime && typeof runtime.resetPosition === "function") {
+    runtime.resetPosition(entrySpawn);
+  } else {
+    setRoomStatus("Reset unavailable", "The room runtime has not implemented resetPosition(spawnId) yet.", true);
+  }
+});
+
+function boot3DRoom() {
+  const runtime = window.SHP3DRoomRuntime;
+  if (!runtime || typeof runtime.init !== "function") {
+    setRoomStatus("3D runtime missing", "Implement window.SHP3DRoomRuntime.init(...) in world.js.", true);
+    return;
+  }
+  try {
+    const result = runtime.init({
+      host: worldHost,
+      roomId: ROOM_3D_CONFIG.id,
+      config: ROOM_3D_CONFIG,
+      entry: {...entryContext, spawnId:entrySpawn},
+      navigation: { sendToParent },
+      setStatus: setRoomStatus
+    });
+    if (result && typeof result.then === "function") {
+      result.then(() => setRoomStatus("", "", false)).catch(err => {
+        console.error("3D room init failed", err);
+        setRoomStatus("3D room failed to start", String(err && err.message || err), true);
+      });
+    } else {
+      setRoomStatus("", "", false);
+    }
+  } catch (err) {
+    console.error("3D room init failed", err);
+    setRoomStatus("3D room failed to start", String(err && err.message || err), true);
+  }
+}
+
+window.addEventListener("beforeunload", () => {
+  const runtime = window.SHP3DRoomRuntime;
+  if (runtime && typeof runtime.dispose === "function") runtime.dispose();
+});
+
+</script>
+<script src="world.js"></script>
+<script>
+// world.js is a classic script for local-file test compatibility. It may replace
+// the placeholder runtime below. Re-run boot only after world.js has loaded.
+if (window.SHP3DRoomRuntime && !window.SHP3DRoomRuntime.__bootedByTemplate) {
+  window.SHP3DRoomRuntime.__bootedByTemplate = true;
+  boot3DRoom();
+}
+</script>
+</body>
+</html>
