@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fate Expression Viewer</title>
+<style>
+:root{color-scheme:dark;--bg:#09090d;--panel:#12121a;--line:#29293a;--accent:#c82ad8;--text:#f6f4fa;--muted:#aaa7b5}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#171323 0,#09090d 48%);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+header{padding:22px 24px 14px;border-bottom:1px solid var(--line);background:#0b0b11e8;position:sticky;top:0;z-index:2}
+h1{margin:0;font-size:24px} header p{margin:6px 0 0;color:var(--muted)}
+main{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;padding:18px;min-height:calc(100vh - 86px)}
+.stage{background:linear-gradient(145deg,#111119,#08080c);border:1px solid var(--line);border-radius:16px;display:flex;align-items:center;justify-content:center;min-height:650px;overflow:hidden;padding:18px}
+.stage img{display:block;max-width:100%;max-height:78vh;object-fit:contain}
+.sidebar{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;overflow:auto;max-height:calc(100vh - 122px)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+button{background:#1a1a25;color:var(--text);border:1px solid #343448;border-radius:10px;padding:10px;cursor:pointer;text-align:left}
+button:hover,button.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.slot{font-weight:700}.file{display:block;color:var(--muted);font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.empty{opacity:.45}.status{color:var(--muted);font-size:12px;margin:0 0 12px}
+@media(max-width:850px){main{grid-template-columns:1fr}.sidebar{max-height:none}.stage{min-height:55vh}}
+</style>
+</head>
+<body>
+<header><h1>Fate — Character Expression Viewer</h1><p>Expression reference sprites</p></header>
+<main>
+  <section class="stage"><img id="portrait" alt="Fate expression"></section>
+  <aside class="sidebar">
+    <p class="status" id="status">Loading expression manifest…</p>
+    <div class="grid" id="expressionGrid"></div>
+  </aside>
+</main>
+<script src="expressions/manifest.js"></script>
+<script>
+const files = Array.isArray(window.EXPRESSION_FILES) ? window.EXPRESSION_FILES.slice(0,20) : [];
+const portrait=document.getElementById('portrait'), grid=document.getElementById('expressionGrid'), status=document.getElementById('status');
+for(let i=0;i<20;i++){
+  const file=files[i]||'';
+  const b=document.createElement('button');
+  b.className=file?'':'empty';
+  b.innerHTML=`<span class="slot">Expression ${String(i+1).padStart(2,'0')}</span><span class="file">${file||'Empty slot'}</span>`;
+  if(file)b.onclick=()=>select(i,b);
+  grid.appendChild(b);
+}
+function select(i,b){
+  portrait.src='expressions/'+files[i];
+  portrait.alt=`Fate expression ${i+1}`;
+  [...grid.children].forEach(x=>x.classList.remove('active')); b.classList.add('active');
+  status.textContent=`Showing ${String(i+1).padStart(2,'0')} of ${files.length}: ${files[i]}`;
+}
+if(files.length){select(0,grid.children[0]);} else {status.textContent='No expressions are listed in expressions/manifest.js.'}
+</script>
+</body></html>

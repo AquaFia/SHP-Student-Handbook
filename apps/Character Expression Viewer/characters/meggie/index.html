@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meggie Expression Viewer</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#080914;color:#fff;font-family:Arial,sans-serif;min-height:100vh}
+header{display:flex;align-items:center;gap:16px;padding:14px 18px;background:#0d1020;border-bottom:1px solid #343b62}
+a{color:#fff;text-decoration:none;padding:9px 12px;border:1px solid #343b62;border-radius:8px}.title{font-size:20px;font-weight:800}
+main{display:grid;grid-template-columns:1fr 260px;min-height:calc(100vh - 65px)}.stage{display:flex;align-items:center;justify-content:center;padding:20px}
+.stage img{max-width:100%;max-height:calc(100vh - 105px);object-fit:contain}.side{padding:15px;border-left:1px solid #343b62;background:#0d1020}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.slot{aspect-ratio:1;border:1px solid #343b62;border-radius:8px;background:#171a30;color:#fff;font-weight:bold;cursor:pointer}
+.slot.active{outline:2px solid #8d69ff;background:#28224b}.slot:disabled{opacity:.25;cursor:default}#status{margin-top:14px;color:#adb5d5;font-size:12px}
+@media(max-width:760px){main{grid-template-columns:1fr}.side{border-left:0;border-top:1px solid #343b62}}
+</style></head><body>
+<header><a href="../../index.html">← Character Viewers</a><div class="title">Meggie — Expression Viewer</div></header>
+<main><section class="stage"><img id="sprite" alt="Meggie expression"></section><aside class="side"><h3>Expressions</h3><div class="grid" id="slots"></div><div id="status"></div></aside></main>
+<script src="expressions/manifest.js"></script><script>
+const files=Array.isArray(window.EXPRESSION_FILES)?window.EXPRESSION_FILES.slice(0,20):[];
+const img=document.getElementById('sprite'),box=document.getElementById('slots'),status=document.getElementById('status');
+function show(i){if(!files[i])return;img.src='expressions/'+encodeURIComponent(files[i]);document.querySelectorAll('.slot').forEach((b,n)=>b.classList.toggle('active',n===i));status.textContent=`Expression ${String(i+1).padStart(2,'0')} — ${files[i]}`;}
+for(let i=0;i<20;i++){let b=document.createElement('button');b.className='slot';b.textContent=String(i+1).padStart(2,'0');b.disabled=!files[i];if(files[i])b.onclick=()=>show(i);box.appendChild(b)}if(files.length)show(0);
+</script></body></html>
