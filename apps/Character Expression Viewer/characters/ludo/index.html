@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ludo Expression Viewer</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#251526,#060407 60%);color:#fff;font-family:Inter,system-ui,sans-serif}
+main{width:min(1180px,calc(100% - 28px));margin:auto;padding:28px 0 44px}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.back{display:inline-block;text-decoration:none;color:#fff;background:#130d15;border:1px solid #532438;border-radius:10px;padding:10px 14px;font-weight:750}
+.back:hover{border-color:#ef4964;background:#24121b}
+.ey{color:#df8ca2;text-transform:uppercase;letter-spacing:.16em;font-size:.75rem;font-weight:850}
+h1{font-size:clamp(2rem,6vw,3.8rem);margin:8px 0 4px}
+p{color:#bcaab7;line-height:1.5;margin:0 0 22px}
+.layout{display:grid;grid-template-columns:minmax(300px,1fr) minmax(260px,390px);gap:18px}
+.stage,.panel{background:#0d090e;border:1px solid #40202e;border-radius:16px}
+.stage{min-height:650px;display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden}
+.stage img{display:block;max-width:100%;max-height:76vh;object-fit:contain}
+.panel{padding:14px;max-height:76vh;overflow:auto}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.slot{aspect-ratio:1;border:1px solid #532438;border-radius:10px;background:#130d15;padding:4px;cursor:pointer;overflow:hidden}
+.slot:hover,.slot.active{border-color:#ef4964;background:#24121b}
+.slot img{width:100%;height:100%;object-fit:contain}
+.empty{display:flex;align-items:center;justify-content:center;color:#715d69;font-size:.75rem}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.stage{min-height:480px}.panel{max-height:none}}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><a class="back" href="../../index.html">&lt;-- Character Viewers</a></div>
+<div class="ey">Student Handbook · Expression Viewer</div>
+<h1>Ludo</h1>
+<p>Select an expression. This viewer supports up to 20 sprite slots from Ludo's own expressions folder.</p>
+<div class="layout">
+  <section class="stage"><img id="preview" alt="Ludo expression"></section>
+  <aside class="panel"><div class="grid" id="grid"></div></aside>
+</div>
+</main>
+<script src="expressions/manifest.js"></script>
+<script>
+const files=(window.EXPRESSION_FILES||[]).slice(0,20);
+const grid=document.getElementById('grid');
+const preview=document.getElementById('preview');
+function select(i){
+  const f=files[i];
+  if(!f)return;
+  preview.src='expressions/'+encodeURIComponent(f);
+  preview.alt='Ludo expression '+String(i+1).padStart(2,'0');
+  document.querySelectorAll('.slot').forEach((b,n)=>b.classList.toggle('active',n===i));
+}
+for(let i=0;i<20;i++){
+  const b=document.createElement('button');
+  b.className='slot'+(files[i]?'':' empty');
+  b.type='button';
+  if(files[i]){
+    const im=document.createElement('img');
+    im.src='expressions/'+encodeURIComponent(files[i]);
+    im.alt='Expression '+String(i+1).padStart(2,'0');
+    b.appendChild(im);
+    b.addEventListener('click',()=>select(i));
+  }else b.textContent=String(i+1).padStart(2,'0');
+  grid.appendChild(b);
+}
+if(files.length)select(0);
+</script>
+</body>
+</html>
