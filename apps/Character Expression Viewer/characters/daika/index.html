@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Daika Expression Viewer</title>
+<style>
+*{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 12%,#27152f,transparent 34rem),linear-gradient(135deg,#030204,#110b14);color:#fff;font-family:Inter,system-ui,sans-serif}
+main{width:min(1200px,calc(100% - 24px));margin:auto;padding:20px 0 30px} .back{display:inline-block;color:#fff;text-decoration:none;border:1px solid #7f2538;background:#170f19;padding:9px 13px;border-radius:10px;font-weight:750}
+header{margin:16px 0} .ey{color:#df8ca2;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:850} h1{margin:5px 0 0;font-size:clamp(2rem,6vw,3.5rem)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:stretch}
+.stage{height:72vh;min-height:560px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid #592437;border-radius:18px;background:radial-gradient(circle,#231422,#080609 68%);position:relative}
+.stage img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 15px 18px #0009)} .empty{padding:32px;text-align:center;color:#bcaab7;line-height:1.5}
+.tag{position:absolute;left:16px;bottom:14px;background:#0b080ccf;border:1px solid #8e3047;padding:8px 12px;border-radius:10px;font-weight:800}
+.panel{border:1px solid #592437;border-radius:18px;background:#120c14;padding:14px;overflow:auto;max-height:72vh} .panel h2{margin:3px 4px 12px;font-size:1rem;color:#d8c5d2}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px} button{text-align:left;color:#eee;background:#1b111a;border:1px solid #4d2634;border-radius:11px;padding:11px 12px;cursor:pointer;font-weight:750}
+button:hover,button.active{border-color:#ef4964;background:#301521} button.missing{opacity:.42;cursor:default} button span{display:inline-block;width:34px;color:#dc7890}
+.help{margin-top:12px;color:#9e8997;font-size:.78rem;line-height:1.45}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.stage{height:62vh;min-height:440px}.panel{max-height:none}}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../../index.html">← Character Menu</a>
+<header><div class="ey">Student Handbook • Expression Viewer</div><h1>Daika</h1></header>
+<div class="layout">
+<section class="stage" id="stage">
+  <div class="empty" id="empty">No sprite loaded yet.<br>Put images in <b>characters/Daika/expressions/</b>.</div>
+  <img id="sprite" alt="Daika expression" hidden>
+  <div class="tag" id="tag">No expression loaded</div>
+</section>
+<aside class="panel">
+<h2>Expression / Sprite Slots • 20</h2>
+<div class="buttons" id="buttons"></div>
+<div class="help">Drop sprites into this character's <b>expressions</b> folder using slot names 01–20. WebP is preferred; PNG/JPG also work. The viewer automatically fills each numbered slot when opened.</div>
+</aside>
+</div>
+</main>
+<script src="expressions/manifest.js"></script>
+<script>
+const MAX=20, IMAGE_EXT=/\.(webp|png|jpe?g|gif|avif)$/i;
+const sprite=document.getElementById('sprite'), empty=document.getElementById('empty'),
+      tag=document.getElementById('tag'), box=document.getElementById('buttons');
+let slots=[];
+
+function naturalSort(a,b){return a.localeCompare(b,undefined,{numeric:true,sensitivity:'base'});}
+function resetSlots(){
+  box.innerHTML=''; slots=[];
+  for(let n=1;n<=MAX;n++){
+    const b=document.createElement('button');
+    b.className='missing'; b.disabled=true;
+    b.innerHTML=`<span>${String(n).padStart(2,'0')}</span>Empty slot`;
+    box.appendChild(b); slots.push({button:b,src:null,name:null});
+  }
+}
+function selectSlot(n){
+  const s=slots[n-1]; if(!s || !s.src)return;
+  document.querySelectorAll('.buttons button').forEach(b=>b.classList.remove('active'));
+  s.button.classList.add('active');
+  sprite.src=s.src; sprite.hidden=false; empty.hidden=true;
+  tag.textContent=s.name || `Slot ${String(n).padStart(2,'0')}`;
+}
+function fill(files, preserveOrder=false){
+  resetSlots();
+  files=files.filter(f=>IMAGE_EXT.test(f.name));
+  if(!preserveOrder) files.sort((a,b)=>naturalSort(a.name,b.name));
+  files=files.slice(0,MAX);
+  files.forEach((f,i)=>{
+    const s=slots[i]; s.src=f.url; s.name=f.name;
+    s.button.disabled=false; s.button.classList.remove('missing');
+    s.button.innerHTML=`<span>${String(i+1).padStart(2,'0')}</span>${f.name}`;
+    s.button.onclick=()=>selectSlot(i+1);
+  });
+  if(files.length) selectSlot(1);
+  else {
+    sprite.hidden=true; empty.hidden=false; tag.textContent='No expression loaded';
+  }
+  return files.length;
+}
+function parseDirectoryListing(html, base){
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  return [...doc.querySelectorAll('a[href]')]
+    .map(a=>a.getAttribute('href'))
+    .filter(h=>h && IMAGE_EXT.test(h.split('?')[0].split('#')[0]))
+    .map(h=>({name:decodeURIComponent(h.split('/').pop()),url:new URL(h,base).href}));
+}
+async function discoverHttpDirectory(){
+  try{
+    const base=new URL('expressions/',location.href);
+    const r=await fetch(base.href,{cache:'no-store'});
+    if(!r.ok)return [];
+    return parseDirectoryListing(await r.text(),base);
+  }catch(e){return [];}
+}
+async function discoverGithubPages(){
+  if(!location.hostname.endsWith('.github.io')) return [];
+  try{
+    const owner=location.hostname.split('.')[0];
+    const parts=location.pathname.split('/').filter(Boolean);
+    const isUserSite=(parts.length===0);
+    const repo=isUserSite ? `${owner}.github.io` : parts[0];
+    const pageRoot=isUserSite ? '' : parts.slice(1,-3).join('/');
+    const charPath=location.pathname.split('/').filter(Boolean);
+    const idx=charPath.lastIndexOf('characters');
+    const rel=(idx>=0 ? charPath.slice(idx).join('/') : '');
+    const dir=rel.replace(/\/index\.html?$/i,'').replace(/\/$/,'')+'/expressions';
+    const api=`https://api.github.com/repos/${owner}/${repo}/contents/${dir}`;
+    const r=await fetch(api,{headers:{Accept:'application/vnd.github+json'}});
+    if(!r.ok)return [];
+    const data=await r.json();
+    return Array.isArray(data) ? data.filter(x=>x.type==='file'&&IMAGE_EXT.test(x.name))
+      .map(x=>({name:x.name,url:x.download_url})) : [];
+  }catch(e){return [];}
+}
+function addLocalFolderPicker(){
+  const panel=document.querySelector('.panel');
+  if(document.getElementById('localFolderPicker'))return;
+  const wrap=document.createElement('div');
+  wrap.id='localFolderPicker';
+  wrap.style.margin='0 0 12px';
+  wrap.innerHTML=`<label style="display:block;border:1px solid #7f2538;background:#24121b;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:800;text-align:center">
+    Load this character's expressions folder
+    <input id="folderInput" type="file" webkitdirectory multiple accept="image/*" style="display:none">
+  </label>
+  <div style="color:#9e8997;font-size:.76rem;line-height:1.4;margin-top:7px">Local browser security prevents a webpage from silently reading arbitrary folder filenames. Select the expressions folder when opening the viewer directly from your computer; filenames can be anything.</div>`;
+  panel.insertBefore(wrap,panel.querySelector('.buttons'));
+  document.getElementById('folderInput').addEventListener('change',e=>{
+    const files=[...e.target.files].filter(f=>IMAGE_EXT.test(f.name))
+      .map(f=>({name:f.name,url:URL.createObjectURL(f)}));
+    fill(files);
+  });
+}
+(async()=>{
+  resetSlots();
+
+  // Preferred source: the per-character manifest. This works from file://,
+  // normal web hosting, and GitHub Pages, and preserves manifest order.
+  const manifest=Array.isArray(window.EXPRESSION_FILES) ? window.EXPRESSION_FILES : [];
+  const manifestFiles=manifest
+    .filter(name=>typeof name==='string' && IMAGE_EXT.test(name))
+    .map(name=>({name,url:new URL('expressions/'+encodeURIComponent(name),location.href).href}));
+  if(manifestFiles.length){
+    fill(manifestFiles,true);
+    return;
+  }
+
+  // Fallback discovery remains available for hosted copies with no manifest entries.
+  let files=[];
+  if(location.protocol==='file:'){
+    addLocalFolderPicker();
+  }else{
+    files=await discoverGithubPages();
+    if(!files.length) files=await discoverHttpDirectory();
+    fill(files);
+  }
+})();
+</script>
+</body></html>
