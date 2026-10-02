@@ -1,0 +1,187 @@
+{
+  "version": "1.0.0",
+  "phase": "M.S.19",
+  "root": "apps/assets/",
+  "policy": {
+    "map": "Map/floor artwork",
+    "rooms": "Room-specific editable/source assets",
+    "shared": "Assets shared by navigation, 3D environments, or multiple rooms"
+  },
+  "assets": [
+    {
+      "path": "assets/map/floors/1f.png",
+      "bytes": 303810,
+      "sha256": "0befa9814db3723966bcdcdd961eec89d9b55c4a528448992ce106ed1a58b6b1"
+    },
+    {
+      "path": "assets/map/floors/2f.png",
+      "bytes": 620432,
+      "sha256": "adae07be142805879cf94dc69d3949ee7d2808fe989ede595ca660bba8b9fb40"
+    },
+    {
+      "path": "assets/map/floors/3f.png",
+      "bytes": 666912,
+      "sha256": "2cb3008f093f372da30304dca2d231e681336f343bd50c3e10448465076f5fa7"
+    },
+    {
+      "path": "assets/rooms/aria-dorm/aria-dorm.png",
+      "bytes": 2167032,
+      "sha256": "faf977bdc1c3227588c5d29fd659924756568eba8cfb06899a8a2753f76ceabe"
+    },
+    {
+      "path": "assets/rooms/aria-dorm/motive-letter-pages/aria-motive-letter-page-1.png",
+      "bytes": 3385513,
+      "sha256": "6fd67c4eb1f4e6bf3a7a766309b8a4ba8d1645ac3c730988d491c3a546999e56"
+    },
+    {
+      "path": "assets/rooms/aria-dorm/motive-letter-pages/aria-motive-letter-page-2.png",
+      "bytes": 3330139,
+      "sha256": "a41e7b1efea82f9039c8cef5102f6fc8dfad7eee7bd2c146820b51a54fd263ac"
+    },
+    {
+      "path": "assets/rooms/aria-dorm/motive-letter-pages/aria-motive-letter-page-3.png",
+      "bytes": 3239302,
+      "sha256": "084f5c584729a3172a2bfa231b6d28128690228251d1261cc24b6b88956b2ea2"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/architecture/ceiling_grid.png",
+      "bytes": 1680,
+      "sha256": "0a81aad2894eb90ba7f6121bc6e7ff81054be7c905188bb77a6a75da98b351a1"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/architecture/floor_tile.png",
+      "bytes": 332705,
+      "sha256": "5764220f923eba61261917119db0e7b018161f2227421f9098fd90492464a03b"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/architecture/hallway_floor_tile.png",
+      "bytes": 151701,
+      "sha256": "cdbd9e5c7a87812dc9b335ae746e47a522d212abf06972e582ec6fb1e1715f03"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/architecture/navy_trim.png",
+      "bytes": 65863,
+      "sha256": "79d5c6db5056e9ebe0bd9ce1ee693b69d6f7daa7f0caebb6cb9028f11bbb5e93"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/architecture/stair_reference_crop.png",
+      "bytes": 224422,
+      "sha256": "2f4b49cc7a8beafb5eb41ec57babf55dca355458646e119502ea0e7fd3ee28e0"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/architecture/wall_lower_navy.png",
+      "bytes": 3598,
+      "sha256": "d7d64ac682ae845884a8b70ec85c4c3b144acca43f6e591515f4ade6fab7ae74"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/architecture/wall_panel_reference.png",
+      "bytes": 218630,
+      "sha256": "ee8d3edb8146bee546071a6d577f63beb507d4270b6f072083e740e65bbc4cd8"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/architecture/wall_upper_atlas.png",
+      "bytes": 206526,
+      "sha256": "0cd45284281e575c583c4a9ed20778afcae99e88d46840a4a8cd91eda1983bce"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/architecture/wall_upper_clean.png",
+      "bytes": 15284,
+      "sha256": "e8f3cd619cb06b67a3b9e835549bdf1e65f10307f021ea01c093dfab7262ad67"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/environment/entrance_rug.png",
+      "bytes": 238708,
+      "sha256": "d48d27ab8403c227ba96751793dd8554f93afbdd68fe883566d58c1fb9e33a03"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/environment/virtual_window.png",
+      "bytes": 307019,
+      "sha256": "64cb46edee604e4b54caf90cac5480e84d17231f0d0500fe077543523b234a04"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/furniture/chair_back.png",
+      "bytes": 78614,
+      "sha256": "f1407f017c8e964b088956e3e0ccc1f431ddd56b042f29c035694b9f8f964c13"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/furniture/wood.png",
+      "bytes": 72800,
+      "sha256": "75a917cd1ab7d0634fd5a9e69f4b9aecfbdcfa132c3ab902d001ea5beed5dc69"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/reference/cafeteria_reference.png",
+      "bytes": 2632037,
+      "sha256": "470743e0d0abdcb71881d3b16df4d66fa16285c7d5783fdb70f01c94e2687e79"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/reference/cafeteria_texture_atlas.png",
+      "bytes": 2216902,
+      "sha256": "b7d0e5c64413f8a2f92ea4a9eb0be5a28787c343333f3466da73948a90329d3f"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/service/drink_vending_reference_crop.png",
+      "bytes": 384414,
+      "sha256": "e9304b8cc59c0c3656ef3701ce7bc74f280da23af9ce35f85312a30e37c0d9fa"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/service/kitchen_reference_crop.png",
+      "bytes": 542656,
+      "sha256": "9ef112a625aa948d639a9a23ccee440cad1a04ed37673c119e211bca4c382a58"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/service/menu_board.png",
+      "bytes": 243531,
+      "sha256": "0dfab115c615dc6bc2608028ad63f2c6f340aa92f2cfb08c6687d5cb3ec4ba19"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/service/service_backsplash.png",
+      "bytes": 294780,
+      "sha256": "4c8ae85e653869f5d5aa6e46e310d7184f5f0e64243b78077e05e109f953c3fc"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/service/service_counter.png",
+      "bytes": 346648,
+      "sha256": "dc4907868d965780e469480baaa3d404eef2a4362c1cd53283dc530b927883ed"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/service/service_counter_repeat.png",
+      "bytes": 346648,
+      "sha256": "dc4907868d965780e469480baaa3d404eef2a4362c1cd53283dc530b927883ed"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/service/service_wall_full.png",
+      "bytes": 718094,
+      "sha256": "855c25d88f45a7093bca69d65d3f17cc08c897ba43158929287230de662d0e8a"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/service/service_wall_tile.png",
+      "bytes": 1885,
+      "sha256": "22a4d07eafd49382b3a5efc4bdf1aa1d2f0380321da78fa4988189d72ec1e7d4"
+    },
+    {
+      "path": "assets/rooms/cafeteria/textures/texture_manifest.json",
+      "bytes": 17978,
+      "sha256": "16855b612a518444d935c9cfb5c28c564c86b073554550f5349d1c3fd591e9b6"
+    },
+    {
+      "path": "assets/rooms/jacey-dorm/jacey-dorm.png",
+      "bytes": 2972087,
+      "sha256": "515bd2298a7787cdac42132c69f68b3183507ed5c688f8bfcddb7dc384e99d27"
+    },
+    {
+      "path": "assets/shared/dorm-hall/textures/dorm-floor.png",
+      "bytes": 1070263,
+      "sha256": "683448fa0e85715927937d7af30f79f914d430359f1e80e8c13ba17b665f6214"
+    },
+    {
+      "path": "assets/shared/dorm-hall/textures/dorm-wall.png",
+      "bytes": 880105,
+      "sha256": "c28f16bee22c4d4b4f043f07ff68a2e79a4d3fae6193eca7251539666d300422"
+    },
+    {
+      "path": "assets/shared/dorm-hall/textures/jacey-door.webp",
+      "bytes": 40088,
+      "sha256": "664537b9e34a3c5a593b41beb623a2a24e9b90afc78e64dea59860afc195b512"
+    }
+  ]
+}
