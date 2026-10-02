@@ -17,6 +17,14 @@
       "enabled": true
     },
     {
+      "id": "adair-nexus",
+      "name": "Adair Nexus",
+      "subtitle": "Ultimate Meteorologist",
+      "file": "./companions/shared/jacey_framework.html?character=adair",
+      "portrait": "./companions/adair/expressions/....",
+      "enabled": true
+    },
+    {
       "id": "jacey-cosmo",
       "name": "Jacey Cosmo",
       "subtitle": "Ultimate Cryptologist",
