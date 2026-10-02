@@ -1,0 +1,19 @@
+/* Safe Havens Peak — M.S.15 2F Floor Module
+ * Data extracted from the certified M.F.2 2F floor HTML.
+ * Room launch paths remain in map-shared/room-registry.js.
+ */
+(function(global){
+  'use strict';
+  if(!global.SHPFloorModuleRegistry) throw new Error('SHPFloorModuleRegistry must load before floors/2f/floor.js');
+  global.SHPFloorModuleRegistry.register(Object.freeze({
+    id:"2F",
+    title:"Second Floor",
+    label:"2F",
+    description:"Floor 2 \u2014 performance, clubs, student government, and B-wing classrooms.",
+    status:'Open',
+    minWidth:920,
+    imageAlt:"2F school map",
+    image:"map/assets/map/floors/2f.png",
+    rooms:[{"name":"Chorus","x":8.9,"y":8.4,"w":15.7,"h":10.6,"status":"open","desc":"Choir rehearsal and vocal performance room.","roomId":"chorus"},{"name":"Music Room / Band","x":26.3,"y":8.4,"w":16.6,"h":10.6,"status":"open","desc":"Band practice, instruments, and music instruction.","roomId":"music-room-band"},{"name":"Occult Clubroom","x":8.9,"y":19.0,"w":9.5,"h":10.0,"status":"open","desc":"Meeting room for the Occult Club.","roomId":"occult-clubroom"},{"name":"Life Skills","x":18.4,"y":19.0,"w":10.3,"h":10.0,"status":"open","desc":"Practical life-skills classroom.","roomId":"life-skills"},{"name":"Talent Committee","x":28.7,"y":19.0,"w":14.2,"h":10.0,"status":"open","desc":"Large meeting room used by the Talent Committee.","roomId":"talent-committee"},{"name":"Costume Closet \u2014 North","x":45.0,"y":5.7,"w":14.5,"h":6.0,"status":"restricted","desc":"Upper costume storage room for theater productions.","roomId":"costume-closet-north"},{"name":"Costume Closet \u2014 South","x":45.0,"y":11.7,"w":14.5,"h":5.7,"status":"restricted","desc":"Lower costume storage room for theater productions.","roomId":"costume-closet-south"},{"name":"Drama Clubroom","x":45.0,"y":17.4,"w":16.2,"h":11.7,"status":"open","desc":"Drama Club meeting, rehearsal, and preparation room.","roomId":"drama-clubroom"},{"name":"Theater","x":61.2,"y":5.6,"w":23.5,"h":23.5,"status":"open","desc":"Large theater with stage and audience seating.","roomId":"theater"},{"name":"Classroom B-4","x":9.8,"y":40.2,"w":12.3,"h":12.4,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-4"},{"name":"Classroom B-2","x":22.1,"y":40.2,"w":13.5,"h":12.4,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-2"},{"name":"Student Council","x":37.8,"y":39.9,"w":19.0,"h":15.0,"status":"open","desc":"Student Council meeting and administrative room.","roomId":"student-council"},{"name":"Classroom B-1","x":59.0,"y":39.8,"w":12.2,"h":12.8,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-1"},{"name":"Classroom B-3","x":71.2,"y":39.8,"w":13.5,"h":12.8,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-3"},{"name":"Classroom B-5","x":9.8,"y":54.9,"w":12.3,"h":12.4,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-5"},{"name":"Classroom B-6","x":22.1,"y":54.9,"w":13.5,"h":12.4,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-6"},{"name":"Classroom B-7","x":35.6,"y":54.9,"w":11.7,"h":12.4,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-7"},{"name":"Classroom B-8","x":47.3,"y":54.9,"w":11.7,"h":12.4,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-8"},{"name":"Classroom B-9","x":59.0,"y":54.9,"w":12.2,"h":12.4,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-9"},{"name":"Classroom B-10","x":71.2,"y":54.9,"w":13.5,"h":12.4,"status":"open","desc":"Second-floor B-wing classroom.","roomId":"classroom-b-10"},{"name":"Shooting Ring","x":36.5,"y":75.8,"w":27.5,"h":21.5,"status":"restricted","desc":"Supervised shooting range reached from the south stairwell.","roomId":"shooting-ring"}]
+  }));
+})(window);
