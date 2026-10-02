@@ -1,124 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Safe Havens Peak — Campus Map</title><style>
-:root{--bg:#07111f;--panel:#101827ee;--line:#e63b53;--text:#f7f7fb;--muted:#aeb6c8;--cyan:#9be7ff;--grid:#76c6ff;}
-*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 30% 10%,#173759,#07111f 55%,#03060c);color:var(--text);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
-.app{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;padding:18px}
-header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid #ffffff22;background:#08111dcc;padding:12px 16px;box-shadow:0 0 24px #0008}
-.title{font-weight:900;letter-spacing:.14em;text-transform:uppercase} .subtitle{color:var(--muted);font-size:13px;margin-top:3px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap} button{background:#111827;border:1px solid #ffffff2a;color:var(--text);padding:9px 13px;border-radius:8px;font-weight:800;cursor:pointer;letter-spacing:.05em} button.active,button:hover{border-color:var(--line);box-shadow:0 0 18px #e63b5355;color:#fff}
-.map-wrap{position:relative;align-self:start;border:1px solid #ffffff28;background:#0b1421;padding:10px;box-shadow:0 0 40px #0008;overflow:auto;max-height:calc(100vh - 110px)}
-.map-stage{position:relative;min-width:920px} .map-stage img{display:block;width:100%;height:auto;user-select:none}
-.hotspot{position:absolute;border:2px solid #ff3c5b99;background:#ff3c5b16;box-shadow:inset 0 0 12px #ff3c5b30,0 0 14px #ff3c5b22;border-radius:3px;cursor:pointer;transition:.14s ease}
-.hotspot:hover,.hotspot.selected{background:#ff3c5b32;border-color:#fff;box-shadow:0 0 25px #ff3c5baa,inset 0 0 18px #fff4;transform:scale(1.01)}
-.hotspot::after{content:attr(data-name);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:900;text-align:center;text-shadow:0 1px 3px #000,0 0 8px #000;pointer-events:none;max-width:95%;}
-.panel{border:1px solid #ffffff28;background:linear-gradient(180deg,#131c2eef,#090f1bef);padding:18px;box-shadow:0 0 40px #0008;position:sticky;top:18px;height:calc(100vh - 36px);overflow:auto}
-.panel h2{margin:0 0 10px;font-size:26px;letter-spacing:.06em} .tag{display:inline-block;padding:5px 9px;border-radius:999px;border:1px solid #ffffff30;color:#fff;font-size:12px;text-transform:uppercase;margin-bottom:16px} .open{background:#1a6c4d} .restricted{background:#7a2636} .locked{background:#373d4f} .occupied{background:#275a7a}
-.search{width:100%;padding:11px;border-radius:8px;border:1px solid #ffffff2a;background:#050910;color:#fff;margin:12px 0 14px} .list{display:grid;gap:6px} .room-btn{text-align:left;font-weight:700;padding:8px 10px;border-radius:7px;background:#ffffff0a;border:1px solid #ffffff12}
-.note{color:var(--muted);line-height:1.5;font-size:14px} .hidden{display:none!important}
-.profile-link{display:inline-block;margin:12px 0 6px;padding:10px 12px;border-radius:8px;background:#e63b53;color:#fff;text-decoration:none;font-weight:900;box-shadow:0 0 18px #e63b5350} .profile-link:hover{filter:brightness(1.1)}
-.dorm-stage{min-width:1180px;height:520px;padding:0;background:#4f91bc;position:relative;overflow:hidden;border:1px solid #ffffff26;box-shadow:inset 0 0 0 1px #fff1}
-.dorm-stage:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#ffffff30 1px, transparent 1px);background-size:16px 16px;opacity:.55;pointer-events:none}
-.dorm-title{position:absolute;left:18px;top:12px;z-index:4;font-weight:900;letter-spacing:.16em;text-transform:uppercase;text-shadow:0 2px 3px #0007;background:#07111fcc;border:1px solid #ffffff22;padding:8px 10px;border-radius:4px}
-.dorm-grid{position:absolute;z-index:1;left:18px;right:18px;top:48px;bottom:28px}
-.dorm-room,.dorm-hall{position:absolute;border:4px solid #36779e;background:#f9fdff;color:#101827;border-radius:2px;box-shadow:0 0 0 1px #fff8 inset,0 8px 20px #0002;overflow:hidden}
-.dorm-room:before,.dorm-hall:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#b8dff455 1px, transparent 1px),linear-gradient(90deg,#b8dff455 1px, transparent 1px);background-size:18px 18px;pointer-events:none}
-.dorm-room{display:grid;place-items:center;font-size:20px;font-weight:1000;letter-spacing:.03em;text-shadow:0 1px #fff;cursor:pointer;transition:.14s ease;z-index:3}
-.dorm-room span{position:relative;z-index:1}.dorm-room:hover,.dorm-room.selected{border-color:#ff3c5b;box-shadow:0 0 28px #ff3c5baa,0 0 0 2px #fff8 inset;transform:translateY(-2px)}
-.dorm-hall{z-index:1;opacity:.96;display:grid;place-items:center;font-size:12px;font-weight:900;color:#2b607f;text-transform:uppercase;letter-spacing:.12em}
-.dorm-stairs{position:absolute;right:0;bottom:0;width:64px;height:42px;background:repeating-linear-gradient(0deg,#18212c 0 2px,#e7eef3 2px 4px);border:2px solid #36779e;z-index:4}
-.placeholder{display:none;min-height:560px;place-items:center;text-align:center;padding:30px;border:1px dashed #ffffff33;background:#ffffff08} .placeholder.active{display:grid}
-@media(max-width:1000px){.app{grid-template-columns:1fr}.panel{position:relative;height:auto;top:0}.dorm-stage{min-width:760px}.dorm-room{font-size:16px}}
-
-/* Jacey dorm test view — scoped so the rest of the map remains unchanged. */
-.jacey-dorm-view{display:none;position:relative;min-width:920px;background:#070b15;border:1px solid #ffffff28;overflow:hidden;box-shadow:0 0 40px #0008}
-.jacey-dorm-view.active{display:block}
-.jacey-room-image{display:block;width:100%;height:auto;user-select:none}
-.jacey-room-topbar{position:absolute;z-index:8;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;gap:10px;pointer-events:none}
-.jacey-room-topbar button,.jacey-room-topbar a{pointer-events:auto;background:#08111ddd;border:1px solid #ffffff40;color:#fff;padding:10px 13px;border-radius:8px;text-decoration:none;font-weight:900;box-shadow:0 4px 18px #0008}
-.jacey-room-topbar button:hover,.jacey-room-topbar a:hover{border-color:#e63b53;box-shadow:0 0 18px #e63b5377}
-.jacey-hotspot{position:absolute;z-index:5;border:2px solid transparent;background:transparent;cursor:pointer;border-radius:5px;transition:.15s ease}
-.jacey-hotspot:hover,.jacey-hotspot:focus-visible{outline:none;border-color:#fff;background:#e63b532d;box-shadow:0 0 24px #e63b53bb,inset 0 0 20px #fff2}
-.jacey-hotspot:after{content:attr(data-label);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;color:#fff;background:#07111fe6;border:1px solid #ffffff44;padding:6px 9px;border-radius:6px;font-size:12px;font-weight:900;white-space:nowrap;text-shadow:0 2px 3px #000;transition:.15s ease}
-.jacey-hotspot:hover:after,.jacey-hotspot:focus-visible:after{opacity:1}
-.jacey-dialogue{position:absolute;z-index:9;left:4%;right:4%;bottom:3%;display:none;background:linear-gradient(180deg,#141b2ff2,#070b15f8);border:2px solid #fff;border-left:9px solid #e63b53;padding:17px 54px 18px 20px;box-shadow:0 8px 40px #000d,0 0 22px #e63b5355}
-.jacey-dialogue.open{display:block;animation:jaceySlide .18s ease-out}
-.jacey-dialogue h3{margin:0 0 8px;text-transform:uppercase;letter-spacing:.12em;font-size:15px;color:#9be7ff}
-.jacey-dialogue p{margin:0;font-size:18px;line-height:1.45}
-.jacey-dialogue-close{position:absolute;right:12px;top:12px;border:1px solid #ffffff44;background:#ffffff0f;color:#fff;width:32px;height:32px;padding:0;border-radius:50%;font-size:18px}
-.visit-dorm-btn{display:inline-block;margin:12px 8px 6px 0;padding:10px 12px;border-radius:8px;background:#275a7a;color:#fff;border:1px solid #9be7ff;text-decoration:none;font-weight:900;box-shadow:0 0 18px #4cc9ff45}
-.visit-dorm-btn:hover{filter:brightness(1.14);box-shadow:0 0 22px #4cc9ff88}
-@keyframes jaceySlide{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
-@media(max-width:1000px){.jacey-dorm-view{min-width:760px}.jacey-dialogue p{font-size:15px}}
-
-/* Immersive room mode retained from the later Jacey-room interface. */
-body.room-mode .app{grid-template-rows:1fr}
-body.room-mode header{display:none}
-body.room-mode .map-wrap{
-  max-height:calc(100vh - 36px);
-  height:calc(100vh - 36px);
-  overflow:hidden;
-  display:grid;
-  place-items:center;
-}
-body.room-mode .jacey-dorm-view.active{
-  min-width:0;
-  width:min(100%,calc((100vh - 58px) * 1.5));
-  max-width:100%;
-  aspect-ratio:3 / 2;
-  margin:auto;
-}
-body.room-mode .jacey-room-image{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-}
-body.room-mode .panel .search,
-body.room-mode .panel .list,
-body.room-mode .panel #profileBox{display:none}
-body.room-mode .panel{height:calc(100vh - 36px)}
-@media(max-width:1000px){
-  body.room-mode .app{grid-template-columns:1fr}
-  body.room-mode .map-wrap{height:auto;max-height:none;min-height:60vh}
-  body.room-mode .jacey-dorm-view.active{width:100%;min-width:0}
-  body.room-mode .panel{height:auto}
-}
-
-
-.map-header-actions{
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.map-handbook-back{
-  display:none;
-  flex:0 0 auto;
-  background:#08111ddd;
-  border:1px solid #ffffff40;
-  color:#fff;
-  padding:9px 13px;
-  border-radius:8px;
-  font-weight:900;
-  letter-spacing:.04em;
-  cursor:pointer;
-  box-shadow:0 4px 18px #0006;
-}
-.map-handbook-back.visible{
-  display:inline-flex;
-  align-items:center;
-}
-.map-handbook-back:hover,
-.map-handbook-back:focus-visible{
-  border-color:var(--line);
-  box-shadow:0 0 18px #e63b5377;
-  outline:none;
-}
-@media(max-width:1000px){
-  .map-header-actions{width:100%;justify-content:flex-start}
-}
-
-
-.floor-frame{display:block;width:100%;height:calc(100vh - 132px);min-height:560px;border:0;background:#07101b}.map-wrap{padding:10px;overflow:hidden}.map-header-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}@media(max-width:900px){.app{grid-template-columns:1fr}.panel{position:relative;top:auto;height:auto}.floor-frame{height:70vh;min-height:520px}}</style></head><body><div class="app"><header>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Safe Havens Peak — Campus Map</title><link rel="stylesheet" href="map/map-shared/map-styles.css"></head><body><div class="app"><header>
 <div>
 <div class="title">Safe Havens Peak — Campus Map</div>
 <div class="subtitle">1F rebuilt without Dorms. Dorms are now their own tab with Notion profile links.</div>
@@ -133,52 +13,13 @@ body.room-mode .panel{height:calc(100vh - 36px)}
 <button class="visit-dorm-btn" id="exploreDormHall" type="button" style="display:none">Explore Dorm Hallway in 3D</button>
 <button class="map-handbook-back" id="mapHandbookBack" type="button">← Student Handbook</button>
 </div>
-</header><main class="map-wrap"><iframe id="floorFrame" class="floor-frame" title="School floor map"></iframe></main><aside class="panel"><h2 id="roomTitle">1F</h2><span class="tag open" id="roomStatus">Open</span><p class="note" id="roomDesc">Select a room on the map, or search below.</p><div id="profileBox"></div><input class="search" id="search" placeholder="Search rooms or students…"/><div class="list" id="roomList"></div></aside></div>
-<script>const FLOOR_FILES=Object.freeze({'1F':'map-floors/1f.html','Dorms':'map-floors/dorms.html','2F':'map-floors/2f.html','3F':'map-floors/3f.html'});
-const FLOOR_CONTRACT_VERSION='1.0.0';
-const FLOOR_MESSAGES=Object.freeze({READY:'MAP_FLOOR_READY',SELECTED:'MAP_FLOOR_SELECTED',RESET_PANEL:'MAP_FLOOR_RESET_PANEL',ACTION:'MAP_FLOOR_REQUEST_ACTION',SELECT:'MAP_FLOOR_SELECT',CLEAR_SELECTION:'MAP_FLOOR_CLEAR_SELECTION',ACTIVATE:'MAP_FLOOR_ACTIVATE'});
-let current='1F', selected=null, currentRooms=[], currentFloorMeta=null;
-const frame=document.getElementById('floorFrame'), roomList=document.getElementById('roomList'), search=document.getElementById('search');
-function cls(s){return s==='restricted'?'restricted':s==='locked'?'locked':s==='occupied'?'occupied':'open'}
-function resetPanel(f,msg,status){document.getElementById('roomTitle').textContent=f;const tag=document.getElementById('roomStatus');tag.textContent=status||(f==='Dorms'?'Directory':f==='1F'?'Open':'Pending');tag.className='tag '+((status||'').toLowerCase()==='directory'?'occupied':cls((status||'').toLowerCase()));document.getElementById('roomDesc').textContent=msg;document.getElementById('profileBox').innerHTML='';}
-function postToFloor(type,extra={}){if(!frame.contentWindow)return;frame.contentWindow.postMessage(Object.assign({type,floor:current,contractVersion:FLOOR_CONTRACT_VERSION},extra),'*');}
-// Restored M.S.8/M.S.9 launcher bridge. Keep floor modules layout-only; the shell owns room launching.
-const ACTIVE_ROOM_LAUNCHERS=Object.freeze({
-  'Lunch Room':{roomId:'cafeteria',label:'Enter 3D Cafeteria'},
-  'Aria':{roomId:'aria-dorm',label:'Visit Dorm'},
-  'Jacey':{roomId:'jacey-dorm',label:'Visit Dorm'}
-});
-function activeRoomLauncher(r){return r&&ACTIVE_ROOM_LAUNCHERS[r.name]||null;}
-function roomEntryContext(){return {source:'map',returnTarget:'map',floor:current,locationId:'school-map',spawnId:null};}
-function requestOpenRoom(roomId){
-  if(!roomId)return;
-  const payload={type:'SHP_OPEN_ROOM',roomId,context:roomEntryContext()};
-  if(window.parent!==window)window.parent.postMessage(payload,'*');
-  else window.location.href=`rooms/${encodeURIComponent(roomId)}/index.html?shpSource=map&shpReturn=map&shpFloor=${encodeURIComponent(current)}&shpLocation=school-map`;
-}
-function selectRoom(r,fromFloor=false){if(!r||!r.name)return;selected=r.roomId||r.name;document.getElementById('roomTitle').textContent=r.name;const tag=document.getElementById('roomStatus');tag.textContent=r.status||'open';tag.className='tag '+cls(r.status);document.getElementById('roomDesc').textContent=r.desc||'No description yet.';const box=document.getElementById('profileBox');const launcher=activeRoomLauncher(r);let html='';if(r.url)html+=`<a class="profile-link" href="${r.url}" target="_blank" rel="noopener noreferrer">Open Notion Profile</a>`;if(launcher)html+=`<button type="button" class="visit-dorm-btn" id="visitActiveRoom">${launcher.label}</button>`;box.innerHTML=html;if(launcher&&document.getElementById('visitActiveRoom'))document.getElementById('visitActiveRoom').onclick=()=>requestOpenRoom(launcher.roomId);if(!fromFloor)postToFloor(FLOOR_MESSAGES.SELECT,{roomId:r.roomId||null,roomName:r.name});}
-function renderList(){const q=search.value.trim().toLowerCase();roomList.innerHTML='';currentRooms.filter(r=>String(r.name||'').toLowerCase().includes(q)).forEach(r=>{let b=document.createElement('button');b.className='room-btn';b.textContent=r.name;b.dataset.roomId=r.roomId||'';b.onclick=()=>selectRoom(r);roomList.appendChild(b);})}
-function loadFloor(f){if(!FLOOR_FILES[f])return;current=f;selected=null;currentRooms=[];currentFloorMeta=null;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.floor===f));document.getElementById('exploreDormHall').style.display=f==='Dorms'?'inline-block':'none';search.value='';roomList.innerHTML='';resetPanel(f,f==='Dorms'?'Loading dorm directory…':f==='1F'?'Loading first floor…':'Loading '+f+'…','Pending');frame.src=FLOOR_FILES[f];}
-function acceptFloorMessage(event,msg){return event.source===frame.contentWindow&&msg&&typeof msg==='object'&&msg.floor===current;}
-window.addEventListener('message',event=>{const msg=event.data;if(!msg||typeof msg!=='object')return;
- // Floor-module messages are accepted only from the active floor iframe.
- if(acceptFloorMessage(event,msg)){
-   if(msg.type===FLOOR_MESSAGES.READY){currentRooms=Array.isArray(msg.rooms)?msg.rooms.filter(r=>r&&r.name):[];currentFloorMeta=msg.meta&&typeof msg.meta==='object'?msg.meta:{id:current,label:current,description:msg.description||'',status:msg.status||'Open'};resetPanel(current,msg.description||currentFloorMeta.description||'',msg.status||currentFloorMeta.status);renderList();postToFloor(FLOOR_MESSAGES.ACTIVATE,{meta:currentFloorMeta});return;}
-   if(msg.type===FLOOR_MESSAGES.SELECTED&&msg.room){selectRoom(msg.room,true);return;}
-   if(msg.type===FLOOR_MESSAGES.RESET_PANEL){resetPanel(current,msg.description||currentFloorMeta?.description||'',msg.status||currentFloorMeta?.status);search.value='';renderList();return;}
-   if(msg.type===FLOOR_MESSAGES.ACTION){
-     // Generic floor action channel. M.F.2 defines it; floor-specific actions can be added later.
-     window.dispatchEvent(new CustomEvent('shp-map-floor-action',{detail:{floor:current,action:msg.action,payload:msg.payload||{}}}));return;
-   }
-   // Existing Dorm/Jacey actions remain compatibility behavior during the floor split.
-   if(msg.type==='MAP_FLOOR_REQUEST_JACEY_EXIT'){if(new URLSearchParams(location.search).get('mode')==='handbook'&&window.parent!==window)window.parent.postMessage({type:'shp:request-exit-jacey'},'*');else postToFloor('MAP_FLOOR_CLOSE_JACEY');return;}
- }
- // Messages from the handbook parent are still forwarded through the shell.
- if(event.source!==frame.contentWindow&&msg.type==='shp:show-jacey-room'){if(current!=='Dorms')loadFloor('Dorms');setTimeout(()=>postToFloor('MAP_FLOOR_OPEN_JACEY'),50);return;}
- if(event.source!==frame.contentWindow&&msg.type==='shp:show-dorm-map'){if(current!=='Dorms')loadFloor('Dorms');setTimeout(()=>postToFloor('MAP_FLOOR_CLOSE_JACEY'),50);return;}
-});
-document.getElementById('mapHandbookBack').classList.add('visible');
-document.getElementById('mapHandbookBack').addEventListener('click',()=>window.parent.postMessage({type:'shp:return-handbook'},'*'));
-document.getElementById('exploreDormHall').addEventListener('click',()=>{const msg={type:'SHP_OPEN_LOCATION',locationId:'dorm-hall',floor:'Dorms',spawnId:null,source:'map',returnTarget:'map'};if(window.parent!==window)window.parent.postMessage(msg,'*');else window.location.href='explorer/dorm/index.html?mode=handbook&shpSource=map';});
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>loadFloor(b.dataset.floor));search.oninput=renderList;
-const requestedFloor=new URLSearchParams(location.search).get('floor');loadFloor(FLOOR_FILES[requestedFloor]?requestedFloor:'1F');</script></body></html>
+</header><main class="map-wrap"><div id="floorModuleHost" class="floor-module-host" aria-live="polite"></div><iframe id="floorFrame" class="floor-frame" title="School floor map"></iframe></main><aside class="panel"><h2 id="roomTitle">1F</h2><span class="tag open" id="roomStatus">Open</span><p class="note" id="roomDesc">Select a room on the map, or search below.</p><div id="profileBox"></div><input class="search" id="search" placeholder="Search rooms or students…"/><div class="list" id="roomList"></div></aside></div>
+<script src="map/map-shared/room-registry.js"></script>
+<script src="map/map-shared/floor-module-runtime.js"></script>
+<script src="map/rooms/_shared/dorm-mailbox.js"></script>
+<script src="map/map-shared/dorm-companion.js"></script>
+<script src="map/floors/1f/floor.js"></script>
+<script src="map/floors/2f/floor.js"></script>
+<script src="map/floors/3f/floor.js"></script>
+<script src="map/floors/dorms/floor.js"></script>
+<script src="map/map-shared/map-core.js"></script></body></html>
