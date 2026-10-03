@@ -295,7 +295,6 @@ body{font-size:17px;}
 </div>
 <script>
 const MAP_APP_URL='apps/map.html?mode=handbook';
-const DORM_ROOM_BASE='apps/map/floors/dorms/rooms/';
 
 const handbookApps=[
   ['Student Profiles','👤','apps/student-profiles.html','Student identity records and personal notes.'],
@@ -347,16 +346,52 @@ function openHandbook(){
   },reduced?490:3970);
 }
 
-function enterRoom(roomId){
+function enterRoom(roomId,entry,context){
   if(busy || !frame.contentWindow)return;
   const safeRoomId=String(roomId||'').trim().toLowerCase();
-  if(!/^[a-z0-9-]+-dorm$/.test(safeRoomId))return;
+  const safeEntry=String(entry||'').trim();
+
+  // Only accept canonical room pages owned by the Map app.
+  if(!/^[a-z0-9-]+$/.test(safeRoomId))return;
+  if(!/^map\/floors\/(?:1f|2f|3f|dorms)\/rooms\/[a-z0-9-]+\/index\.html$/.test(safeEntry))return;
+
+  const floor=String(context?.floor||'').trim() || (safeEntry.includes('/dorms/')?'Dorms':'1F');
+  const q=new URLSearchParams({
+    shpSource:'map',
+    shpReturn:'map',
+    shpFloor:floor,
+    shpLocation:'school-map'
+  });
+
   busy=true;
   transition.className='room-enter';
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   setTimeout(()=>{
-    frame.src=DORM_ROOM_BASE+encodeURIComponent(safeRoomId)+'/index.html?shpSource=map&shpReturn=map&shpFloor=Dorms&shpLocation=school-map';
-    frame.title=safeRoomId.replace(/-dorm$/,'').replace(/(^|-)([a-z])/g,(_,sep,c)=>sep+c.toUpperCase())+"'s Dorm";
+    frame.src='apps/'+safeEntry+'?'+q.toString();
+    frame.title=safeRoomId.replace(/(^|-)([a-z])/g,(_,sep,c)=>sep+c.toUpperCase());
+  },reduced?120:520);
+  setTimeout(()=>{
+    transition.className='ready';
+    busy=false;
+  },reduced?490:3070);
+}
+
+function enterLocation(locationId,spawnId,source){
+  if(busy || !frame.contentWindow)return;
+  if(locationId!=='dorm-hall')return;
+
+  const q=new URLSearchParams({
+    mode:'handbook',
+    shpSource:String(source||'map')
+  });
+  if(spawnId)q.set('shpSpawn',String(spawnId));
+
+  busy=true;
+  transition.className='room-enter';
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setTimeout(()=>{
+    frame.src='apps/map/explorer/dorm/index.html?'+q.toString();
+    frame.title='3D Dorm Hall';
   },reduced?120:520);
   setTimeout(()=>{
     transition.className='ready';
@@ -391,7 +426,12 @@ window.addEventListener('message',event=>{
   }
 
   if(msg.type==='SHP_OPEN_ROOM'){
-    enterRoom(msg.roomId);
+    enterRoom(msg.roomId,msg.entry,msg.context);
+    return;
+  }
+
+  if(msg.type==='SHP_OPEN_LOCATION'){
+    enterLocation(msg.locationId,msg.spawnId,msg.source);
     return;
   }
 
