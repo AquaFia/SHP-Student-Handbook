@@ -11,7 +11,7 @@ Active implementation structure:
   apps/map/explorer/
   apps/map/floors/
   apps/map/map-shared/
-  apps/map/rooms/_shared/
+  apps/map/shared/
 
 External app dependency:
   apps/companions/manifest.json
