@@ -295,7 +295,7 @@ body{font-size:17px;}
 </div>
 <script>
 const MAP_APP_URL='apps/map.html?mode=handbook';
-const JACEY_DORM_URL='apps/map/floors/dorms/rooms/jacey-dorm/index.html';
+const DORM_ROOM_BASE='apps/map/floors/dorms/rooms/';
 
 const handbookApps=[
   ['Student Profiles','👤','apps/student-profiles.html','Student identity records and personal notes.'],
@@ -346,14 +346,16 @@ function openHandbook(){
   },reduced?490:3970);
 }
 
-function enterRoom(){
+function enterRoom(roomId){
   if(busy || !frame.contentWindow)return;
+  const safeRoomId=String(roomId||'').trim().toLowerCase();
+  if(!/^[a-z0-9-]+-dorm$/.test(safeRoomId))return;
   busy=true;
   transition.className='room-enter';
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   setTimeout(()=>{
-    frame.src=JACEY_DORM_URL;
-    frame.title="Jacey's Dorm";
+    frame.src=DORM_ROOM_BASE+encodeURIComponent(safeRoomId)+'/index.html?shpSource=map&shpReturn=map&shpFloor=Dorms&shpLocation=school-map';
+    frame.title=safeRoomId.replace(/-dorm$/,'').replace(/(^|-)([a-z])/g,(_,sep,c)=>sep+c.toUpperCase())+"'s Dorm";
   },reduced?120:520);
   setTimeout(()=>{
     transition.className='ready';
@@ -361,7 +363,7 @@ function enterRoom(){
   },reduced?490:3070);
 }
 
-function exitRoom(){
+function returnToMap(){
   if(busy || !frame.contentWindow)return;
   busy=true;
   transition.className='room-exit';
@@ -387,8 +389,15 @@ window.addEventListener('message',event=>{
     return;
   }
 
-  if(msg.type==='shp:request-enter-jacey') enterRoom();
-  if(msg.type==='shp:request-exit-jacey') exitRoom();
+  if(msg.type==='SHP_OPEN_ROOM'){
+    enterRoom(msg.roomId);
+    return;
+  }
+
+  if(msg.type==='SHP_RETURN_PREVIOUS'){
+    returnToMap();
+    return;
+  }
 });
 
 
