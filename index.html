@@ -435,6 +435,23 @@ window.addEventListener('message',event=>{
     return;
   }
 
+  if(msg.type==='SHP_OPEN_HANDBOOK'){
+    if(busy)return;
+    frame.src='about:blank';
+    frame.title='Student Handbook';
+    frame.classList.remove('active');
+    document.body.classList.remove('viewer-open');
+    return;
+  }
+
+  if(msg.type==='SHP_OPEN_MAP'){
+    if(busy)return;
+    const floor=String(msg.floor||'Dorms');
+    frame.src='apps/map.html?mode=handbook&floor='+encodeURIComponent(floor);
+    frame.title='School Map';
+    return;
+  }
+
   if(msg.type==='SHP_RETURN_PREVIOUS'){
     returnToMap();
     return;
