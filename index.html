@@ -436,19 +436,37 @@ window.addEventListener('message',event=>{
   }
 
   if(msg.type==='SHP_OPEN_HANDBOOK'){
-    if(busy)return;
-    frame.src='about:blank';
-    frame.title='Student Handbook';
-    frame.classList.remove('active');
-    document.body.classList.remove('viewer-open');
+    if(busy || !frame.contentWindow)return;
+    busy=true;
+    transition.className='room-exit';
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(()=>{
+      frame.src='about:blank';
+      frame.title='Student Handbook';
+      viewer.classList.remove('open');
+    },reduced?470:5380);
+    setTimeout(()=>{
+      transition.className='ready';
+      busy=false;
+    },reduced?590:5670);
     return;
   }
 
   if(msg.type==='SHP_OPEN_MAP'){
-    if(busy)return;
+    if(busy || !frame.contentWindow)return;
+    busy=true;
+    transition.className='room-exit';
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     const floor=String(msg.floor||'Dorms');
-    frame.src='apps/map.html?mode=handbook&floor='+encodeURIComponent(floor);
-    frame.title='School Map';
+    setTimeout(()=>{
+      frame.src='apps/map.html?mode=handbook&floor='+encodeURIComponent(floor);
+      frame.title='School Map';
+      viewer.classList.add('open');
+    },reduced?470:5380);
+    setTimeout(()=>{
+      transition.className='ready';
+      busy=false;
+    },reduced?590:5670);
     return;
   }
 
